@@ -59,8 +59,7 @@ const MockInterview = () => {
       <div className="p-6 max-w-6xl m-auto h-[90vh] flex  flex-col justify-center my-auto">
         <div className="flex  items-center justify-between">
           <h2 className="text-lg font-semibold mb-4">
-            Mock Interview - Question {currentQuestionIndex + 1} of
-            {questions.length}
+            Question {currentQuestionIndex + 1} of {questions.length}
           </h2>
           <div className="mb-2 ">
             {timeLeft ? (
@@ -88,47 +87,63 @@ const MockInterview = () => {
               className="my-4 shadow-md p-4 rounded-xl  h-24 flex items-center  "
               style={{ boxShadow: "0px 0px 10px 0px rgb(186, 213, 238)" }}
             >
-              <p className="font-normal text-3xl">
+              <p className="font-normal text-xl">
                 {questions[currentQuestionIndex].text}
               </p>
             </div>
-            <div className="my-4 shadow-xl p-4 rounded-2xl   ">
+            <div className="my-4 shadow-xl p-4 rounded-2xl box-shadow   ">
               <div className="flex justify-between items-center mb-4">
-                <p>Answer</p>
+                <p
+                  className="text-xl
+                "
+                >
+                  Your Answer
+                </p>
+
                 <Button
                   className={
-                    "px-6 py-2 hover:!bg-[#1170CD] hover:!text-white !bg-white !text-[#1170CD] border rounded w-fit transition"
+                    "px-6 py-2 hover:!bg-[#1170CD] hover:!text-white !bg-white !text-[#1170CD] border rounded w-fit transition "
                   }
+                  onClick={() => {
+                    setAnswers((prevAnswers) => ({
+                      ...prevAnswers,
+                      [currentQuestionIndex]: "Skipped",
+                    }));
+                    nextQuestion();
+                  }}
                 >
                   skip
                 </Button>
               </div>
               <textarea
-                className="w-full p-2 border rounded mb-4"
+                className="w-full p-2 border border-gray-600 rounded-lg mb-4 focus:outline-none text-stone-600"
+                placeholder="Type your answer here..."
                 rows="4"
                 value={answers[currentQuestionIndex] || ""}
                 onChange={handleAnswerChange}
               />
-            </div>
-            <div className="flex justify-between">
-              <button
-                className="px-4 py-2 bg-[#1170CD] text-white rounded disabled:opacity-50"
-                onClick={previousQuestion}
-                disabled={
-                  currentQuestionIndex >= questions.length - 1 || timeLeft === 0
-                }
-              >
-                Previous Question
-              </button>
-              <button
-                className="px-4 py-2 bg-[#1170CD] text-white rounded disabled:opacity-50"
-                onClick={nextQuestion}
-                disabled={
-                  currentQuestionIndex >= questions.length - 1 || timeLeft === 0
-                }
-              >
-                Next Question
-              </button>
+              <div className="flex justify-between">
+                <button
+                  className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50  max-md:text-sm"
+                  onClick={previousQuestion}
+                  disabled={
+                    currentQuestionIndex >= questions.length - 1 ||
+                    timeLeft === 0
+                  }
+                >
+                  Previous
+                </button>
+                <button
+                  className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50  max-md:text-sm"
+                  onClick={nextQuestion}
+                  disabled={
+                    currentQuestionIndex >= questions.length - 1 ||
+                    timeLeft === 0
+                  }
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         )}

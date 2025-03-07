@@ -15,3 +15,8 @@ blue- bg->#1170CD
 blue- hover->#0E5A8A
 blue- active->#0C4C74
 */
+.box-shadow {
+  box-shadow: 0px 10px 30px 10px rgba(186, 213, 238, 0.5);
+
+
+}
