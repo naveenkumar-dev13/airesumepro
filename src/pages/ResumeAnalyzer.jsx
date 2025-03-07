@@ -6,7 +6,7 @@ function ResumeAnalyzer() {
   return (
     <>
       <NavBar />
-      <div className="flex items-center justify-center min-h-screen p-4 ">
+      <div className="flex items-center justify-center w-full h-[80vh] p-4 ">
         <div
           className="flex items-center justify-between gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 max-md:py-10 "
           style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
@@ -34,12 +34,19 @@ function ResumeAnalyzer() {
               <span className="text-gray-500 font-bold max-md:hidden">
                 or click to browse
               </span>
-              <button
-                type=""
-                className="bg-[#1170CD] text-white p-3 max-md:w-50  rounded-full cursor-pointer hover:bg-[#0E5BAA] transition-all duration-300  max-md:text-sm "
+
+              <input
+                type="file"
+                className="hidden"
+                id="resume-upload"
+                accept=".pdf,.doc,.docx"
+              />
+              <label
+                htmlFor="resume-upload"
+                className="bg-[#1170CD] text-white p-3 max-md:w-50 rounded-full cursor-pointer hover:bg-[#0E5BAA] transition-all duration-300 max-md:text-sm"
               >
-                Upload the Resume
-              </button>
+                upload your resume
+              </label>
             </div>
           </div>
           <div className="max-md:hidden overflow-hidden rounded-r-xl w-full">

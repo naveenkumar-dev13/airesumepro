@@ -7,6 +7,7 @@ import ResumeAnalyzer from "./pages/ResumeAnalyzer";
 import DashBoard from "./pages/DashBoard";
 import AnalysisReport from "./pages/AnalysisReport";
 import MockInterview from "./pages/MockInterView";
+import InterviewResult from "./pages/InterViewResult";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/analysisReport" element={<AnalysisReport />} />
         <Route path="/mockinterview" element={<MockInterview />} />
+        <Route path="/interviewresult" element={<InterviewResult />} />
       </Routes>
     </BrowserRouter>
   );
