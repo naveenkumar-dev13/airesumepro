@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import backgroundimage from "../assets/Ellipse 9.png";
 import heroImage from "../assets/hero.png";
-import hero from "../assets/home-Photoroom 1.png";
+
 import { motion } from "framer-motion";
 import Button from "./Button";
 import MockupInterviewPopup from "./InterviewPop";
+import { home } from "../data";
 
 function Header() {
   const [isopen, setIsopen] = useState(false);
@@ -16,7 +17,11 @@ function Header() {
           alt="Background"
           className="absolute  w-full h-full object-cover opacity-80  -z-10"
         />
-        <motion.div className="flex  flex-col gap-4 items-center justify-center max-md:justify-start ">
+        <div
+          className="flex  flex-col gap-4 items-center justify-center max-md:justify-start "
+          data-aos="fade-up"
+          data-aos-duration="800"
+        >
           <div className="w-[70%] h-[70%]">
             <img src={heroImage} alt="" className="w-full h-full" />
           </div>
@@ -30,12 +35,19 @@ function Header() {
             </p>
           </div>
           <Button onClick={() => setIsopen(true)}> Test Now</Button>
-        </motion.div>
-        <div className="w-[30%] max-md:hidden ">
-          <motion.img src={hero} alt="hero" className="w-full h-full" />
+        </div>
+        <div className=" max-md:hidden ">
+          <img
+            src={home}
+            alt="hero"
+            className="w-full h-full"
+            data-aos="fade-down"
+            data-aos-easing="linear"
+            data-aos-duration="1000"
+          />
         </div>
       </div>
-     {isopen && <MockupInterviewPopup  setIsopen={setIsopen} />}
+      {isopen && <MockupInterviewPopup setIsopen={setIsopen} />}
     </div>
   );
 }

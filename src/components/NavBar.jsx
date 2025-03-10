@@ -16,7 +16,7 @@ function NavBar() {
     // DESKTOP MENU
     <div>
       <nav className="sticky top-0 left-0 right-0  ">
-        <ul className="flex justify-between items-center  bg-white z-10 p-4  max-sm:rounded-3xl shadow-[50px_10px_150px_-3px_rgba(66,68,90,0.5)] max-sm:mt-4 max-sm:px-4 max-sm:py-2 max-sm:mx-2">
+        <ul className="flex justify-between items-center  bg-white z-10 p-4  max-sm:rounded-3xl shadow-[10px_10px_30px_-3px_rgba(66,68,90,0.5)] max-sm:mt-4 max-sm:px-4 max-sm:py-2 max-sm:mx-2">
           <Link to="/">
             <img src={logo} alt="logo" className="w-10" />
           </Link>

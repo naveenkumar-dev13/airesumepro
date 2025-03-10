@@ -1,10 +1,13 @@
 import loginImage from "../assets/illustration 1.jpg";
 import signupImage from "../assets/illustration 2.png";
 import resumeImage from "../assets/resumeAnalyzer.png";
-
+import avatarImage from "../assets/Ellipse 14.png";
+import homeImage from "../assets/home.png";
 export const login = loginImage;
 export const signup = signupImage;
 export const ResumeAnalyzer = resumeImage;
+export const avatar = avatarImage;
+export const home = homeImage;
 
 export const resumes = [
   {

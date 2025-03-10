@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
@@ -8,8 +11,13 @@ import DashBoard from "./pages/DashBoard";
 import AnalysisReport from "./pages/AnalysisReport";
 import MockInterview from "./pages/MockInterView";
 import InterviewResult from "./pages/InterViewResult";
+import UserInfo from "./pages/UserInfo";
 
 function App() {
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: false });
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -18,6 +26,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/analysisReport" element={<AnalysisReport />} />
         <Route path="/mockinterview" element={<MockInterview />} />
         <Route path="/interviewresult" element={<InterviewResult />} />
