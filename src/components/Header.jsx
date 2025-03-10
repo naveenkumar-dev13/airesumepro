@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import backgroundimage from "../assets/Ellipse 9.png";
 import heroImage from "../assets/hero.png";
-
-import { motion } from "framer-motion";
 import Button from "./Button";
 import MockupInterviewPopup from "./InterviewPop";
 import { home } from "../data";

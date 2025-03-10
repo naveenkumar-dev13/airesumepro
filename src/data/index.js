@@ -3,11 +3,13 @@ import signupImage from "../assets/illustration 2.png";
 import resumeImage from "../assets/resumeAnalyzer.png";
 import avatarImage from "../assets/Ellipse 14.png";
 import homeImage from "../assets/home.png";
+import nonProfileImage from "../assets/nonProfile.jpg";
 export const login = loginImage;
 export const signup = signupImage;
 export const ResumeAnalyzer = resumeImage;
 export const avatar = avatarImage;
 export const home = homeImage;
+export const nonProfile = nonProfileImage;
 
 export const resumes = [
   {
@@ -104,3 +106,14 @@ export const questionsAndAnswers = [
     correct: true,
   },
 ];
+
+export const userInfo = {
+  name: "Nithin",
+  gender: "Male",
+  location: "India, Tamil Nadu",
+  birthday: "January 25, 2005",
+  summary:
+    "I'm an enthusiastic web designer passionate about blending design and development. Currently, I'm broadening my expertise in web development while building upon my foundational knowledge of C++, Java, and Python.",
+  github: "https://github.com/nithin-kumar-05",
+  linkedin: "https://www.linkedin.com/in/nithin-kumar-05/",
+};

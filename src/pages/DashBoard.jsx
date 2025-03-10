@@ -21,25 +21,17 @@ function DashBoard() {
       <div className=" grid grid-cols-[400px_auto] mx-10   max-sm:mx-2 max-sm:grid-cols-1 gap-10">
         <div
           className=" h-auto w-auto bg-white rounded-xl  mt-10 flex flex-col  shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4"
-          data-aos="fade-right"
+          data-aos="fade-down"
+          data-aos-duration="1000"
         >
           <div className="relative border-b-4 border-[#1170CD]  ">
-            <input
-              type="file"
-              id="avatar-upload"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-            <label htmlFor="avatar-upload" className="cursor-pointer block">
-              <div className="w-24 h-24 object-cover rounded-xl  mx-auto my-4">
-                <img
-                  src={userAvatar}
-                  alt="avatar"
-                  className="w-full h-full object-cover rounded-xl "
-                />
-              </div>
-            </label>
+            <div className="w-24 h-24 object-cover rounded-xl  mx-auto my-4 overflow-hidden">
+              <img
+                src={userAvatar}
+                alt="avatar"
+                className="w-full h-full object-cover rounded-xl    "
+              />
+            </div>
           </div>
           <div className="border-b-2 border-blue-700 p-4 ">
             <h1 className="text-2xl font-semibold text-center">John Doe</h1>
@@ -115,7 +107,7 @@ function DashBoard() {
             <Button className={"  rounded-md "}>Edit Profile</Button>
           </Link>
         </div>
-        <div className="">
+        <div className=" max-sm:mx-2">
           <h1 className="text-4xl  my-10">My Reumes</h1>
           <div className=" grid grid-cols-3 gap-4 max-sm:grid-cols-1">
             {resumes.map((resume, index) => (
@@ -123,7 +115,8 @@ function DashBoard() {
                 key={index}
                 data-aos="zoom-in"
                 data-aos-delay={index * 100}
-                className="p-4 w-auto hover:shadow-[0px_10px_30px_0px_#bad5ee]  transition-all duration-300 bg-white rounded-xl shadow-md"
+                data-aos-duration="1000"
+                className="p-4 w-auto hover:shadow-[0px_10px_30px_0px_#bad5ee] transition-all duration-300 bg-white rounded-xl shadow-md"
               >
                 <h3 className="text-lg font-semibold">{resume.title}</h3>
                 <p className="text-gray-500 text-sm">
