@@ -21,18 +21,6 @@ const BasicInfo = () => {
       setUserAvatar(imageUrl);
     }
   };
-  //   useEffect(() => {
-  //     fetch("https://api.example.com/user/123")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setInfo(data);
-  //         setLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching user data:", error);
-  //         setLoading(false);
-  //       });
-  //   }, []);
 
   useEffect(() => {
     setActiveButton(location.pathname);
@@ -44,21 +32,9 @@ const BasicInfo = () => {
   };
 
   const handleSave = (e) => {
-    e.preventDefault();
     const updatedInfo = { ...info, [editingField]: tempValue };
     setInfo(updatedInfo);
     setEditingField(null);
-    //     fetch("https://api.example.com/user/123", {
-    //       method: "PUT",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(updatedInfo),
-    //     })
-    //       .then((response) => response.json())
-    //       .then((data) => {
-    //         setInfo(data);
-    //         setEditingField(null);
-    //       })
-    //       .catch((error) => console.error("Error updating user data:", error));
   };
 
   //   if (loading) return <Loading />;
@@ -137,7 +113,7 @@ const BasicInfo = () => {
               </Button>
             </div>
           </div>
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h2 className="text-2xl font-bold mb-4 max-sm:text-center">
               Basic Info
             </h2>
@@ -171,39 +147,62 @@ const BasicInfo = () => {
                 </button>
               </div>
             ))}
+          </div> */}
+          <div className="p-4  mx-auto" onSubmit={handleSave}>
+            <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
+            {Object.keys(info).map((key) => (
+              <div
+                key={key}
+                className="flex   items-center py-6 border-b max-sm:flex-col max-sm:gap-4"
+              >
+                <p className="capitalize font-medium w-40">{key}:</p>
+                <p className="text-gray-950 font-semibold flex-1">
+                  {info[key]}
+                </p>
+                <button
+                  onClick={() => handleEdit(key)}
+                  className="text-blue-500 hover:underline"
+                >
+                  Edit
+                </button>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-      {editingField && (
-        <form className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96 max-sm:mx-4"
+        {editingField && (
+          <form
             onSubmit={handleSave}
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
           >
-            <h2 className="text-xl font-bold mb-4">Edit {editingField}</h2>
-            <input
-              type="text"
-              value={tempValue}
-              onChange={(e) => setTempValue(e.target.value)}
-              className="w-full border px-3 py-2 rounded-md mb-4"
-            />
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setEditingField(null)}
-                className="px-4 py-2 bg-gray-300 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md"
-              >
-                Save
-              </button>
+            <div
+              className="bg-white p-6 rounded-lg shadow-lg w-96 max-sm:mx-4"
+              onSubmit={handleSave}
+            >
+              <h2 className="text-xl font-bold mb-4">Edit {editingField}</h2>
+              <input
+                type="text"
+                value={tempValue}
+                onChange={(e) => setTempValue(e.target.value)}
+                className="w-full border px-3 py-2 rounded-md mb-4"
+              />
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setEditingField(null)}
+                  className="px-4 py-2 bg-gray-300 rounded-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                >
+                  Save
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-      )}
+          </form>
+        )}
+      </div>
     </>
   );
 };

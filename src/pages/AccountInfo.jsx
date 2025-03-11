@@ -27,7 +27,7 @@ function AccountInfoPage() {
     e.preventDefault();
     const updatedInfo = { ...info, [editingField]: tempValue };
     setInfo(updatedInfo);
-    setEditingField(null);
+    setEditingField();
   };
   useEffect(() => {
     setActiveButton(location.pathname);
@@ -36,9 +36,9 @@ function AccountInfoPage() {
     <div>
       <NavBar />
       <div className="p-6 bg-gray-100  h-screen m-auto  ">
-        <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md  grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 ">
+        <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md  grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2 ">
           <div className="  p-4 border-r-2 border-[#1170CD]  flex-1 flex gap-4 flex-col relative max-md:border-none ">
-            <div className="absolute -top-10 left-15  max-sm:-top-20 max-sm:left-16">
+            <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-20">
               <input
                 type="file"
                 id="avatar-upload"
@@ -104,44 +104,33 @@ function AccountInfoPage() {
               </Button>
             </div>
           </div>
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold mb-4">Account Info</h2>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold mb-4 max-sm:text-center">
+              Account Info
+            </h2>
             {Object.keys(info).map((key) => (
               <div
                 key={key}
-                className="flex justify-between items-center  gap-4 border-b-2 border-gray-200 p-4 max-sm:flex-col max-sm:gap-2"
+                className="flex   items-center py-6 border-b max-sm:flex-col max-sm:gap-4"
               >
-                <h1 className="font-semibold capitalize  max-sm:text-lg ">
-                  {key.replace("_", " ")}
-                </h1>
-                {editingField === key ? (
-                  <input
-                    type="text"
-                    value={tempValue}
-                    onChange={(e) => setTempValue(e.target.value)}
-                    className="border px-2 py-1 rounded-md  flex-1 "
-                  />
-                ) : (
-                  <p className="text-gray-950 font-semibold flex-1 max-sm:text-lg">
-                    {info[key]}
-                  </p>
-                )}
+                <p className="capitalize font-medium w-52">{key}:</p>
+                <p className="text-gray-950 font-semibold flex-1">
+                  {info[key]}
+                </p>
                 <button
-                  onClick={() =>
-                    editingField === key ? handleSave() : handleEdit(key)
-                  }
+                  onClick={() => handleEdit(key)}
                   className="text-blue-500 hover:underline"
                 >
-                  {editingField === key ? "Save" : "Edit"}
+                  Edit
                 </button>
               </div>
             ))}
-            <div className="flex justify-between items-center gap-4   max-sm:flex-col ">
-              <Button className="px-3 py-2 font-medium rounded-md hover:!text-white hover:!bg-[#F01F1F] bg-white !text-[#F01F1F] border-2 border-[#F01F1F] !flex gap-2 justify-center items-center">
+            <div className="flex justify-between items-center gap-4 max-sm:flex-col max-sm:gap-4">
+              <Button className="px-3 py-2 font-medium rounded-md hover:!text-white hover:!bg-[#F01F1F] bg-white !text-[#F01F1F] border-2 border-[#F01F1F] !flex gap-2 justify-center items-center max-sm:w-full">
                 <ion-icon name="trash-outline" className="w-5 h-5"></ion-icon>
                 Delete
               </Button>
-              <Button className="px-6 py-2 font-medium rounded-md hover:!text-white bg-[#1170CD] !text-white border-2 border-[#1170CD] !flex gap-2 items-center">
+              <Button className="px-6 py-2 font-medium rounded-md hover:!text-white bg-[#1170CD] !text-white border-2 border-[#1170CD] !flex gap-2 items-center justify-center max-sm:w-full">
                 <span className="block mt-1">
                   <ion-icon
                     name="log-out-outline"
@@ -155,7 +144,10 @@ function AccountInfoPage() {
         </div>
       </div>
       {editingField && (
-        <form className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <form
+          onSubmit={handleSave}
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
           <div
             className="bg-white p-6 rounded-lg shadow-lg w-96 max-sm:mx-4"
             onSubmit={handleSave}
