@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { avatar, nonProfile, userInfo } from "../data";
-import Loading from "../components/Loading";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
+import { AccountInfo, avatar, nonProfile } from "../data";
 import Button from "../components/Button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const BasicInfo = () => {
-  const [info, setInfo] = useState(userInfo);
-  const [loading, setLoading] = useState(true);
+function AccountInfoPage() {
+  const [info, setInfo] = useState(AccountInfo);
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState("");
   const [userAvatar, setUserAvatar] = useState(avatar);
-  const location = useLocation();
-  const [activeButton, setActiveButton] = useState(location.pathname);
+  const [activeButton, setActiveButton] = useState("basicinfo");
   const navigate = useNavigate();
+  const location = useLocation();
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -21,56 +19,26 @@ const BasicInfo = () => {
       setUserAvatar(imageUrl);
     }
   };
-  //   useEffect(() => {
-  //     fetch("https://api.example.com/user/123")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setInfo(data);
-  //         setLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching user data:", error);
-  //         setLoading(false);
-  //       });
-  //   }, []);
-
-  useEffect(() => {
-    setActiveButton(location.pathname);
-  }, [location.pathname]);
-
   const handleEdit = (field) => {
     setEditingField(field);
     setTempValue(info[field]);
   };
-
   const handleSave = (e) => {
     e.preventDefault();
     const updatedInfo = { ...info, [editingField]: tempValue };
     setInfo(updatedInfo);
     setEditingField(null);
-    //     fetch("https://api.example.com/user/123", {
-    //       method: "PUT",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(updatedInfo),
-    //     })
-    //       .then((response) => response.json())
-    //       .then((data) => {
-    //         setInfo(data);
-    //         setEditingField(null);
-    //       })
-    //       .catch((error) => console.error("Error updating user data:", error));
   };
-
-  //   if (loading) return <Loading />;
-
+  useEffect(() => {
+    setActiveButton(location.pathname);
+  }, [location.pathname]);
   return (
-    <>
+    <div>
       <NavBar />
-
-      <div className="p-6 bg-gray-100 min-h-screen  ">
-        <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md  grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1">
+      <div className="p-6 bg-gray-100  h-screen m-auto  ">
+        <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md  grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 ">
           <div className="  p-4 border-r-2 border-[#1170CD]  flex-1 flex gap-4 flex-col relative max-md:border-none ">
-            <div className="absolute -top-20 left-15  max-sm:-top-20 max-sm:left-20">
+            <div className="absolute -top-10 left-15  max-sm:-top-20 max-sm:left-16">
               <input
                 type="file"
                 id="avatar-upload"
@@ -79,12 +47,12 @@ const BasicInfo = () => {
                 className="hidden"
               />
               <label htmlFor="avatar-upload" className="cursor-pointer block">
-                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
+                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 ">
                   {userAvatar ? (
                     <img
                       src={userAvatar}
                       alt="avatar"
-                      className="w-full h-full object-cover rounded-full"
+                      className="w-full h-full object-cover rounded-full  "
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -99,15 +67,13 @@ const BasicInfo = () => {
               </label>
             </div>
             <div className="mt-20  max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex">
-              <Button
-                className={`px-6 py-2 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                  activeButton === "basicinfo"
-                    ? "!bg-[#1170CD] !text-white"
-                    : ""
+              <Link
+                to="/userinfo"
+                className={`px-6 py-2  font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                  activeButton === "userinfo" ? "" : ""
                 }`}
                 onClick={() => {
-                  setActiveButton("basicinfo");
-                  navigate("/userinfo");
+                  setActiveButton("userinfo");
                 }}
               >
                 <span className="block mt-1">
@@ -117,14 +83,15 @@ const BasicInfo = () => {
                   ></ion-icon>
                 </span>
                 Basic Info
-              </Button>
+              </Link>
+
               <Button
-                className={`px-6 py-2  font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                  activeButton === "account" ? "!bg-[#1170CD] !text-white" : ""
+                to="/accountinfo"
+                className={`px-6 py-2  font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                  activeButton === "account" ? "" : ""
                 }`}
                 onClick={() => {
                   setActiveButton("account");
-                  navigate("/accountinfo");
                 }}
               >
                 <span className="block mt-1">
@@ -138,15 +105,13 @@ const BasicInfo = () => {
             </div>
           </div>
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold mb-4 max-sm:text-center">
-              Basic Info
-            </h2>
+            <h2 className="text-2xl font-bold mb-4">Account Info</h2>
             {Object.keys(info).map((key) => (
               <div
                 key={key}
-                className="flex justify-between items-center  gap-4 border-b-2 border-gray-200 p-4 max-sm:flex-col"
+                className="flex justify-between items-center  gap-4 border-b-2 border-gray-200 p-4 max-sm:flex-col max-sm:gap-2"
               >
-                <h1 className="font-semibold capitalize ">
+                <h1 className="font-semibold capitalize  max-sm:text-lg ">
                   {key.replace("_", " ")}
                 </h1>
                 {editingField === key ? (
@@ -157,7 +122,7 @@ const BasicInfo = () => {
                     className="border px-2 py-1 rounded-md  flex-1 "
                   />
                 ) : (
-                  <p className="text-gray-950 font-semibold flex-1">
+                  <p className="text-gray-950 font-semibold flex-1 max-sm:text-lg">
                     {info[key]}
                   </p>
                 )}
@@ -171,6 +136,21 @@ const BasicInfo = () => {
                 </button>
               </div>
             ))}
+            <div className="flex justify-between items-center gap-4   max-sm:flex-col ">
+              <Button className="px-3 py-2 font-medium rounded-md hover:!text-white hover:!bg-[#F01F1F] bg-white !text-[#F01F1F] border-2 border-[#F01F1F] !flex gap-2 justify-center items-center">
+                <ion-icon name="trash-outline" className="w-5 h-5"></ion-icon>
+                Delete
+              </Button>
+              <Button className="px-6 py-2 font-medium rounded-md hover:!text-white bg-[#1170CD] !text-white border-2 border-[#1170CD] !flex gap-2 items-center">
+                <span className="block mt-1">
+                  <ion-icon
+                    name="log-out-outline"
+                    className="w-5 h-5"
+                  ></ion-icon>
+                </span>
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -204,8 +184,8 @@ const BasicInfo = () => {
           </div>
         </form>
       )}
-    </>
+    </div>
   );
-};
+}
 
-export default BasicInfo;
+export default AccountInfoPage;

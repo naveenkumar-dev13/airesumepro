@@ -117,3 +117,10 @@ export const userInfo = {
   github: "https://github.com/nithin-kumar-05",
   linkedin: "https://www.linkedin.com/in/nithin-kumar-05/",
 };
+export const AccountInfo = {
+  name: "Nithin",
+  email: "nithin@gmail.com",
+  phone: "+91 9876543210",
+  password: "nithin123",
+  confirmPassword: "nithin123",
+};
