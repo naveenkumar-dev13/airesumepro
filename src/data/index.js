@@ -2,7 +2,7 @@ import loginImage from "../assets/illustration 1.jpg";
 import signupImage from "../assets/illustration 2.png";
 import resumeImage from "../assets/resumeAnalyzer.png";
 import avatarImage from "../assets/Ellipse 14.png";
-import homeImage from "../assets/home.png";
+import homeImage from "../assets/resume 1.png";
 import nonProfileImage from "../assets/nonProfile.jpg";
 export const login = loginImage;
 export const signup = signupImage;
@@ -10,6 +10,76 @@ export const ResumeAnalyzer = resumeImage;
 export const avatar = avatarImage;
 export const home = homeImage;
 export const nonProfile = nonProfileImage;
+
+export const cards = [
+  {
+    percentage: "85%",
+    title: "Resume Scored",
+    description: "Your resume ranks in the top percentile",
+  },
+  {
+    percentage: <span style={{ color: "#1076DA" }}>85%</span>,
+    title: "Resume Scored",
+    description: "Your resume ranks in the top percentile",
+  },
+  {
+    percentage: <span style={{ color: "#1076DA" }}>1000+</span>,
+    title: "Resumes Reviewed",
+    description: " candidates improve their job prospects",
+  },
+];
+
+export const analysis = [
+  {
+    icon: <ion-icon name="document-outline"></ion-icon>,
+    title: "Real-time AI Mock Interviews",
+    description:
+      "Practice with our AI interviewer, get instant feedback and improve your skills",
+  },
+  {
+    icon: <ion-icon name="analytics-outline"></ion-icon>,
+    title: "AI-Powered Performance Feedback",
+    description: "Detailed analysis of your interview performance",
+  },
+  {
+    icon: <ion-icon name="invert-mode-outline"></ion-icon>,
+    title: "Custom Question Bank",
+    description: "Tailored questions based on your resume",
+  },
+];
+
+export const howItWorks = [
+  {
+    icon: <ion-icon name="arrow-up-outline"></ion-icon>,
+    title: "Upload Resume",
+    description: "Drag & drop your resume file",
+  },
+  {
+    icon: <ion-icon name="accessibility-outline"></ion-icon>,
+    title: "AI Analysis",
+    description: "Get detailed score & suggestions",
+  },
+  {
+    icon: <ion-icon name="chatbox-outline"></ion-icon>,
+    title: "Start Interview",
+    description: "Practice with AI interviewer",
+  },
+];
+
+export const aboutUs = [
+  {
+    icon: <ion-icon name="call-outline"></ion-icon>,
+    title: "+91 789-456-1230",
+  },
+  {
+    icon: <ion-icon name="mail-outline"></ion-icon>,
+    title: "nithin@gmail.com",
+  },
+  {
+    icon: <ion-icon name="location-outline"></ion-icon>,
+    title: "India, Tamil Nadu",
+  },
+];
 
 export const resumes = [
   {

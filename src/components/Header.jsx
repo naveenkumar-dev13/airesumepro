@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import backgroundimage from "../assets/Ellipse 9.png";
-import heroImage from "../assets/hero.png";
 import Button from "./Button";
 import MockupInterviewPopup from "./InterviewPop";
 import { home } from "../data";
@@ -8,43 +6,31 @@ import { home } from "../data";
 function Header() {
   const [isopen, setIsopen] = useState(false);
   return (
-    <div>
-      <div className=" relative z-10  h-screen max-sm:flex-col-reverse max-sm:gap-10  flex items-center justify-around  ">
-        <img
-          src={backgroundimage}
-          alt="Background"
-          className="absolute  w-full h-full object-cover opacity-80  -z-10"
-        />
+    <div className="bg-[#F5F7FA]">
+      <div
+        className="flex  items-center justify-evenly   p-16  gap-10  max-sm:gap-5  max-sm:flex-col-reverse  max-sm:py-5 max-sm:px-2
+        
+         "
+      >
         <div
-          className="flex  flex-col gap-4 items-center justify-center max-md:justify-start "
-          data-aos="fade-up"
-          data-aos-duration="800"
+          className="  flex flex-col gap-4  w-[50%] mx-auto max-sm:w-full max-sm:text-center"
+          data-aos="fade-up-right"
         >
-          <div className="w-[70%] h-[70%]">
-            <img src={heroImage} alt="" className="w-full h-full" />
-          </div>
-          <div className=" w-[80%] flex flex-col gap-4 items-center justify-center">
-            <h2 className="text-3xl text-center">
-              The professional resume builder
-            </h2>
-            <p className=" text-center text-xl font-normal max-sm:text-base ">
-              Easily craft a professional resume with customizable templates and
-              expert guidance
-            </p>
-          </div>
-          <Button onClick={() => setIsopen(true)}> Test Now</Button>
+          <h2 className="text-6xl font-bold max-sm:text-2xl ">
+            Your AI-Powered Resume Expert
+          </h2>
+          <p className=" text-2xl font-normal max-sm:text-sm max-sm:text-center max-sm:m-4 ">
+            Scan your resume, get instant feedback, and prepare for mock
+            interviews with AI-driven insights.
+          </p>
+          <Button onClick={() => setIsopen(true)}> Analyze your resume</Button>
         </div>
-        <div className=" max-md:hidden ">
-          <img
-            src={home}
-            alt="hero"
-            className="w-full h-full"
-            data-aos="fade-down"
-            data-aos-easing="linear"
-            data-aos-duration="1000"
-          />
+
+        <div className="max-sm:w-[90%]  mx-auto " data-aos="fade-up-left">
+          <img src={home} alt="hero" className="w-full h-full" />
         </div>
       </div>
+
       {isopen && <MockupInterviewPopup setIsopen={setIsopen} />}
     </div>
   );

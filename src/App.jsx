@@ -15,7 +15,7 @@ import UserInfo from "./pages/UserInfo";
 import AccountInfo from "./pages/AccountInfo";
 function App() {
   useEffect(() => {
-    AOS.init({ duration: 1000, once: false });
+    AOS.init({ duration: 1000, once: false, mirror: true });
   }, []);
 
   return (
