@@ -11,6 +11,13 @@ export const avatar = avatarImage;
 export const home = homeImage;
 export const nonProfile = nonProfileImage;
 
+export const LINKS = [
+  { href: "#work", label: "Work" },
+  { href: "#about", label: "About" },
+  { href: "#experience", label: "Experience" },
+  { href: "#testimonials", label: "Testimonials" },
+  { href: "#contact", label: "Contact" },
+];
 export const cards = [
   {
     percentage: "85%",
@@ -81,6 +88,24 @@ export const aboutUs = [
   },
 ];
 
+export const copyRight = [
+  {
+    icon: <ion-icon name="logo-instagram"></ion-icon>,
+    title: "Instagram",
+  },
+  {
+    icon: <ion-icon name="logo-linkedin"></ion-icon>,
+    title: "LinkedIn",
+  },
+  {
+    icon: <ion-icon name="logo-facebook"></ion-icon>,
+    title: "Facebook",
+  },
+  {
+    icon: <ion-icon name="logo-twitter"></ion-icon>,
+    title: "Twitter",
+  },
+];
 export const resumes = [
   {
     title: "Software Engineer",

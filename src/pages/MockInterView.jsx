@@ -148,6 +148,34 @@ const MockInterview = () => {
           </div>
         )}
       </div>
+
+      {/* {showExitPopup && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-96 relative mx-2">
+            <h2 className="text-2xl font-bold text-[#1170CD] mb-4">
+              Exit Interview?
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to exit? Your progress will be lost.
+            </p>
+            <div className="flex justify-end gap-4">
+              <Button
+                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                onClick={cancelExit}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="px-6 py-2 bg-[#1170CD] text-white rounded-lg hover:bg-blue-700"
+                onClick={confirmExit}
+              >
+                Exit
+              </Button>
+            </div>
+          </div>
+        </div>
+      )} */}
+
       {timeLeft === 0 && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50 ">
           <div className="bg-[#1170CD] p-6 rounded-2xl shadow-lg w-96 relative mx-2">

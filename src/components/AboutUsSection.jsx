@@ -1,7 +1,9 @@
 import React from "react";
 import Button from "./Button";
-
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 function AboutUsSection() {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="flex flex-col gap-6 py-16 max-sm:py-8  bg-[#1170CD] ">
@@ -12,11 +14,19 @@ function AboutUsSection() {
           Join 10,000+ professionals using AI to improve their resumes and
           interview skills!
         </h2>
-        <div data-aos="fade-left">
-          <Button className="text-black bg-white rounded-md block mx-auto  ">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          data-aos="fade-left"
+        >
+          <Button
+            className="!text-black bg-white rounded-md block mx-auto  !w-fit  hover:!text-white "
+            onClick={() => navigate("/login")}
+          >
             Let’s get started
           </Button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

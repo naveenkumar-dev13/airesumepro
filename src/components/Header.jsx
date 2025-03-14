@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import Button from "./Button";
 import MockupInterviewPopup from "./InterviewPop";
 import { home } from "../data";
-
+import { useNavigate } from "react-router-dom";
 function Header() {
   const [isopen, setIsopen] = useState(false);
+  const navigate = useNavigate();
   return (
     <div className="bg-[#F5F7FA]">
       <div
@@ -23,7 +24,9 @@ function Header() {
             Scan your resume, get instant feedback, and prepare for mock
             interviews with AI-driven insights.
           </p>
-          <Button onClick={() => setIsopen(true)}> Analyze your resume</Button>
+          <Button onClick={() => navigate("/create-resume")}>
+            Analyze your resume
+          </Button>
         </div>
 
         <div className="max-sm:w-[90%]  mx-auto " data-aos="fade-up-left">

@@ -47,7 +47,10 @@ const MockupInterviewPopup = ({ setIsopen }) => {
           <option value="Behavioral">Behavioral</option>
         </select>
         <div className="flex justify-between mt-4">
-          <Button className="px-4 py-2 bg-gray-200 rounded-md max-md:w-24">
+          <Button
+            className="px-4 py-2  rounded-md max-md:w-24 "
+            onClick={() => setIsopen(false)}
+          >
             Cancel
           </Button>
           <Button className="px-4 py-2 rounded-md max-md:w-24">Start</Button>

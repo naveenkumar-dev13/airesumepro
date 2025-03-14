@@ -6,7 +6,10 @@ function Footer() {
   return (
     <>
       <footer className="bg-[#111827] p-8 text-white flex  justify-center items-center gap-10  flex-wrap-reverse py-16 max-sm:py-6 ">
-        <div className="flex flex-col gap-4  ">
+        <div
+          className="flex flex-col gap-4 max-sm:items-center max-sm:text-center "
+          data-aos="fade-right"
+        >
           <h2 className="text-3xl font-semibold max-sm:text-xl">About US</h2>
           <p className="max-w-xl text-base">
             Our AI-powered platform helps job seekers analyze resumes, receive
@@ -15,7 +18,10 @@ function Footer() {
             success.
           </p>
         </div>
-        <div className="  flex flex-col gap-4 flex-1">
+        <div
+          className="flex flex-col gap-4 flex-1 justify-items-center items-center"
+          data-aos="zoom-in"
+        >
           <h2 className="text-3xl font-semibold max-md:text-xl">
             Connect Us <br />
           </h2>
@@ -28,7 +34,10 @@ function Footer() {
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-4 flex-1 max-sm:bg-[#1F2937] max-sm:p-4 max-sm:rounded-md ">
+        <div
+          className="flex flex-col gap-4 flex-1 max-sm:bg-[#1F2937] max-sm:p-4 max-sm:rounded-md "
+          data-aos="fade-left"
+        >
           <ul className="flex flex-col gap-2">
             <h2 className="text-3xl font-semibold">Stay Updated!</h2>
             <p>

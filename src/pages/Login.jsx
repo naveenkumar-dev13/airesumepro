@@ -3,7 +3,6 @@ import logo from "../assets/Google__G__logo 1.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { login } from "../data";
-
 import Inputs from "../components/Inputs";
 
 function Login() {
@@ -62,7 +61,7 @@ function Login() {
             <p className="text-center max-sm:text-xs text-gray-500">
               New to builder?
               <span
-                className="text-[#1170CD] ml-1 cursor-pointer hover:text-[#0E5BAA] transition-all duration-300 text-xs"
+                className="text-[#1170CD] ml-1 cursor-pointer hover:text-[#0E5BAA] transition-all duration-300 text-sm"
                 onClick={() => navigate("/signup")}
               >
                  Create an account

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/M logo .png";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { div } from "motion/react-client";
 
-function NavBar() {
+const NavBar = ({ onExit }) => {
   const [isopen, setIsopen] = useState(false);
   const location = useLocation();
   const [activeButton, setActiveButton] = useState(location.pathname);
@@ -16,7 +17,7 @@ function NavBar() {
     // DESKTOP MENU
     <div>
       <nav className="sticky top-0 left-0 right-0  ">
-        <ul className="flex justify-between items-center  bg-white z-10 p-4  max-sm:rounded-3xl shadow-[10px_10px_30px_-3px_rgba(66,68,90,0.5)] max-sm:mt-4 max-sm:px-4 max-sm:py-2 max-sm:mx-2">
+        <ul className="flex justify-between items-center  bg-white z-10 p-4  shadow-[10px_10px_30px_-3px_rgba(66,68,90,0.5)]  max-sm:px-4 max-sm:py-2 ">
           <Link to="/">
             <img src={logo} alt="logo" className="w-10" />
           </Link>
@@ -56,17 +57,30 @@ function NavBar() {
               ></ion-icon>
             ) : (
               <ion-icon
-                name="close-outline"
                 className="w-10 h-10 block max-sm:w-8 max-sm:h-8"
                 onClick={() => setIsopen(false)}
               ></ion-icon>
             )}
           </li>
+          {onExit && (
+            <button
+              onClick={onExit}
+              className="text-[#1170CD] hover:text-blue-700 px-4 py-2 rounded-lg flex items-center gap-2"
+            >
+              <span className="material-icons-outlined">exit_to_app</span>
+              Exit Interview
+            </button>
+          )}
         </ul>
         {/* MOBILE MENU */}
         {isopen && (
-          <div className="transfrom translate-y-[20%] w-[90%] mx-auto h-full flex items-center justify-center z-10">
-            <motion.div className="bg-white p-4 w-full h-full relative -top-8 shadow-lg rounded-br-2xl rounded-bl-2xl z-10  ">
+          <div className="transfrom translate-y-[20%]   w-full  bg-opacity-90   ">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-4 w-full h-full relative -top-8 shadow-lg rounded-br-2xl rounded-bl-2xl z-10  "
+            >
               <motion.ul className="flex flex-col gap-[2px] items-center">
                 <Link to="/create-resume">
                   <motion.button
@@ -112,6 +126,6 @@ function NavBar() {
       </nav>
     </div>
   );
-}
+};
 
 export default NavBar;
