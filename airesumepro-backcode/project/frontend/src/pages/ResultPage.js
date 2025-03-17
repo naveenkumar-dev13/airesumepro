@@ -4,8 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 const ResultPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const resumeData = location.state?.data;
-    
+    const resumeData = location.state?.data; // Access the data passed from HomePage
+
     const [showPopup, setShowPopup] = useState(false);
     const [jobRole, setJobRole] = useState("");
     const [difficulty, setDifficulty] = useState("");
@@ -13,77 +13,87 @@ const ResultPage = () => {
     const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
     useEffect(() => {
-        if (showPopup && resumeData?.suggestions) {
-            const fetchJobRoles = async () => {
-                try {
-                    const token = localStorage.getItem("token");
-                    if (!token) {
-                        console.error("No token found in localStorage.");
-                        return;
-                    }
-    
-                    const response = await fetch("http://localhost:5000/api/resume/job-suggestions", {
-                        method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ resumeText: resumeData.suggestions }),
-                    });
-    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("API Error Response:", errorData);
-                        throw new Error("Failed to fetch job suggestions.");
-                    }
-    
-                    const data = await response.json();
-                    setJobSuggestions(data.suggestions || []); // Ensure this matches the server response
-                } catch (error) {
-                    console.error("Error fetching job suggestions:", error);
-                }
-            };
-    
+        if (showPopup) {
             fetchJobRoles();
         }
-    }, [showPopup, resumeData?.suggestions]);
+    }, [showPopup]);
+
+    const fetchJobRoles = async () => {
+        if (!resumeData) return;
+        setLoadingSuggestions(true);
+
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("No token found in localStorage.");
+                setLoadingSuggestions(false);
+                return;
+            }
+
+            const response = await fetch("http://localhost:5000/api/resume/job-suggestions", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ resumeText: resumeData }),
+            });
+
+            if (!response.ok) {
+                console.error("Failed to fetch job suggestions.");
+                setLoadingSuggestions(false);
+                return;
+            }
+
+            const data = await response.json();
+            setJobSuggestions(data.suggestions || []);
+        } catch (error) {
+            console.error("Error fetching job suggestions:", error);
+        } finally {
+            setLoadingSuggestions(false);
+        }
+    };
 
     const startMockInterview = () => {
         if (!jobRole || !difficulty) return alert("Please select a job role and difficulty level.");
         setShowPopup(false);
-        navigate("/mock-interview", { state: { resumeText: resumeData.suggestions, jobRole, difficulty } });
+        navigate("/mock-interview", { state: { resumeText: resumeData, jobRole, difficulty } });
     };
 
     const renderAnalysisReport = () => {
-        if (!resumeData.suggestions) return null;
-
-        const sections = resumeData.suggestions.split("\n\n").filter(section => section.trim() !== "");
-
+        if (!resumeData || !resumeData.overallScore) {
+            return (
+                <div>
+                    <h2>No resume data found. Please upload a resume first.</h2>
+                    <button onClick={() => navigate("/")}>Go to Home</button>
+                </div>
+            );
+        }
+    
         return (
-            <div>
+            <div className="report-container">
                 <h1>Resume Analysis Report</h1>
-                {sections.map((section, index) => (
-                    <div key={index}>
-                        <pre>{section}</pre>
-                        {section.includes("**Score:**") && (
-                            <p><strong>Score:</strong> {section.match(/Score: (\d+\/\d+)/)?.[1] || "N/A"}</p>
-                        )}
+                <h2>Overall Score: {resumeData.overallScore}%</h2>
+    
+                {[
+                    { name: "Content", data: resumeData.content },
+                    { name: "Format", data: resumeData.format },
+                    { name: "Sections", data: resumeData.sections },
+                    { name: "Skills", data: resumeData.skills },
+                    { name: "Style", data: resumeData.style }
+                ].map(({ name, data }, index) => (
+                    <div key={index} className="category-card">
+                        <h3>{name}</h3>
+                        <p><strong>Score:</strong> {data?.score || 0}/20</p>
+                        <p><strong>Issues:</strong> {data?.issues || "No data"}</p>
+                        <p><strong>Suggestions:</strong> {data?.suggestions || "No data"}</p>
                     </div>
                 ))}
             </div>
         );
     };
 
-    if (!resumeData) {
-        return (
-            <div>
-                <h2>No resume data found. Please upload a resume first.</h2>
-                <button onClick={() => navigate("/")}>Go to Home</button>
-            </div>
-        );
-    }
-
-    return (
+   return (
         <div>
             {renderAnalysisReport()}
             <button onClick={() => setShowPopup(true)}>Start Mock Interview</button>

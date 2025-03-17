@@ -65,7 +65,7 @@ const HomePage = () => {
             return;
         }
     
-        const token = localStorage.getItem("token"); // Get token
+        const token = localStorage.getItem("token");
         if (!token) {
             alert("You must be logged in to analyze a resume.");
             navigate("/login");
@@ -81,13 +81,16 @@ const HomePage = () => {
         try {
             const response = await fetch("http://localhost:5000/api/resume/analyze", {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${token}` }, // Add token
+                headers: { "Authorization": `Bearer ${token}` },
                 body: formData,
             });
     
             const result = await response.json();
             
             if (response.ok && result.success && result.data) {
+                // Ensure result.data is passed correctly
+                
+                console.log("API Response:", result.data);
                 navigate("/result", { state: { data: result.data } });
             } else {
                 throw new Error(result.message || "Failed to analyze resume.");
@@ -98,7 +101,6 @@ const HomePage = () => {
             setLoading(false);
         }
     };
-    
 
     return (
         <div className="container">

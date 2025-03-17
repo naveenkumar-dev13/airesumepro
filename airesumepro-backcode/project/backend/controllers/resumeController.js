@@ -138,10 +138,26 @@ export const analyzeResume = async (req, res) => {
                     { role: "user", content: `Analyze this resume and provide:
                         1. Resume Analysis Score (as a percentage).
                         2. Category-wise analysis:
-                            **Category Name: [Category Name]**
-                            - Issues
-                            - Suggested Fixes
-                            - **Score:** [Score]/20
+                            Content:
+                             Issues
+                             Suggested Fixes
+                             Score:[Score]/20
+                            Format:
+                             Issues
+                             Suggested Fixes
+                             Score:[Score]/20
+                            Sections:
+                             Issues
+                             Suggested Fixes
+                             Score:[Score]/20
+                            Skills:
+                             Issues
+                             Suggested Fixes
+                             Score:[Score]/20
+                            Style:
+                             Issues
+                             Suggested Fixes
+                             Score:[Score]/20
                         Resume Text: ${resumeText}` }
                 ]
             })
@@ -153,21 +169,58 @@ export const analyzeResume = async (req, res) => {
         }
 
         const extractedText = data.choices[0].message.content;
+        console.log(extractedText);
+
+        // Extract overall resume score
         const scoreMatch = extractedText.match(/Resume Analysis Score: (\d+)%/);
         const score = scoreMatch ? parseInt(scoreMatch[1]) : null;
+
+        const extractCategoryData = (category) => {
+            const regex = new RegExp(
+                `${category}:\\s*\\n?-?\\s*Issues:(.*?)\\n?-?\\s*Suggested Fixes:(.*?)\\n?-?\\s*Score:\\s*(\\d+)/20`,
+                "is"
+            );
+            
+            const match = extractedText.match(regex);
+            return match
+                ? {
+                    score: parseInt(match[3], 10),
+                    issues: match[1].trim().replace(/\n/g, " "),
+                    suggestions: match[2].trim().replace(/\n/g, " ")
+                }
+                : { score: 0, issues: "No data found", suggestions: "No data found" };
+        };
+        
+
+        const content = extractCategoryData("Content");
+        const format = extractCategoryData("Format");
+        const sections = extractCategoryData("Sections");
+        const skills = extractCategoryData("Skills");
+        const style = extractCategoryData("Style");
+        console.log("san",content)
         fs.unlinkSync(filePath);
 
         // Push new resume analysis data
         user.resumeAnalysis.push({ score, feedback: extractedText });
         await user.save();
 
-        res.json({ success: true, data: { suggestions: extractedText, score } });
+        res.json({
+            success: true,
+            data: {
+                overallScore: score,
+                content,
+                format,
+                sections,
+                skills,
+                style
+            }
+        });
+
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
-
 export const jobSuggestions = async (req, res) => {
     try {
         const { resumeText } = req.body;
@@ -407,7 +460,6 @@ export const getDashboardData = async (req, res) => {
                 dashboardData[jobRole] = {
                     jobRole,
                     correctAnswers: 0,
-                    resumeAnalysisScore: 0
                 };
             }
 
@@ -418,7 +470,7 @@ export const getDashboardData = async (req, res) => {
        // Process resume analysis data
 user.resumeAnalysis.forEach(analysis => {
     const { score, jobRole } = analysis;
-
+    console.log(score)
     // Find the latest mock interview data for the corresponding job role
     const latestMockInterview = user.mockInterviewData
         .filter(interview => interview.jobRole === jobRole)
@@ -437,6 +489,7 @@ user.resumeAnalysis.forEach(analysis => {
 
         // Assign the resume analysis score to the corresponding job role
         dashboardData[jobRole].resumeAnalysisScore = score || 0;
+
     }
 });
 
