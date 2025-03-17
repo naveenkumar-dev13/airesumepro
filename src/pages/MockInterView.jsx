@@ -48,18 +48,18 @@ const MockInterview = () => {
     };
 
     // Handle browser back button
-    const handlePopState = (e) => {
-      e.preventDefault();
-      setShowExitPopup(true);
-    };
+    //   const handlePopState = (e) => {
+    //     e.preventDefault();
+    //     setShowExitPopup(true);
+    //   };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('popstate', handlePopState);
+    //   window.addEventListener('beforeunload', handleBeforeUnload);
+    //   window.addEventListener('popstate', handlePopState);
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
-    };
+    //   return () => {
+    //     window.removeEventListener('beforeunload', handleBeforeUnload);
+    //     window.removeEventListener("popstate", handlePopState);
+    //   };
   }, []);
 
   const handleAnswerChange = (e) => {
@@ -162,7 +162,7 @@ const MockInterview = () => {
                 onChange={handleAnswerChange}
               />
               <div className="flex justify-between">
-                <button
+                <Button
                   className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50  max-md:text-sm"
                   onClick={previousQuestion}
                   disabled={
@@ -171,8 +171,8 @@ const MockInterview = () => {
                   }
                 >
                   Previous
-                </button>
-                <button
+                </Button>
+                <Button
                   className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50  max-md:text-sm"
                   onClick={nextQuestion}
                   disabled={
@@ -181,7 +181,7 @@ const MockInterview = () => {
                   }
                 >
                   Next
-                </button>
+                </Button>
               </div>
             </div>
           </div>

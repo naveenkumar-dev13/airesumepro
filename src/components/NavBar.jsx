@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/M logo .png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Account, dashboard } from "../data";
+import { Account, dashboard, Analyse } from "../data";
 import Button from "./Button";
 
 const NavBar = ({ onExit }) => {
@@ -22,9 +22,12 @@ const NavBar = ({ onExit }) => {
 
   return (
     <>
-      {/* Blur overlay */}
+      {/* Blur overlay with animation */}
       {isopen && (
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={() => setIsopen(false)}
         />
@@ -68,54 +71,52 @@ const NavBar = ({ onExit }) => {
               {!isopen ? (
                 <ion-icon
                   name="menu-outline"
-                  className="w-10 h-10 block max-sm:w-8 max-sm:h-8"
+                  className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
                   onClick={() => setIsopen(true)}
                 ></ion-icon>
               ) : (
                 <ion-icon
-                  className="w-10 h-10 block max-sm:w-8 max-sm:h-8"
+                  name="close-outline"
+                  className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
                   onClick={() => setIsopen(false)}
                 ></ion-icon>
               )}
             </li>
-            {onExit && (
-              <button
-                onClick={onExit}
-                className="text-[#1170CD] hover:text-blue-700 px-4 py-2 rounded-lg flex items-center gap-2"
-              >
-                <span className="material-icons-outlined">exit_to_app</span>
-                Exit Interview
-              </button>
-            )}
           </ul>
 
           {/* MOBILE MENU */}
           {isopen && (
-            <div className="fixed top-0 right-0 w-full    bg-white shadow-2xl z-50  rounded-br-3xl rounded-bl-3xl ">
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className="py-6 "
-              >
-                <div className="flex items-center justify-between px-4 border-b border-gray-400 pb-4">
-                  <Link to="/">
-                    <img src={logo} alt="logo" className="w-10" />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 20 }}
+              className="fixed top-0 right-0 w-[85%] max-w-[350px] h-full bg-white shadow-2xl z-50"
+            >
+              <div className="p-6 h-full flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <Link to="/" onClick={() => setIsopen(false)}>
+                    <img src={logo} alt="logo" className="w-12" />
                   </Link>
                   <button
                     onClick={() => setIsopen(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
                     <ion-icon
                       name="close-outline"
-                      style={{ fontSize: "24px" }}
+                      className="w-8 h-8 text-gray-600"
                     ></ion-icon>
                   </button>
                 </div>
-                <motion.ul className="flex  flex-col gap-4 max-sm:gap-2 max-sm:p-4">
+
+                {/* Menu Items */}
+                <motion.ul className="flex flex-col gap-2 flex-1">
                   <Link to="/create-resume">
                     <motion.button
-                      className={`w-full text-left text-[#1170CD] text-xl transition-all duration-300 hover:bg-[#D7E8FF] hover:text-[#2563EB] p-3 rounded-md ${
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`w-full text-left text-[#1170CD] text-lg transition-all duration-300 hover:bg-[#D7E8FF] hover:text-[#2563EB] p-4 rounded-xl ${
                         activeButton === "/create-resume"
                           ? "bg-[#1170CD] text-white"
                           : ""
@@ -125,13 +126,20 @@ const NavBar = ({ onExit }) => {
                         setIsopen(false);
                       }}
                     >
-                      Resume Analyse
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 bg-[#D7E8FF] rounded-lg">
+                          <img src={Analyse} alt="" className="w-6 h-6" />
+                        </span>
+                        Resume Analyse
+                      </div>
                     </motion.button>
                   </Link>
 
                   <Link to="/dashboard">
                     <motion.button
-                      className={`w-full text-left text-[#1170CD] text-xl hover:bg-[#D7E8FF] hover:text-[#2563EB] p-3 transition-all duration-300 rounded-md ${
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`w-full text-left text-[#1170CD] text-lg hover:bg-[#D7E8FF] hover:text-[#2563EB] p-4 transition-all duration-300 rounded-xl ${
                         activeButton === "/dashboard"
                           ? "bg-[#1170CD] text-white"
                           : ""
@@ -141,8 +149,10 @@ const NavBar = ({ onExit }) => {
                         setIsopen(false);
                       }}
                     >
-                      <div className="flex items-center gap-2">
-                        <img src={dashboard} alt="" />
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 bg-[#D7E8FF] rounded-lg">
+                          <img src={dashboard} alt="" className="w-6 h-6" />
+                        </span>
                         Dashboard
                       </div>
                     </motion.button>
@@ -150,7 +160,9 @@ const NavBar = ({ onExit }) => {
 
                   <Link to="/login">
                     <motion.button
-                      className={`w-full text-left text-[#1170CD] text-xl hover:bg-[#D7E8FF] hover:text-[#2563EB] p-3 transition-all duration-300 rounded-md ${
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`w-full text-left text-[#1170CD] text-lg hover:bg-[#D7E8FF] hover:text-[#2563EB] p-4 transition-all duration-300 rounded-xl ${
                         activeButton === "/login"
                           ? "bg-[#1170CD] text-white"
                           : ""
@@ -160,19 +172,20 @@ const NavBar = ({ onExit }) => {
                         setIsopen(false);
                       }}
                     >
-                      {" "}
-                      <div className="flex items-center gap-2">
-                        <span>
-                          <img src={Account} alt="" />
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 bg-[#D7E8FF] rounded-lg">
+                          <img src={Account} alt="" className="w-6 h-6" />
                         </span>
                         My Account
                       </div>
                     </motion.button>
                   </Link>
                 </motion.ul>
-                <div className="flex justify-center border-t border-gray-200 pt-4">
+
+                {/* Footer */}
+                <div className="mt-auto pt-6 border-t border-gray-100">
                   <Button
-                    className="bg-[#1170CD] text-white  rounded-md w-40 text-xl"
+                    className="w-full bg-[#1170CD] text-white rounded-xl !p-4 text-lg font-medium hover:bg-[#0E5BAA] transition-colors"
                     onClick={() => {
                       navigate("/login");
                       setIsopen(false);
@@ -181,8 +194,8 @@ const NavBar = ({ onExit }) => {
                     Sign In
                   </Button>
                 </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
           )}
         </nav>
       </div>
