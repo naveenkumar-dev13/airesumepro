@@ -73,7 +73,7 @@ const BasicInfo = () => {
                     <textarea name="summary" value={user.summary} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>GitHub Link:</label>
+                    <label>GitHub link:</label>
                     <input type="url" name="githubLink" value={user.githubLink} onChange={handleChange} />
                 </div>
                 <div>
