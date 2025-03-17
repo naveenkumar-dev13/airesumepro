@@ -13,6 +13,7 @@ import MockInterview from "./pages/MockInterView";
 import InterviewResult from "./pages/InterViewResult";
 import UserInfo from "./pages/UserInfo";
 import AccountInfo from "./pages/AccountInfo";
+import NotFound from "./components/NotFound";
 function App() {
   useEffect(() => {
     AOS.init({ duration: 1000, once: false, mirror: true });
@@ -31,6 +32,7 @@ function App() {
         <Route path="/analysisReport" element={<AnalysisReport />} />
         <Route path="/mockinterview" element={<MockInterview />} />
         <Route path="/interviewresult" element={<InterviewResult />} />
+        <Route path="*" element={<NotFound/>} />
       </Routes>
     </BrowserRouter>
   );

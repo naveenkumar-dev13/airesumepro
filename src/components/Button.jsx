@@ -5,7 +5,7 @@ function Button({ children, className, onClick }) {
     <div>
       <button
         onClick={onClick}
-        className={`${className}  bg-[#1170CD] text-white p-4  rounded-md cursor-pointer hover:!bg-[#0E5BAA] transition-all duration-300 outline-none  `}
+          className={`${className}  bg-[#1170CD] text-white p-4  rounded-md cursor-pointer hover:!bg-[#0E5BAA] transition-all duration-300 outline-none  `}
       >
         {children}
       </button>

@@ -14,7 +14,7 @@ function CopyRigth() {
         </motion.p>
       </div>
       <div className="flex flex-col gap-2 items-start justify-start max-sm:gap-2 P-8 max-sm:p-4">
-        <p className="text-2xl hidden max-sm:block">Follow us</p>
+        <p className="text-2xl hidden max-sm:block max-sm:pl-5">Follow us</p>
         <motion.ul
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}

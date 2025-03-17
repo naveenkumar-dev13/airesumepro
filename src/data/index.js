@@ -4,12 +4,20 @@ import resumeImage from "../assets/resumeAnalyzer.png";
 import avatarImage from "../assets/Ellipse 14.png";
 import homeImage from "../assets/resume 1.png";
 import nonProfileImage from "../assets/nonProfile.jpg";
+import homeIconImage from "../assets/icons/homeIcon.png";
+import resumeIconImage from "../assets/icons/resumeIcon.png";
+import AccountImage from "../assets/icons/Group.png";
+import dashboardImage from "../assets/icons/dashboard v2.0 1.png";
 export const login = loginImage;
 export const signup = signupImage;
 export const ResumeAnalyzer = resumeImage;
 export const avatar = avatarImage;
 export const home = homeImage;
 export const nonProfile = nonProfileImage;
+export const homeIcon = homeIconImage;
+export const resumeIcon = resumeIconImage;
+export const Account = AccountImage;
+export const dashboard = dashboardImage;
 
 export const LINKS = [
   { href: "#work", label: "Work" },

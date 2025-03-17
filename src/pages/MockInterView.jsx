@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 const MockInterview = () => {
+  const navigate = useNavigate();
+  const [showExitPopup, setShowExitPopup] = useState(false);
   const [questions, setQuestions] = useState([
     { text: "What is React, and how does it work?" },
     { text: "Explain the difference between state and props in React." },
@@ -21,12 +24,12 @@ const MockInterview = () => {
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(900);
 
-  useEffect(() => {
-    fetch("mock-interview-questions")
-      .then((response) => response.json())
-      .then((data) => setQuestions(data))
-      .catch((error) => console.error("Error fetching questions:", error));
-  }, []);
+  // useEffect(() => {
+  //   fetch("mock-interview-questions")
+  //     .then((response) => response.json())
+  //     .then((data) => setQuestions(data))
+  //     .catch((error) => console.error("Error fetching questions:", error));
+  // }, []);
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -34,6 +37,30 @@ const MockInterview = () => {
       return () => clearTimeout(timer);
     }
   }, [timeLeft]);
+
+  // Add protection against browser navigation/refresh
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+      setShowExitPopup(true);
+      return "";
+    };
+
+    // Handle browser back button
+    const handlePopState = (e) => {
+      e.preventDefault();
+      setShowExitPopup(true);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
@@ -53,9 +80,21 @@ const MockInterview = () => {
 
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
+  const handleExit = () => {
+    setShowExitPopup(true);
+  };
+
+  const handleConfirmExit = () => {
+    navigate("/dashboard");
+  };
+
+  const handleCancelExit = () => {
+    setShowExitPopup(false);
+  };
+
   return (
     <>
-      <NavBar />
+      <NavBar onExit={handleExit} />
       <div className="p-6 max-w-6xl m-auto h-[90vh] flex  flex-col justify-center my-auto">
         <div className="flex  items-center justify-between">
           <h2 className="text-lg font-semibold mb-4">
@@ -149,35 +188,43 @@ const MockInterview = () => {
         )}
       </div>
 
-      {/* {showExitPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-96 relative mx-2">
-            <h2 className="text-2xl font-bold text-[#1170CD] mb-4">
-              Exit Interview?
-            </h2>
+      {/* Exit Confirmation Popup */}
+      {showExitPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-[400px] mx-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-icons-outlined text-red-500 text-2xl">
+                warning
+              </span>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Exit Interview?
+              </h2>
+            </div>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to exit? Your progress will be lost.
+              Are you sure you want to exit? All your progress will be lost and
+              cannot be recovered.
             </p>
             <div className="flex justify-end gap-4">
-              <Button
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                onClick={cancelExit}
+              <button
+                onClick={handleCancelExit}
+                className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 Cancel
-              </Button>
-              <Button
-                className="px-6 py-2 bg-[#1170CD] text-white rounded-lg hover:bg-blue-700"
-                onClick={confirmExit}
+              </button>
+              <button
+                onClick={handleConfirmExit}
+                className="px-6 py-2 text-white bg-[#1170CD] rounded-lg hover:bg-[#0E5BAA] transition-colors"
               >
-                Exit
-              </Button>
+                Exit Interview
+              </button>
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
+      {/* Existing Time's Up Popup */}
       {timeLeft === 0 && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50 ">
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-[#1170CD] p-6 rounded-2xl shadow-lg w-96 relative mx-2">
             <p className="text-3xl font-bold text-white">Time is up!</p>
             <p className="text-xl text-white">
