@@ -437,6 +437,8 @@ export const evaluateAnswers = async (req, res) => {
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
+
+
 export const getDashboardData = async (req, res) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];
@@ -444,69 +446,53 @@ export const getDashboardData = async (req, res) => {
             return res.status(401).json({ error: "Unauthorized: No token provided." });
         }
 
-        // Verify the token
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Find the user by ID and fetch mock interview data and resume analysis data
         const user = await Resume.findById(decoded.id).select("mockInterviewData resumeAnalysis").lean();
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
 
-        // Aggregate data for the dashboard
         const dashboardData = {};
 
         // Process mock interview data
-        user.mockInterviewData.forEach(interview => {
-            const { jobRole, correctCount } = interview;
+        user.mockInterviewData.forEach(({ jobRole, correctCount }) => {
+            if (!dashboardData[jobRole]) {
+                dashboardData[jobRole] = {
+                    jobRole,
+                    correctAnswers: 0,
+                    resumeAnalysisScore: null // Default null to indicate missing data
+                };
+            }
+            dashboardData[jobRole].correctAnswers += correctCount;
+        });
+
+        // Process resume analysis data
+        user.resumeAnalysis.forEach(({ score }) => {
+            // Find the first available job role
+            const jobRole = user.mockInterviewData.length > 0 ? user.mockInterviewData[0].jobRole : "Unknown";
 
             if (!dashboardData[jobRole]) {
                 dashboardData[jobRole] = {
                     jobRole,
                     correctAnswers: 0,
+                    resumeAnalysisScore: score || 0
                 };
+            } else {
+                dashboardData[jobRole].resumeAnalysisScore = score || 0;
             }
-
-            // Sum up correct answers for the same job role
-            dashboardData[jobRole].correctAnswers += correctCount;
         });
 
-        // Process resume analysis data
-        user.resumeAnalysis.forEach(analysis => {
-            const { score, jobRole } = analysis;
-
-            if (!dashboardData[jobRole]) {
-                dashboardData[jobRole] = {
-                    jobRole,
-                    resumeAnalysisScore: 0,
-                };
-            }
-
-            // Assign the resume analysis score to the corresponding job role
-            dashboardData[jobRole].resumeAnalysisScore = score || 0;
-        });
-
-        // Convert the dashboardData object to an array
+        // Convert object to array format
         const result = Object.values(dashboardData);
 
-        // Ensure that each job role is represented only once
-        const uniqueResult = result.reduce((acc, curr) => {
-            const existing = acc.find(item => item.jobRole === curr.jobRole);
-            if (!existing) {
-                acc.push(curr);
-            } else {
-                existing.correctAnswers += curr.correctAnswers;
-                existing.resumeAnalysisScore = curr.resumeAnalysisScore;
-            }
-            return acc;
-        }, []);
-
-        res.json({ data: uniqueResult });
+        res.json({ data: result });
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         res.status(500).json({ error: "Internal server error", details: error.message });
     }
 };
+
 // Fetch user account information
 export const getAccountInfo = async (req, res) => {
     try {
