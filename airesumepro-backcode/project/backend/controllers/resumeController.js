@@ -274,16 +274,8 @@ export const mockInterview = async (req, res) => {
             body: JSON.stringify({
                 model: "mixtral-8x7b-32768",
                 messages: [
-                    { role: "system", content: "You generate mock interview questions and their correct answers based on job role and difficulty level." },
-                    { role: "user", content: `Generate 15 interview questions for a ${jobRole} based on this resume. For each question, provide the correct answer. Format the response as:
-                        Q1: [Question 1]
-                        A1: [Correct Answer 1]
-                        Q2: [Question 2]
-                        A2: [Correct Answer 2]
-                        ...
-                        Q15: [Question 15]
-                        A15: [Correct Answer 15]
-                        Resume Text: ${resumeText}` }
+                    { role: "system", content: "You generate mock interview questions and their correct answers based on job role and difficulty level. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]" },
+                    { role: "user", content: `Generate 15 interview questions for a ${jobRole} based on this resume. For each question, provide the correct answer. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]\n\nResume Text: ${resumeText}` }
                 ]
             })
         });
@@ -299,20 +291,31 @@ export const mockInterview = async (req, res) => {
         const data = JSON.parse(responseBody);
         const content = data.choices?.[0]?.message?.content;
 
+        if (!content) {
+            console.error("Invalid Groq API response format:", data);
+            return res.status(500).json({ error: "Invalid response format", details: data });
+        }
+
+        // Parse QA pairs more robustly
         const qaPairs = content.split("\n").filter(line => line.trim() !== "");
         const questions = [];
         const expectedAnswers = [];
 
-        for (let i = 0; i < qaPairs.length; i += 2) {
-            const question = qaPairs[i].replace(/^Q\d+: /, "").trim();
-            const answer = qaPairs[i + 1].replace(/^A\d+: /, "").trim();
-            questions.push(question);
-            expectedAnswers.push(answer);
+        for (let i = 0; i < qaPairs.length; i++) {
+            const line = qaPairs[i].trim();
+            if (line.startsWith("Q")) {
+                const question = line.replace(/^Q\d+: /, "").trim();
+                questions.push(question);
+            } else if (line.startsWith("A")) {
+                const answer = line.replace(/^A\d+: /, "").trim();
+                expectedAnswers.push(answer);
+            }
         }
 
-        if (!questions.length || !expectedAnswers.length) {
-            console.error("Invalid Groq API response format:", data);
-            return res.status(500).json({ error: "Invalid response format", details: data });
+        // Validate that we have 15 questions and answers
+        if (questions.length !== 15 || expectedAnswers.length !== 15) {
+            console.error("Unexpected number of QA pairs:", { questions, expectedAnswers });
+            return res.status(500).json({ error: "Malformed response format", details: { questions, expectedAnswers } });
         }
 
         res.json({ success: true, questions, expectedAnswers });
@@ -322,6 +325,7 @@ export const mockInterview = async (req, res) => {
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
+
 
 export const evaluateAnswers = async (req, res) => {
     try {
@@ -467,36 +471,37 @@ export const getDashboardData = async (req, res) => {
             dashboardData[jobRole].correctAnswers += correctCount;
         });
 
-       // Process resume analysis data
-user.resumeAnalysis.forEach(analysis => {
-    const { score, jobRole } = analysis;
-    console.log(score)
-    // Find the latest mock interview data for the corresponding job role
-    const latestMockInterview = user.mockInterviewData
-        .filter(interview => interview.jobRole === jobRole)
-        .sort((a, b) => b.date - a.date)[0]; // Get the latest interview
+        // Process resume analysis data
+        user.resumeAnalysis.forEach(analysis => {
+            const { score, jobRole } = analysis;
 
-    if (latestMockInterview) {
-        const jobRole = latestMockInterview.jobRole;
+            if (!dashboardData[jobRole]) {
+                dashboardData[jobRole] = {
+                    jobRole,
+                    resumeAnalysisScore: 0,
+                };
+            }
 
-        if (!dashboardData[jobRole]) {
-            dashboardData[jobRole] = {
-                jobRole,
-                correctAnswers: 0,
-                resumeAnalysisScore: 0
-            };
-        }
-
-        // Assign the resume analysis score to the corresponding job role
-        dashboardData[jobRole].resumeAnalysisScore = score || 0;
-
-    }
-});
+            // Assign the resume analysis score to the corresponding job role
+            dashboardData[jobRole].resumeAnalysisScore = score || 0;
+        });
 
         // Convert the dashboardData object to an array
         const result = Object.values(dashboardData);
 
-        res.json({ data: result });
+        // Ensure that each job role is represented only once
+        const uniqueResult = result.reduce((acc, curr) => {
+            const existing = acc.find(item => item.jobRole === curr.jobRole);
+            if (!existing) {
+                acc.push(curr);
+            } else {
+                existing.correctAnswers += curr.correctAnswers;
+                existing.resumeAnalysisScore = curr.resumeAnalysisScore;
+            }
+            return acc;
+        }, []);
+
+        res.json({ data: uniqueResult });
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         res.status(500).json({ error: "Internal server error", details: error.message });

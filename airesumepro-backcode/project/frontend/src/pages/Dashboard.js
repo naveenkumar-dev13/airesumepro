@@ -6,7 +6,6 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
@@ -15,14 +14,14 @@ const Dashboard = () => {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
+                        "Authorization": `Bearer ${token}`, // Fix: Use backticks for template literals
                     },
                 });
-
+    
                 if (!response.ok) {
                     throw new Error("Failed to fetch dashboard data.");
                 }
-
+    
                 const data = await response.json();
                 setDashboardData(data.data);
             } catch (err) {
@@ -31,10 +30,9 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
-
+    
         fetchDashboardData();
     }, []);
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
@@ -45,8 +43,8 @@ const Dashboard = () => {
                 dashboardData.map((item, index) => (
                     <div key={index}>
                         <h3>{item.jobRole}</h3>
-                        <p>Resume Analysis Score: {item.resumeAnalysisScore}%</p>
                         <p>Correct Answers: {item.correctAnswers}</p>
+                        <p>Resume Analysis Score: {item.resumeAnalysisScore}%</p>
                     </div>
                 ))
             ) : (
