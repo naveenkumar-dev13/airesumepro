@@ -9,7 +9,7 @@ import resumeIconImage from "../assets/icons/resumeIcon.png";
 import AccountImage from "../assets/icons/Group.png";
 import dashboardImage from "../assets/icons/dashboard v2.0 1.png";
 import AnalyseIconImage from "../assets/icons/Analyse.png";
-
+import FixAllIconImage from "../assets/icons/fix 1.png";
 export const login = loginImage;
 export const signup = signupImage;
 export const ResumeAnalyzer = resumeImage;
@@ -21,6 +21,7 @@ export const resumeIcon = resumeIconImage;
 export const Account = AccountImage;
 export const dashboard = dashboardImage;
 export const Analyse = AnalyseIconImage;
+export const Fix = FixAllIconImage;
 
 export const LINKS = [
   { href: "#work", label: "Work" },

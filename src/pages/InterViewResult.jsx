@@ -132,7 +132,7 @@ const InterviewResult = () => {
       <div className="max-w-7xl mx-auto  shadow-[-1px_-1px_23px_7px_rgba(0,0,0,0.32)] p-4 rounded-lg ">
         <h2 className="text-2xl font-bold">Interview Result</h2>
 
-        <div className="grid grid-cols-4 gap-4  p-4 rounded-lg mb-6 text-center max-md:grid-cols-2">
+        <div className="grid grid-cols-4 gap-4  p-4 rounded-lg mb-6 text-center max-md:grid-cols-2 shadow-md ">
           <div className="bg-gray-300 p-3 rounded   max-sm:text-sm">
             Skipped
             <br />

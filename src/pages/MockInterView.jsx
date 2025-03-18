@@ -22,7 +22,7 @@ const MockInterview = () => {
   ]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(900);
+  const [timeLeft, setTimeLeft] = useState(10);
 
   // useEffect(() => {
   //   fetch("mock-interview-questions")
