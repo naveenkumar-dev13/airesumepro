@@ -109,7 +109,7 @@ function DashBoard() {
         </div>
         <div className=" max-sm:mx-2">
           <h1 className="text-4xl  my-10">My Reumes</h1>
-          <div className=" grid grid-cols-3 gap-4 max-sm:grid-cols-1">
+          <div className=" grid grid-cols-3 gap-14 max-sm:grid-cols-1">
             {resumes.map((resume, index) => (
               <div
                 key={index}

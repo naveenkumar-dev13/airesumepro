@@ -13,6 +13,7 @@ const BasicInfo = () => {
   const [userAvatar, setUserAvatar] = useState(avatar);
   const location = useLocation();
   const [activeButton, setActiveButton] = useState(location.pathname);
+  const [isopen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -74,9 +75,9 @@ const BasicInfo = () => {
                 </div>
               </label>
             </div>
-            <div className="mt-20  max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex">
+            <div className="mt-20  max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex max-sm:hidden">
               <Button
-                className={`px-6 py-2 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                   activeButton === "basicinfo"
                     ? "!bg-[#1170CD] !text-white"
                     : ""
@@ -95,7 +96,7 @@ const BasicInfo = () => {
                 Basic Info
               </Button>
               <Button
-                className={`px-6 py-2  font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                className={`w-40 py-2  font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                   activeButton === "account" ? "!bg-[#1170CD] !text-white" : ""
                 }`}
                 onClick={() => {
@@ -149,7 +150,27 @@ const BasicInfo = () => {
             ))}
           </div> */}
           <div className="p-4  mx-auto" onSubmit={handleSave}>
-            <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
+            <div
+              className="max-sm:flex gap-4"
+              onClick={() => setIsOpen(!isopen)}
+            >
+              <span>
+                {!isopen ? (
+                  <ion-icon
+                    name="menu-outline"
+                    className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
+                    onClick={() => setIsOpen(true)}
+                  ></ion-icon>
+                ) : (
+                  <ion-icon
+                    name="close-outline"
+                    className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
+                    onClick={() => setIsOpen(false)}
+                  ></ion-icon>
+                )}
+              </span>
+              <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
+            </div>
             {Object.keys(info).map((key) => (
               <div
                 key={key}

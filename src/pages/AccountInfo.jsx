@@ -87,7 +87,7 @@ function AccountInfoPage() {
 
               <Button
                 to="/accountinfo"
-                className={`px-6 py-2  font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                className={`w-40 py-2  font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                   activeButton === "account" ? "" : ""
                 }`}
                 onClick={() => {

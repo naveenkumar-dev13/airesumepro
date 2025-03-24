@@ -11,7 +11,7 @@ function ResumeAnalyzer() {
           className="flex items-center justify-between gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 max-md:py-10 "
           style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
         >
-          <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-8 max">
+          <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6 m   ">
             <h2 className="text-[#1170CD] text-4xl font-semibold max-md:text-2xl  max-md:text-center ">
               Is Your Resume Good Enough
             </h2>
