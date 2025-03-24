@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
-import { Fix } from "../data";
+import { Fix, Issues } from "../data";
+import AnalyseReportPopup from "../components/AnalysisReportPop";
+import { motion } from "framer-motion";
 const ReportAnalysis = () => {
   const [data, setData] = useState({
     overallScore: 90,
@@ -14,54 +16,12 @@ const ReportAnalysis = () => {
     ],
   });
 
-  const [issues, setIssue] = useState({
-    contentDetails: {
-      needsImprovement: [
-        "Lacks quantifiable metrics (e.g., 'Reduced costs by 15%').",
-        "Some bullet points are too vague.",
-      ],
-      recommendations: [
-        "Add data-driven results.",
-        "Use strong action verbs to showcase impact.",
-      ],
-    },
-    formatDetails: {
-      needsImprovement: ["Inconsistent font sizes.", "Poor alignment of text."],
-      recommendations: [
-        "Use consistent formatting.",
-        "Ensure proper alignment.",
-      ],
-    },
-    styleDetails: {
-      needsImprovement: ["Overuse of jargon.", "Sentences are too long."],
-      recommendations: ["Use simpler language.", "Break down long sentences."],
-    },
-    sectionDetails: {
-      needsImprovement: [
-        "Missing key points.",
-        "Sections are not clearly defined.",
-      ],
-      recommendations: [
-        "Add missing information.",
-        "Use headings for clarity.",
-      ],
-    },
-    skillsDetails: {
-      needsImprovement: [
-        "Lack of technical terms.",
-        "Poor explanation of skills.",
-      ],
-      recommendations: [
-        "Include more technical language.",
-        "Provide detailed examples.",
-      ],
-    },
-  });
+  const [issues, setIssue] = useState(Issues);
 
   const [error, setError] = useState(null);
-
-  const [openSection, setOpenSection] = useState("content");
-
+  const [openSection, setOpenSection] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [popUp, setPopUp] = useState(false);
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? "" : section);
   };
@@ -111,8 +71,12 @@ const ReportAnalysis = () => {
   return (
     <>
       <NavBar />
-      <div className="p-6 max-w-6xl m-auto max-sm:p-4  ">
-        <div className="bg-white shadow-[0px_14px_50px_-3px_rgba(0,0,0,0.2)] rounded-xl p-6 max-sm:shadow-none max-sm:p-4 ">
+      <div
+        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0  ${
+          openSection ? "mt-20" : ""
+        }`}
+      >
+        <div className="bg-white shadow-[0px_5px_20px_-3px_rgba(0,0,0,0.2)] rounded-xl p-6 max-sm:shadow-none max-sm:p-4  mb-8">
           <div className="flex  gap-16  items-center  max-sm:flex-col ">
             <div className="">
               <div
@@ -138,9 +102,13 @@ const ReportAnalysis = () => {
                   Score BrerakDown
                 </p>
                 <div className=" max-sm:flex max-sm:justify-center  ">
-                  <Button className="  bg-[#1170CD] text-white rounded-xl !p-3 text-lg font-medium hover:bg-[#0E5BAA] transition-colors max-sm:w-80">
+                  <Button
+                    className="bg-[#1170CD] text-white rounded-xl !p-3 text-lg font-medium hover:bg-[#0E5BAA] transition-colors max-sm:w-80"
+                    onClick={() => setPopUp(true)}
+                  >
                     want to Mock
                   </Button>
+                  {popUp && <AnalyseReportPopup setPopUp={setPopUp} />}
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-8 w-full max-sm:justify-between max-sm:grid-cols-2">
@@ -179,7 +147,10 @@ const ReportAnalysis = () => {
                     </p>
                   </div>
                 ))}
-                <Button className="  flex items-center gap-2 justify-center  ">
+                <Button
+                  className="  flex items-center gap-2 justify-center  "
+                  onClick={() => setIsOpen(!isOpen)}
+                >
                   <span>
                     <img src={Fix} alt="Fix" />
                   </span>
@@ -191,62 +162,68 @@ const ReportAnalysis = () => {
         </div>
         <div className="mt-4">
           <div className=" ">
-            {Object.keys(issues).map((issueKey) => (
-              <div
-                key={issueKey}
-                className={`mb-4 bg-white rounded-xl shadow-md border border-gray-200 p-6   ${
-                  openSection === issueKey ? "block" : ""
-                }`}
-                onClick={() => toggleSection(issueKey)}
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold mb-2 capitalize cursor-pointer">
-                    {issueKey.replace("Details", "")}
-                  </h3>
-                  <div>
-                    <span>
-                      <ion-icon
-                        name={
-                          openSection === issueKey
-                            ? "chevron-up-outline"
-                            : "chevron-down-outline"
-                        }
-                        className="text-2xl"
-                      ></ion-icon>
-                    </span>
-                  </div>
-                </div>
-                <div className="">
-                  {openSection === issueKey && (
-                    <>
-                      <div className="mb-2 ">
-                        <h4 className="font-medium">Needs Improvement:</h4>
-                        <ul className="list-disc list-inside">
-                          {issues[issueKey].needsImprovement.map(
-                            (item, index) => (
-                              <li key={index} className="text-gray-700">
-                                {item}
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </div>
+            {Object.keys(issues).map((issueKey, index) => (
+              <>
+                {isOpen && (
+                  <motion.div
+                    data-aos="fade-up"
+                    data-aos-delay={index * 100}
+                    key={issueKey}
+                    className={`mb-4 rounded-xl shadow-md border border-gray-200 p-6 ${
+                      openSection === issueKey ? "" : ""
+                    }`}
+                    onClick={() => toggleSection(issueKey)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold mb-2 capitalize cursor-pointer">
+                        {issueKey.replace("Details", "")}
+                      </h3>
                       <div>
-                        <h4 className="font-medium">Recommendations:</h4>
-                        <ul className="list-disc list-inside">
-                          {issues[issueKey].recommendations.map(
-                            (item, index) => (
-                              <li key={index} className="text-gray-700">
-                                {item}
-                              </li>
-                            )
-                          )}
-                        </ul>
+                        <span>
+                          <ion-icon
+                            name={
+                              openSection === issueKey
+                                ? "chevron-up-outline"
+                                : "chevron-down-outline"
+                            }
+                            className="text-2xl"
+                          ></ion-icon>
+                        </span>
                       </div>
-                    </>
-                  )}
-                </div>
-              </div>
+                    </div>
+                    <div className="">
+                      {openSection === issueKey && (
+                        <>
+                          <div className="mb-2 ">
+                            <h4 className="font-bold">Needs Improvement:</h4>
+                            <ul className="list-disc list-inside">
+                              {issues[issueKey].needsImprovement.map(
+                                (item, index) => (
+                                  <li key={index} className="text-gray-700">
+                                    {item}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-bold">Recommendations:</h4>
+                            <ul className="list-disc list-inside">
+                              {issues[issueKey].recommendations.map(
+                                (item, index) => (
+                                  <li key={index} className="text-gray-700">
+                                    {item}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </>
             ))}
           </div>
         </div>

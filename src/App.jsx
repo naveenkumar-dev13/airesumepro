@@ -32,7 +32,7 @@ function App() {
         <Route path="/analysisReport" element={<AnalysisReport />} />
         <Route path="/mockinterview" element={<MockInterview />} />
         <Route path="/interviewresult" element={<InterviewResult />} />
-        <Route path="*" element={<NotFound/>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

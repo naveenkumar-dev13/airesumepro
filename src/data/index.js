@@ -231,3 +231,41 @@ export const AccountInfo = {
   password: "nithin123",
   Password: "nithin123",
 };
+
+export const Issues = {
+  contentDetails: {
+    needsImprovement: [
+      "Lacks quantifiable metrics (e.g., 'Reduced costs by 15%').",
+      "Some bullet points are too vague.",
+    ],
+    recommendations: [
+      "Add data-driven results.",
+      "Use strong action verbs to showcase impact.",
+    ],
+  },
+  formatDetails: {
+    needsImprovement: ["Inconsistent font sizes.", "Poor alignment of text."],
+    recommendations: ["Use consistent formatting.", "Ensure proper alignment."],
+  },
+  styleDetails: {
+    needsImprovement: ["Overuse of jargon.", "Sentences are too long."],
+    recommendations: ["Use simpler language.", "Break down long sentences."],
+  },
+  sectionDetails: {
+    needsImprovement: [
+      "Missing key points.",
+      "Sections are not clearly defined.",
+    ],
+    recommendations: ["Add missing information.", "Use headings for clarity."],
+  },
+  skillsDetails: {
+    needsImprovement: [
+      "Lack of technical terms.",
+      "Poor explanation of skills.",
+    ],
+    recommendations: [
+      "Include more technical language.",
+      "Provide detailed examples.",
+    ],
+  },
+};

@@ -1,7 +1,7 @@
 import Button from "./Button";
 import React, { useState } from "react";
 
-const AnalyseReportPopup = ({ setIsopen }) => {
+const AnalyseReportPopup = ({ setPopUp }) => {
   const [roleByResume, setRoleByResume] = useState([]);
   const [preferredRole, setPreferredRole] = useState("");
   const [interviewType, setInterviewType] = useState("General");
@@ -14,7 +14,7 @@ const AnalyseReportPopup = ({ setIsopen }) => {
           <ion-icon
             name="close-outline"
             className="w-8 h-8 block max-sm:w-8 max-sm:h-8 cursor-pointer"
-            onClick={() => setIsopen(false)}
+            onClick={() => setPopUp(false)}
           ></ion-icon>
         </span>
         <h2 className="text-xl font-bold text-center mb-4">

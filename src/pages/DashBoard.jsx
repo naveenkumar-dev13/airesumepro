@@ -116,7 +116,7 @@ function DashBoard() {
                 data-aos="zoom-in"
                 data-aos-delay={index * 100}
                 data-aos-duration="1000"
-                className="p-4 w-auto hover:shadow-[0px_10px_30px_0px_#bad5ee] transition-all duration-300 bg-white rounded-xl shadow-md"
+                className="p-4 w-auto  transition-all duration-300 bg-white rounded-xl shadow-md "
               >
                 <h3 className="text-lg font-semibold">{resume.title}</h3>
                 <p className="text-gray-500 text-sm">
