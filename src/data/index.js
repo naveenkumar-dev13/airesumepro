@@ -229,7 +229,6 @@ export const AccountInfo = {
   email: "nithin@gmail.com",
   phone: "+91 9876543210",
   password: "nithin123",
-  Password: "nithin123",
 };
 
 export const Issues = {
