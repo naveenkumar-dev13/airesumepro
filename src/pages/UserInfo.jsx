@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { div } from "motion/react-client";
 import AccountInputs from "../components/AccountInputs";
+import { motion } from "framer-motion";
 
 const BasicInfo = () => {
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,7 @@ const BasicInfo = () => {
       <div className="p-6 bg-gray-100 min-h-screen max-sm:p-4">
         <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1">
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
-            <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-20">
+            <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-24 ">
               <input
                 type="file"
                 id="avatar-upload"
@@ -71,7 +72,7 @@ const BasicInfo = () => {
                 </div>
               </label>
             </div>
-            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex ">
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex max-sm:hidden ">
               <Link to={"/userinfo"}>
                 <Button
                   className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
@@ -112,9 +113,74 @@ const BasicInfo = () => {
             </div>
           </div>
 
-          <div className="">
+          <div className="  ">
             <div className="max-sm:flex gap-4">
+              <div className="hidden max-sm:block">
+                {!isopen ? (
+                  <ion-icon
+                    name="menu-outline"
+                    className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
+                    onClick={() => setIsOpen(true)}
+                  ></ion-icon>
+                ) : (
+                  <ion-icon
+                    name="close-outline"
+                    className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
+                    onClick={() => setIsOpen(false)}
+                  ></ion-icon>
+                )}
+              </div>
               <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
+              {isopen && (
+                <motion.div
+                  initial={{ x: 0 }}
+                  animate={{ x: 0 }}
+                  transition={{ type: "spring" }}
+                  className=" h-full  z-50"
+                >
+                  <div className=" bg-gray-200 z-10 p-4  w-[350px] h-full -translate-x-40 ">
+                    <Link to={"/userinfo"}>
+                      <Button
+                        className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                          activeButton === "basicinfo"
+                            ? "!bg-[#1170CD] !text-white"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          setActiveButton("basicinfo");
+                        }}
+                      >
+                        <span className="block mt-1">
+                          <ion-icon
+                            name="person-outline"
+                            className="w-5 h-5"
+                          ></ion-icon>
+                        </span>
+                        Basic Info
+                      </Button>
+                    </Link>
+                    <Button
+                      className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                        activeButton === "account"
+                          ? "!bg-[#1170CD] !text-white"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setActiveButton("account");
+                        navigate("/accountinfo");
+                      }}
+                    >
+                      <span className="block mt-1">
+                        <ion-icon
+                          name="settings-outline"
+                          className="w-5 h-5"
+                        ></ion-icon>
+                      </span>
+                      Account
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
             </div>
             <AccountInputs />
           </div>

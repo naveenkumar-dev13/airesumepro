@@ -3,7 +3,6 @@ import NavBar from "../components/NavBar";
 import { AccountInfo, avatar, nonProfile } from "../data";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import PasswordPopUP from "../components/PasswordPopUp";
 
 function AccountInfoPage() {
   const [info, setInfo] = useState(AccountInfo);
@@ -12,7 +11,6 @@ function AccountInfoPage() {
   const [userAvatar, setUserAvatar] = useState(avatar);
   const [activeButton, setActiveButton] = useState("basicinfo");
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -41,6 +39,13 @@ function AccountInfoPage() {
     setTempValue("");
   };
 
+  const confirmPasswordSave = (e) => {
+    e.preventDefault();
+    const updatedInfo = { ...info, password: tempValue };
+    setInfo(updatedInfo);
+    setEditingField(null);
+    setShowPasswordPopup(false);
+  };
   useEffect(() => {
     setActiveButton(location.pathname);
   }, [location.pathname]);
@@ -79,32 +84,34 @@ function AccountInfoPage() {
                 </div>
               </label>
             </div>
-            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex">
-              <Link
-                to="/userinfo"
-                className={`px-6 py-2 font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                  activeButton === "userinfo" ? "" : ""
-                }`}
-                onClick={() => {
-                  setActiveButton("userinfo");
-                }}
-              >
-                <span className="block mt-1">
-                  <ion-icon
-                    name="person-outline"
-                    className="w-5 h-5"
-                  ></ion-icon>
-                </span>
-                Basic Info
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex ">
+              <Link to={"/userinfo"}>
+                <Button
+                  className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                    activeButton === "basicinfo"
+                      ? "!bg-[#1170CD] !text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setActiveButton("basicinfo");
+                  }}
+                >
+                  <span className="block mt-1">
+                    <ion-icon
+                      name="person-outline"
+                      className="w-5 h-5"
+                    ></ion-icon>
+                  </span>
+                  Basic Info
+                </Button>
               </Link>
-
               <Button
-                to="/accountinfo"
-                className={`w-40 py-2 font-medium hover:bg-[#1170CD] hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                  activeButton === "account" ? "" : ""
+                className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                  activeButton === "account" ? "!bg-[#1170CD] !text-white" : ""
                 }`}
                 onClick={() => {
                   setActiveButton("account");
+                  navigate("/accountinfo");
                 }}
               >
                 <span className="block mt-1">
@@ -128,7 +135,9 @@ function AccountInfoPage() {
                   key={key}
                   className="flex items-center py-6 border-b max-sm:flex-col max-sm:gap-4"
                 >
-                  <p className="capitalize font-medium w-52">{key}:</p>
+                  <p className="capitalize font-medium  max-sm:text-xl ">
+                    {key}:
+                  </p>
                   {editingField === key ? (
                     <div>
                       <input
@@ -137,15 +146,9 @@ function AccountInfoPage() {
                         onChange={(e) => setTempValue(e.target.value)}
                         className="px-2 py-1 flex-1 border-b"
                       />
+
                       {editingField === "password" ? (
-                        <div className="flex justify-start mt-4">
-                          <button
-                            type="button"
-                            onClick={() => setShowPasswordPopup(true)}
-                            className="p-2 bg-gray-300 rounded-md mr-2"
-                          >
-                            Save
-                          </button>
+                        <div className="flex justify-start mt-4 gap-2">
                           <button
                             type="button"
                             onClick={handleCancel}
@@ -153,7 +156,13 @@ function AccountInfoPage() {
                           >
                             Cancel
                           </button>
-                          {/* <PasswordPopUP info={info} setInfo={setInfo} /> */}
+                          <Button
+                            type="button"
+                            onClick={() => setShowPasswordPopup(true)}
+                            className="!p-2 "
+                          >
+                            Save
+                          </Button>
                         </div>
                       ) : (
                         <div className="flex justify-start mt-4">
@@ -172,18 +181,29 @@ function AccountInfoPage() {
                     </div>
                   ) : (
                     <p className="text-gray-950 font-semibold flex-1">
-                      {key === "password" ? "••••••••" : info[key]}
+                      {info[key]}
                     </p>
                   )}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      editingField === key ? handleSave() : handleEdit(key)
-                    }
-                    className="text-blue-500 hover:underline"
-                  >
-                    {editingField === key ? "" : "Edit"}
-                  </button>
+                  {key === "password" && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordPopup(true)}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Change Password
+                    </button>
+                  )}
+                  {key !== "password" && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        editingField === key ? handleSave() : handleEdit(key)
+                      }
+                      className="text-blue-500 hover:underline"
+                    >
+                      {editingField === key ? "" : "Edit"}
+                    </button>
+                  )}
                 </div>
               ))}
             </form>
@@ -205,6 +225,64 @@ function AccountInfoPage() {
           </div>
         </div>
       </div>
+      {showPasswordPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Change Password</h2>
+            <form onSubmit={confirmPasswordSave}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                  onChange={(e) => setTempValue(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                  onChange={(e) => setTempValue(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                  onChange={(e) => setTempValue(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-end gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordPopup(false)}
+                  className="p-2 border
+                 rounded-md mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
