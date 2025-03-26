@@ -7,7 +7,7 @@ function ResumeAnalyzer() {
     <>
       <NavBar />
       <div
-        className="flex items-center justify-center  h-[100vh] p-4 "
+        className="flex items-center justify-center my-8 p-4 "
         data-aos="fade-up"
       >
         <div
