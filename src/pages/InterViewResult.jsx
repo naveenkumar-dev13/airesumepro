@@ -61,8 +61,10 @@ const InterviewResult = () => {
           {/*  */}
           <div className=" shadow-[-1px_-1px_13px_7px_rgba(0,0,0,0.1)] p-6 rounded-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Interview Result</h2>
-              <p className="bg-[#1170CD] text-white p-2 rounded-xl">
+              <h2 className="text-2xl font-bold max-sm:text-lg">
+                Interview Result
+              </h2>
+              <p className="bg-[#1170CD] text-white p-2 rounded-xl max-sm:text-center">
                 TotalQuestions <strong>{totalQuestions + 1}</strong>
               </p>
             </div>
@@ -140,7 +142,7 @@ const InterviewResult = () => {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
-               <div className="flex items-center gap-1 justify-center">
+              <div className="flex items-center gap-1 justify-center">
                 <span>
                   <ion-icon name="chevron-back-outline"></ion-icon>
                 </span>
