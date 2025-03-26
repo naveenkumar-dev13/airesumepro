@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import login from "../assets/illustration 2.png";
 import logo from "../assets/Google__G__logo 1.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Inputs from "../components/Inputs";
+import { signup } from "../data";
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -25,10 +25,10 @@ function SignUp() {
 
         ease: "easeInOut",
       }}
-      className="flex items-center justify-between min-h-screen p-4"
+      className="flex items-center justify-between min-h-screen p-4 "
     >
       <div
-        className="flex  items-center justify-evenly gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 "
+        className="flex  items-center justify-evenly gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 py-10 "
         style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
       >
         <form
@@ -73,10 +73,10 @@ function SignUp() {
           </div>
         </form>
 
-        <div className="max-md:hidden overflow-hidden rounded-r-xl ">
+        <div className="max-md:hidden overflow-hidden rounded-r-xl w-1/2 ">
           <motion.img
-            src={login}
-            className="w-full h-auto hover:scale-110 transition-all duration-300 "
+            src={signup}
+            className="w-full h-full  "
             alt="Login Illustration"
           />
         </div>

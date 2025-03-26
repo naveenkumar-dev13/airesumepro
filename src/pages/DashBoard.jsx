@@ -18,7 +18,7 @@ function DashBoard() {
   return (
     <div>
       <NavBar />
-      <div className=" grid grid-cols-[400px_auto] mx-10   max-sm:mx-2 max-sm:grid-cols-1 gap-10">
+      <div className=" grid grid-cols-[400px_auto] mx-10   max-sm:mx-2 max-sm:grid-cols-1 gap-10 ">
         <div
           className=" h-auto w-auto bg-white rounded-xl  mt-10 flex flex-col  shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4"
           data-aos="fade-down"
@@ -109,7 +109,7 @@ function DashBoard() {
         </div>
         <div className=" max-sm:mx-2">
           <h1 className="text-4xl  my-10">My Reumes</h1>
-          <div className=" grid grid-cols-3 gap-14 max-sm:grid-cols-1">
+          <div className=" grid grid-cols-3 gap-6 max-sm:grid-cols-1">
             {resumes.map((resume, index) => (
               <div
                 key={index}

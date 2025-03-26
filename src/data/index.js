@@ -1,5 +1,5 @@
-import loginImage from "../assets/illustration 1.jpg";
-import signupImage from "../assets/illustration 2.png";
+import loginImage from "../assets/login.png";
+import signupImage from "../assets/signUp.png";
 import resumeImage from "../assets/resumeAnalyzer.png";
 import avatarImage from "../assets/Ellipse 14.png";
 import homeImage from "../assets/resume 1.png";

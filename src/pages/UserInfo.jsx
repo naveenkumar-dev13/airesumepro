@@ -131,59 +131,69 @@ const BasicInfo = () => {
                 )}
               </div>
               <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
-              {isopen && (
-                <motion.div
-                  initial={{ x: 0 }}
-                  animate={{ x: 0 }}
-                  transition={{ type: "spring" }}
-                  className=" h-full  z-50"
-                >
-                  <div className=" bg-gray-200 z-10 p-4  w-[350px] h-full -translate-x-40 ">
-                    <Link to={"/userinfo"}>
-                      <Button
-                        className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                          activeButton === "basicinfo"
-                            ? "!bg-[#1170CD] !text-white"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setActiveButton("basicinfo");
-                        }}
-                      >
-                        <span className="block mt-1">
-                          <ion-icon
-                            name="person-outline"
-                            className="w-5 h-5"
-                          ></ion-icon>
-                        </span>
-                        Basic Info
-                      </Button>
-                    </Link>
+            </div>
+            {<AccountInputs isopen={isopen} />}
+          </div>
+          {isopen && (
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              className="absolute top-52 left-5  h-[400px]  bg-white shadow-2xl p-4 w-[350px] rounded-md  "
+            >
+              <div className="flex justify-between ">
+                <div className=" p-2 flex  flex-col gap-6 w-[250px] absolute top-12 left-5 ">
+                  <Link to={"/userinfo"}>
                     <Button
-                      className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                        activeButton === "account"
+                      className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                        activeButton === "basicinfo"
                           ? "!bg-[#1170CD] !text-white"
                           : ""
                       }`}
                       onClick={() => {
-                        setActiveButton("account");
-                        navigate("/accountinfo");
+                        setActiveButton("basicinfo");
                       }}
                     >
                       <span className="block mt-1">
                         <ion-icon
-                          name="settings-outline"
+                          name="person-outline"
                           className="w-5 h-5"
                         ></ion-icon>
                       </span>
-                      Account
+                      Basic Info
                     </Button>
-                  </div>
-                </motion.div>
-              )}
-            </div>
-            <AccountInputs />
-          </div>
+                  </Link>
+                  <Button
+                    className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                      activeButton === "account"
+                        ? "!bg-[#1170CD] !text-white"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setActiveButton("account");
+                      navigate("/accountinfo");
+                    }}
+                  >
+                    <span className="block mt-1">
+                      <ion-icon
+                        name="settings-outline"
+                        className="w-5 h-5"
+                      ></ion-icon>
+                    </span>
+                    Account
+                  </Button>
+                </div>
+                <div>
+                  <span onClick={() => setIsOpen(false)}>
+                    <ion-icon
+                      name="chevron-back-outline"
+                      className="w-5 h-5"
+                    ></ion-icon>
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     </>

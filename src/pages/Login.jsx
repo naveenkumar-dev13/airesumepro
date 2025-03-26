@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import logo from "../assets/Google__G__logo 1.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { login } from "../data";
+
 import Inputs from "../components/Inputs";
+import { login } from "../data";
 
 function Login() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function Login() {
       >
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col items-center justify-center w-1/2 max-md:w-full  max-md:p-8"
+          className="flex flex-col items-center justify-center w-1/2 max-md:w-full  max-md:p-4"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-3">Login </h1>
           <div className="flex flex-col items-center justify-start gap-4 w-full p-4">
@@ -70,10 +71,10 @@ function Login() {
           </div>
         </form>
 
-        <div className="max-md:hidden overflow-hidden rounded-r-xl">
+        <div className="max-md:hidden overflow-hidden rounded-r-xl w-1/2 py-5">
           <motion.img
             src={login}
-            className="w-full h-auto hover:scale-110 transition-all duration-300   "
+            className="w-full h-full"
             alt="Login Illustration"
           />
         </div>

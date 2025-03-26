@@ -6,9 +6,9 @@ function ResumeAnalyzer() {
   return (
     <>
       <NavBar />
-      <div className="flex items-center justify-center w-full h-[80vh] p-4 ">
+      <div className="flex items-center justify-center  h-[100vh] p-4  ">
         <div
-          className="flex items-center justify-between gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 max-md:py-10 "
+          className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-3   "
           style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
         >
           <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6 m   ">
@@ -52,7 +52,7 @@ function ResumeAnalyzer() {
           <div className="max-md:hidden overflow-hidden rounded-r-xl w-full">
             <img
               src={resumeImage}
-              className="w-full h-auto hover:scale-110 transition-all duration-300   "
+              className="w-full h-full   "
               alt="Login Illustration"
             />
           </div>
