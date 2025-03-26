@@ -6,12 +6,18 @@ function ResumeAnalyzer() {
   return (
     <>
       <NavBar />
-      <div className="flex items-center justify-center  h-[100vh] p-4  ">
+      <div
+        className="flex items-center justify-center  h-[100vh] p-4 "
+        data-aos="fade-up"
+      >
         <div
           className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-3   "
           style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
         >
-          <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6 m   ">
+          <div
+            data-aos="fade-right"
+            className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6     "
+          >
             <h2 className="text-[#1170CD] text-4xl font-semibold max-md:text-2xl  max-md:text-center ">
               Is Your Resume Good Enough
             </h2>
@@ -54,6 +60,7 @@ function ResumeAnalyzer() {
               src={resumeImage}
               className="w-full h-full   "
               alt="Login Illustration"
+              data-aos="fade-left"
             />
           </div>
         </div>

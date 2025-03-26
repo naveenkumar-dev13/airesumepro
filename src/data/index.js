@@ -47,6 +47,93 @@ export const cards = [
     description: " candidates improve their job prospects",
   },
 ];
+export const questions = [
+  {
+    text: "What is the capital of France?",
+    userAnswer: "Paris",
+    correctAnswer: "Paris",
+    correct: true,
+    correct: true,
+  },
+  {
+    text: "What is the square root of 16?",
+    userAnswer: "5",
+    correctAnswer: "4",
+    correct: false,
+  },
+  {
+    text: "What is the chemical symbol for water?",
+    userAnswer: "H2O",
+    correctAnswer: "H2O",
+    correct: true,
+  },
+  {
+    text: "Who wrote 'Romeo and Juliet'?",
+    userAnswer: "Shakespeare",
+    correctAnswer: "William Shakespeare",
+    correct: true,
+  },
+  {
+    text: "What is the largest planet in our solar system?",
+    userAnswer: "Saturn",
+    correctAnswer: "Jupiter",
+    correct: false,
+  },
+  {
+    text: "What is the boiling point of water in Celsius?",
+    userAnswer: "100",
+    correctAnswer: "100",
+    correct: true,
+  },
+  {
+    text: "Who painted the Mona Lisa?",
+    userAnswer: "Da Vinci",
+    correctAnswer: "Leonardo da Vinci",
+    correct: true,
+  },
+  {
+    text: "What is the primary language spoken in Brazil?",
+    userAnswer: "Spanish",
+    correctAnswer: "Portuguese",
+    correct: false,
+  },
+  {
+    text: "What is the fastest land animal?",
+    userAnswer: "Cheetah",
+    correctAnswer: "Cheetah",
+    correct: true,
+  },
+  {
+    text: "What is the currency of Japan?",
+    userAnswer: "Yen",
+    correctAnswer: "Yen",
+    correct: true,
+  },
+  {
+    text: "What is the currency of Japan?",
+    userAnswer: "Yen",
+    correctAnswer: "Yen",
+    correct: true,
+  },
+  {
+    text: "What is the currency of Japan?",
+    userAnswer: "Yen",
+    correctAnswer: "Yen",
+    correct: true,
+  },
+  {
+    text: "What is the currency of Japan?",
+    userAnswer: "Yen",
+    correctAnswer: "Yen",
+    correct: true,
+  },
+  {
+    text: "What is the currency of Japan?",
+    userAnswer: "Yen",
+    correctAnswer: "Yen",
+    correct: true,
+  },
+];
 
 export const analysis = [
   {

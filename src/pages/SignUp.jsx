@@ -18,11 +18,11 @@ function SignUp() {
   };
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{
-        duration: 1,
-
+        duration: 0.8,
+        stiffness: 600,
         ease: "easeInOut",
       }}
       className="flex items-center justify-between min-h-screen p-4 "

@@ -21,7 +21,7 @@ function Login() {
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{
-        duration: 1,
+        duration: 0.8,
         stiffness: 600,
         ease: "easeInOut",
       }}
