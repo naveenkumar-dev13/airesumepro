@@ -4,7 +4,6 @@ import Loading from "../components/Loading";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { div } from "motion/react-client";
 import AccountInputs from "../components/AccountInputs";
 import { motion } from "framer-motion";
 

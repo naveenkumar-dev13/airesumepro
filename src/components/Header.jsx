@@ -7,16 +7,9 @@ function Header() {
   const [isopen, setIsopen] = useState(false);
   const navigate = useNavigate();
   return (
-    <div className="bg-[#F5F7FA]">
-      <div
-        className="flex  items-center justify-evenly   p-16  gap-10  max-sm:gap-5  max-sm:flex-col-reverse  max-sm:py-5 max-sm:px-2
-        
-         "
-      >
-        <div
-          className="  flex flex-col gap-4  w-[50%] mx-auto max-sm:w-full max-sm:text-center"
-          data-aos="fade-up-right"
-        >
+    <div className="bg-[#F5F7FA]   ">
+      <div className="flex  items-center justify-evenly   px-16  gap-10  max-sm:gap-5  max-sm:flex-col-reverse  max-sm:py-5 max-sm:px-2">
+        <div className="  flex flex-col gap-4  w-[50%] mx-auto max-sm:w-full max-sm:text-center">
           <h2 className="text-6xl font-bold max-sm:text-2xl ">
             Your AI-Powered Resume Expert
           </h2>
@@ -29,7 +22,7 @@ function Header() {
           </Button>
         </div>
 
-        <div className="max-sm:w-[90%]  mx-auto " data-aos="fade-up-left">
+        <div className="max-sm:w-[90%]  mx-auto ">
           <img src={home} alt="hero" className="w-full h-full" />
         </div>
       </div>
