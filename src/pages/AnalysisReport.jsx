@@ -69,10 +69,10 @@ const ReportAnalysis = () => {
   };
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       <NavBar />
       <div
-        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0  ${
+        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0 h-[calc(100vh-75px)]   ${
           openSection ? "mt-20" : ""
         }`}
       >
@@ -228,7 +228,7 @@ const ReportAnalysis = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
