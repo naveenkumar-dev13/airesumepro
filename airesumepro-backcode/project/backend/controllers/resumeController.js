@@ -73,6 +73,7 @@ export const login = async (req, res) => {
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
+
 // Protect this route with JWT
 export const protectedRoute = (req, res) => {
     res.json({ message: "You have access to this protected route", user: req.user });
@@ -132,7 +133,7 @@ export const analyzeResume = async (req, res) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: "mixtral-8x7b-32768",
+                model: "gemma2-9b-it",
                 messages: [
                     { role: "system", content: "You analyze resumes and provide structured feedback. Each category (Content, Format, Sections, Skills, Style) should be scored out of 20, with suggestions for improvement." },
                     { role: "user", content: `Analyze this resume and provide:
@@ -164,6 +165,7 @@ export const analyzeResume = async (req, res) => {
         });
 
         const data = await response.json();
+        console.log(data)
         if (!data.choices || !data.choices[0]?.message?.content) {
             throw new Error("Invalid Groq API response format");
         }
@@ -234,7 +236,7 @@ export const jobSuggestions = async (req, res) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: "mixtral-8x7b-32768",
+                model: "gemma2-9b-it",
                 messages: [
                     { role: "system", content: "You analyze resumes and suggest the best job roles." },
                     { role: "user", content: `Extract and return only the job role title from the given text without any additional words or descriptions.  :
@@ -272,7 +274,7 @@ export const mockInterview = async (req, res) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: "mixtral-8x7b-32768",
+                model: "gemma2-9b-it",
                 messages: [
                     { role: "system", content: "You generate mock interview questions and their correct answers based on job role and difficulty level. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]" },
                     { role: "user", content: `Generate 15 interview questions for a ${jobRole} based on this resume. For each question, provide the correct answer. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]\n\nResume Text: ${resumeText}` }
@@ -357,7 +359,7 @@ export const evaluateAnswers = async (req, res) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: "mixtral-8x7b-32768",
+                model: "gemma2-9b-it",
                 messages: [
                     { role: "system", content: "You evaluate interview answers. Clearly label answers as 'Correct' or 'Wrong' and explain why." },
                     { role: "user", content: `Evaluate these answers. Clearly mention 'Correct' or 'Wrong' for each:
