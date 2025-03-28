@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Inputs from "../components/Inputs";
 import { login } from "../data";
 import { useDispatch } from "react-redux";
+import { updateName } from "../feature/UserSlice";
 //  import {login} from '../feature/UserSlice'
 
 function Login() {
@@ -18,7 +19,8 @@ function Login() {
     e.preventDefault();
     navigate("/");
     console.log(email, password);
-    // dispatch(login{});
+    dispatch(updateName(email, password));
+    console.log(updateName);
   };
   return (
     <motion.div
@@ -42,12 +44,11 @@ function Login() {
           <h1 className="text-4xl md:text-5xl font-bold mb-3">Login </h1>
           <div className="flex flex-col items-center justify-start gap-4 w-full p-4">
             <Inputs email={email} setEmail={setEmail}>
-              Login
+              Email
             </Inputs>
-            <Inputs email={password} setPassword={setPassword}>
-              password
+            <Inputs password={password} setPassword={setPassword}>
+              Password
             </Inputs>
-
             <button className="bg-[#1170CD] text-white p-2 max-md:w-40 w-80 text-xl rounded-md cursor-pointer hover:bg-[#0E5BAA] transition-all duration-300">
               login
             </button>

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import React, { useState } from "react";
 
@@ -5,6 +6,7 @@ const AnalyseReportPopup = ({ setPopUp }) => {
   const [roleByResume, setRoleByResume] = useState([]);
   const [preferredRole, setPreferredRole] = useState("");
   const [interviewType, setInterviewType] = useState("General");
+  const navigate = useNavigate();
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50 ">
@@ -46,8 +48,18 @@ const AnalyseReportPopup = ({ setPopUp }) => {
           <option value="Behavioral">Behavioral</option>
         </select>
         <div className="flex justify-between mt-4">
-          <Button className="px-4 py-2     rounded-md max-md:w-24">Cancel</Button>
-          <Button className="px-4 py-2 rounded-md max-md:w-24">Start</Button>
+          <Button
+            className="px-4 py-2     rounded-md max-md:w-24"
+            onClick={() => setPopUp(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="px-4 py-2 rounded-md max-md:w-24"
+            onClick={() => navigate("/mockinterview")}
+          >
+            Start
+          </Button>
         </div>
       </div>
     </div>

@@ -8,8 +8,9 @@ function ResumeAnalyzer() {
       <NavBar />
       <div className="flex items-center justify-center p-4 h-[calc(100vh-75px)]">
         <div
-          className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-3   "
-          style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
+          className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-5   "
+          style={{ boxShadow: "0px 0px 25px 10px rgb(186, 213, 238)" }}
+          data-aos="fade-up"
         >
           <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6     ">
             <h2 className="text-[#1170CD] text-4xl font-semibold max-md:text-2xl  max-md:text-center ">

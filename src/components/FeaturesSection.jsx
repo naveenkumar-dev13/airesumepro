@@ -13,7 +13,10 @@ function FeaturesSection() {
             data-aos-delay={card.delay || index * 100}
             data-aos-duration={2000}
             key={index}
-            className="flex flex-col gap-2 shadow-[10px_10px_30px_-3px_rgba(66,68,90,0.5)]   p-8 rounded-lg items-center max-sm:px-4"
+            className="flex flex-col gap-2    p-8 rounded-lg items-center max-sm:px-4"
+            style={{
+              boxShadow: "0px 0px 25px rgba(0, 0, 0, 0.2)",
+            }}
           >
             <p className="text-4xl font-bold text-green-500">
               {card.percentage}
