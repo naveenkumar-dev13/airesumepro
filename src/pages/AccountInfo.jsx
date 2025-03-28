@@ -55,7 +55,7 @@ function AccountInfoPage() {
   return (
     <div>
       <NavBar />
-      <div className="p-6 bg-gray-100 h-screen m-auto">
+      <div className="p-6">
         <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2">
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
             <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-28 ">
@@ -86,7 +86,7 @@ function AccountInfoPage() {
                 </div>
               </label>
             </div>
-            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 max-sm:hidden  ">
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4  max-sm:hidden  ">
               <Link to={"/userinfo"}>
                 <Button
                   className={`py-2  mb-4 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
@@ -156,11 +156,26 @@ function AccountInfoPage() {
               {Object.keys(info).map((key) => (
                 <div
                   key={key}
-                  className="flex items-center py-6 border-b max-sm:flex-col max-sm:gap-4"
+                  className="flex items-center  gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4"
                 >
-                  <p className="capitalize font-medium  max-sm:text-xl ">
-                    {key}:
-                  </p>
+                  <div className="flex justify-between max-sm:w-full  ">
+                    <p className="capitalize font-medium text-xl">{key}:</p>
+                    <div className="mt-2 sm:mt-0 hidden max-sm:block">
+                      {key !== "password" && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            editingField === key
+                              ? handleSave()
+                              : handleEdit(key)
+                          }
+                          className="text-blue-500 hover:underline"
+                        >
+                          {editingField === key ? "" : "Edit"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
                   {editingField === key ? (
                     <div>
                       <input
@@ -171,7 +186,7 @@ function AccountInfoPage() {
                       />
 
                       {editingField === "password" ? (
-                        <div className="flex justify-start mt-4 gap-2">
+                        <div className="flex justify-start mt-4 gap-2 ">
                           <button
                             type="button"
                             onClick={handleCancel}
@@ -203,30 +218,34 @@ function AccountInfoPage() {
                       )}
                     </div>
                   ) : (
-                    <p className="text-gray-950 font-semibold flex-1">
+                    <p className="text-gray-950 font-semibold flex-grow max-sm:w-full ">
                       {info[key]}
                     </p>
                   )}
-                  {key === "password" && (
-                    <button
-                      type="button"
-                      onClick={() => setShowPasswordPopup(true)}
-                      className="text-blue-500 hover:underline"
-                    >
-                      Change Password
-                    </button>
-                  )}
-                  {key !== "password" && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        editingField === key ? handleSave() : handleEdit(key)
-                      }
-                      className="text-blue-500 hover:underline"
-                    >
-                      {editingField === key ? "" : "Edit"}
-                    </button>
-                  )}
+                  <div>
+                    {key === "password" && (
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswordPopup(true)}
+                        className="text-blue-500 hover:underline"
+                      >
+                        Change Password
+                      </button>
+                    )}
+                  </div>
+                  <div className="max-sm:hidden">
+                    {key !== "password" && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editingField === key ? handleSave() : handleEdit(key)
+                        }
+                        className="text-blue-500 hover:underline"
+                      >
+                        {editingField === key ? "" : "Edit"}
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </form>

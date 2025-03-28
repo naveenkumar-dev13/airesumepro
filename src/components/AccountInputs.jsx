@@ -34,7 +34,7 @@ function AccountInputs({ isopen }) {
                 key={key}
                 className="flex items-center py-6 border-b  max-sm:gap-2 max-sm:flex-col gap-4 "
               >
-                <div>
+                <div className="bg-red-50">
                   <p className="capitalize font-medium  max-sm:text-xl ">
                     {key}:
                   </p>

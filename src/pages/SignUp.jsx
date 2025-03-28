@@ -29,7 +29,7 @@ function SignUp() {
     >
       <div
         className="flex  items-center justify-evenly gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3   "
-        style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
+        style={{ boxShadow: "0px 0px 10px 10px rgb(186, 213, 238,0.5)" }}
       >
         <form
           onSubmit={handleSubmit}

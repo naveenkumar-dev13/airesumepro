@@ -1,23 +1,17 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import { ResumeAnalyzer as resumeImage } from "../data";
-
+import { uploadIcon } from "../data";
 function ResumeAnalyzer() {
   return (
-    <>
+    <div className="h-screen">
       <NavBar />
-      <div
-        className="flex items-center justify-center my-8 p-4 "
-        data-aos="fade-up"
-      >
+      <div className="flex items-center justify-center p-4 h-[calc(100vh-75px)]">
         <div
           className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-3   "
           style={{ boxShadow: "0px 10px 30px 10px rgb(186, 213, 238)" }}
         >
-          <div
-            data-aos="fade-right"
-            className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6     "
-          >
+          <div className=" flex flex-col justify-between  px-16 gap-3 w-full  max-md:px-6     ">
             <h2 className="text-[#1170CD] text-4xl font-semibold max-md:text-2xl  max-md:text-center ">
               Is Your Resume Good Enough
             </h2>
@@ -29,10 +23,11 @@ function ResumeAnalyzer() {
             </p>
             <div className="flex flex-col items-center justify-center  gap-2 border-2 border-dashed border-[#1170CD] py-8 rounded-3xl mt-10 ">
               <span>
-                <ion-icon
-                  name="cloud-upload-outline"
-                  className="w-16 h-16 text-blue-500 block  max-md:w-10 max-md:h-10 "
-                ></ion-icon>
+                <img
+                  src={uploadIcon}
+                  alt="upload"
+                  className="w-14 h-14 max-sm:w-8 max-sm:h-8 "
+                />
               </span>
               <p className="font-bold text-xl max-md:text-base">
                 Drop you Resume Here{" "}
@@ -60,12 +55,11 @@ function ResumeAnalyzer() {
               src={resumeImage}
               className="w-full h-full   "
               alt="Login Illustration"
-              data-aos="fade-left"
             />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
