@@ -174,7 +174,7 @@ const NavBar = ({ onExit }) => {
                       setIsopen(false);
                     }}
                   >
-                    Sign In
+                    loginIn
                   </Button>
                 </div>
               </div>

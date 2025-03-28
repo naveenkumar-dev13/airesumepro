@@ -34,16 +34,27 @@ function AccountInputs({ isopen }) {
                 key={key}
                 className="flex items-center py-6 border-b  max-sm:gap-2 max-sm:flex-col gap-4 "
               >
-                <div className="bg-red-50">
-                  <p className="capitalize font-medium  max-sm:text-xl ">
-                    {key}:
-                  </p>
+                <div className="flex justify-between max-sm:w-full  ">
+                  <p className="capitalize font-medium text-xl">{key}:</p>
+                  <div className="mt-2 sm:mt-0 hidden max-sm:block">
+                    {key !== "password" && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editingField === key ? handleSave() : handleEdit(key)
+                        }
+                        className="text-blue-500 hover:underline"
+                      >
+                        {editingField === key ? "" : "Edit"}
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {editingField === key ? (
                   key === "birthday" ? (
-                    <>
+                    <div className="bg-red-50">
                       <input
-                        type="date"
+                        type="text"
                         value={tempValue}
                         onChange={(e) => setTempValue(e.target.value)}
                         className="px-2 py-1 flex-1 border-b"
@@ -62,7 +73,7 @@ function AccountInputs({ isopen }) {
                           </Button>
                         </div>
                       )}
-                    </>
+                    </div>
                   ) : key === "summary" ? (
                     <>
                       <textarea
@@ -111,19 +122,23 @@ function AccountInputs({ isopen }) {
                     </div>
                   )
                 ) : (
-                  <p className="text-gray-950 font-semibold flex-1 max-sm:text-sm">
+                  <p className="text-gray-950  flex-grow max-sm:w-full ">
                     {info[key]}
                   </p>
                 )}
-                <button
-                  type="button"
-                  onClick={() =>
-                    editingField === key ? handleSave() : handleEdit(key)
-                  }
-                  className="text-blue-500 hover:underline"
-                >
-                  {editingField === key ? "" : "Edit"}
-                </button>
+                <div className="max-sm:hidden">
+                  {key !== "password" && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        editingField === key ? handleSave() : handleEdit(key)
+                      }
+                      className="text-blue-500 hover:underline"
+                    >
+                      {editingField === key ? "" : "Edit"}
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </form>

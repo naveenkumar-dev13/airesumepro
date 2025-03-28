@@ -37,13 +37,13 @@ function SignUp() {
         >
           <h1 className="text-4xl md:text-5xl font-bold ">Signup</h1>
           <div className="flex flex-col items-center justify-start gap-3 w-full p-4">
-            <Inputs email={name} setEmail={setName}>
+            <Inputs name={name} setName={setName}>
               Username
             </Inputs>
             <Inputs email={email} setEmail={setEmail}>
               Email
             </Inputs>
-            <Inputs email={password} setEmail={setPassword}>
+            <Inputs password={password} setPassword={setPassword}>
               Password
             </Inputs>
 

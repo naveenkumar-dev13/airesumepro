@@ -5,16 +5,20 @@ import { motion } from "framer-motion";
 
 import Inputs from "../components/Inputs";
 import { login } from "../data";
+import { useDispatch } from "react-redux";
+//  import {login} from '../feature/UserSlice'
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate("/");
     console.log(email, password);
+    // dispatch(login{});
   };
   return (
     <motion.div
@@ -40,7 +44,7 @@ function Login() {
             <Inputs email={email} setEmail={setEmail}>
               Login
             </Inputs>
-            <Inputs email={password} setEmail={setPassword}>
+            <Inputs email={password} setPassword={setPassword}>
               password
             </Inputs>
 
