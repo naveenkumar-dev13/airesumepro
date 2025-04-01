@@ -15,7 +15,8 @@ import {
     getAccountInfo,
     updateAccountInfo,
     updateBasicInfo,
-    getBasicInfo
+    getBasicInfo,
+    health
 } from "../controllers/resumeController.js";
 import { verifyToken } from "../middlewares/authMiddleware.js";
 
@@ -49,4 +50,6 @@ router.get("/account-info",verifyToken,getAccountInfo);
 router.put("/update-account-info",verifyToken, updateAccountInfo);
 router.post("/basic-info",verifyToken, updateBasicInfo);
 router.get("/basic-info",verifyToken, getBasicInfo);
+router.get("/health",health)
+
 export default router;

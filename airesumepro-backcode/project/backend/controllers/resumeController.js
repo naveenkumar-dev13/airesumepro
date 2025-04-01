@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import mongoose from "mongoose"; 
 
 dotenv.config();
 const router = express.Router();
@@ -135,31 +136,59 @@ export const analyzeResume = async (req, res) => {
             body: JSON.stringify({
                 model: "gemma2-9b-it",
                 messages: [
-                    { role: "system", content: "You analyze resumes and provide structured feedback. Each category (Content, Format, Sections, Skills, Style) should be scored out of 20, with suggestions for improvement." },
-                    { role: "user", content: `Analyze this resume and provide:
-                        1. Resume Analysis Score (as a percentage).
-                        2. Category-wise analysis:
-                            Content:
-                             Issues
-                             Suggested Fixes
-                             Score:[Score]/20
-                            Format:
-                             Issues
-                             Suggested Fixes
-                             Score:[Score]/20
-                            Sections:
-                             Issues
-                             Suggested Fixes
-                             Score:[Score]/20
-                            Skills:
-                             Issues
-                             Suggested Fixes
-                             Score:[Score]/20
-                            Style:
-                             Issues
-                             Suggested Fixes
-                             Score:[Score]/20
-                        Resume Text: ${resumeText}` }
+                    { 
+                        role: "system", 
+                        content: `You analyze resumes and provide structured feedback. 
+                        **Strictly** follow this response format without adding extra text.
+                        
+                        Return the output **exactly** in this structure:
+                        
+                        Resume Analysis Score: [Overall Score]%
+                    
+                        Content:
+                         Issues:
+                         
+                         Suggested Fixes:
+                         
+                        Score: [Score]/20
+                    
+                        Format:
+                         Issues:
+
+                         Suggested Fixes:
+                          
+                        Score: [Score]/20
+                    
+                        Sections:
+                         Issues:
+                          
+                        Suggested Fixes:
+                          
+                        Score: [Score]/20
+                    
+                        Skills:
+                         Issues:
+                          
+                        Suggested Fixes:
+                         
+                        Score: [Score]/20
+                    
+                        Style:
+                         Issues:
+                         
+                        Suggested Fixes:
+                          
+                        Score: [Score]/20
+                    
+                        Any response that deviates from this format will be considered incorrect.`
+                    },
+                    { 
+                        role: "user", 
+                        content: `Analyze this resume and provide feedback in the exact format above:
+                        
+                        Resume Text: ${resumeText}`
+                    }
+                    
                 ]
             })
         });
@@ -239,7 +268,7 @@ export const jobSuggestions = async (req, res) => {
                 model: "gemma2-9b-it",
                 messages: [
                     { role: "system", content: "You analyze resumes and suggest the best job roles." },
-                    { role: "user", content: `Extract and return only the job role title from the given text without any additional words or descriptions.  :
+                    { role: "user", content: `Based on the following resume text, suggest **only the job titles** (one per line) with no extra text  :
                         ${resumeText}` }
                 ]
             })
@@ -247,7 +276,7 @@ export const jobSuggestions = async (req, res) => {
 
         const data = await response.json();
         const jobRoles = data.choices?.[0]?.message?.content.split("\n").map(role => role.trim()).filter(role => role !== "");
-
+        console.log(jobRoles)
         if (!jobRoles) {
             return res.status(500).json({ error: "Invalid Groq API response format" });
         }
@@ -259,6 +288,7 @@ export const jobSuggestions = async (req, res) => {
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
+
 export const mockInterview = async (req, res) => {
     try {
         const { resumeText, jobRole, difficulty } = req.body;
@@ -276,8 +306,26 @@ export const mockInterview = async (req, res) => {
             body: JSON.stringify({
                 model: "gemma2-9b-it",
                 messages: [
-                    { role: "system", content: "You generate mock interview questions and their correct answers based on job role and difficulty level. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]" },
-                    { role: "user", content: `Generate 15 interview questions for a ${jobRole} based on this resume. For each question, provide the correct answer. Ensure the response is strictly formatted as follows:\n\nQ1: [Question 1]\nA1: [Answer 1]\nQ2: [Question 2]\nA2: [Answer 2]\n...\nQ15: [Question 15]\nA15: [Answer 15]\n\nResume Text: ${resumeText}` }
+                    { 
+                        role: "system", 
+                        content: `You are an AI that generates mock interview questions and their correct answers for job candidates. 
+                        **STRICTLY follow this output format without any extra words:**  
+                        Q1: [Question 1]  
+                        A1: [Answer 1]  
+                        Q2: [Question 2]  
+                        A2: [Answer 2]  
+                        ...  
+                        Q15: [Question 15]  
+                        A15: [Answer 15]`
+                    },
+                    { 
+                        role: "user", 
+                        content: `Generate exactly **15** mock interview questions for a **${jobRole}** at **${difficulty} difficulty level** based on the resume below. 
+                        **Do not include any additional explanations or comments. Strictly follow the requested format.**  
+
+                        Resume Text:  
+                        ${resumeText}`
+                    }
                 ]
             })
         });
@@ -314,7 +362,7 @@ export const mockInterview = async (req, res) => {
             }
         }
 
-        // Validate that we have 15 questions and answers
+        // Ensure exactly 15 Q&A pairs
         if (questions.length !== 15 || expectedAnswers.length !== 15) {
             console.error("Unexpected number of QA pairs:", { questions, expectedAnswers });
             return res.status(500).json({ error: "Malformed response format", details: { questions, expectedAnswers } });
@@ -327,7 +375,6 @@ export const mockInterview = async (req, res) => {
         res.status(500).json({ error: "Server error", details: error.message });
     }
 };
-
 
 export const evaluateAnswers = async (req, res) => {
     try {
@@ -610,3 +657,10 @@ export const getBasicInfo = async (req, res) => {
         res.status(500).json({ error: "Internal server error", details: error.message });
     }
 };
+
+export const health = async (req, res) => {
+    res.json({
+      message: "API is running",
+      dbStatus: mongoose.connection.readyState === 1 ? "Connected" : "Not Connected"
+    });
+  };
