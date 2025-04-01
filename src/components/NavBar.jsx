@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/M logo .png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Account, dashboard, Analyse } from "../data";
-import Button from "./Button";
 import { useSelector } from "react-redux";
+import MobileNav from "./MobileNav";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const NavBar = ({ onExit }) => {
   const [isopen, setIsopen] = useState(false);
@@ -23,6 +25,7 @@ const NavBar = ({ onExit }) => {
   }, [location.pathname, isopen]);
 
   const Username = useSelector((state) => state.user.user);
+  console.log(Username);
   return (
     <>
       {/* Blur overlay with animation */}
@@ -76,7 +79,7 @@ const NavBar = ({ onExit }) => {
                   </button>
                 </Link>
               }
-              {/* <div
+              <div
                 className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
                 onClick={() => setHover(!hover)}
               >
@@ -99,121 +102,32 @@ const NavBar = ({ onExit }) => {
                     </p>
                   </div>
                 )}
-              </div> */}
+              </div>
             </li>
             <li className="hidden max-sm:block">
               {!isopen ? (
-                <ion-icon
-                  name="menu-outline"
+                <FontAwesomeIcon
+                  icon={faBars}
                   className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
                   onClick={() => setIsopen(true)}
-                ></ion-icon>
+                />
               ) : (
-                <ion-icon
-                  name="close-outline"
+                <FontAwesomeIcon
+                  icon={faXmark}
                   className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
                   onClick={() => setIsopen(false)}
-                ></ion-icon>
+                />
               )}
             </li>
           </ul>
 
           {/* MOBILE MENU */}
-          {isopen && (
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 20 }}
-              className=" top-14 right-0 w-full h-full bg-white shadow-2xl z-50"
-            >
-              <div className="p-4 h-full flex flex-col">
-                <motion.ul className="flex flex-col gap-2 flex-1">
-                  <Link to="/create-resume">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full text-left text-[#1170CD] text-lg transition-all duration-300 hover:bg-[#D7E8FF] hover:text-[#2563EB] p-4 rounded-xl ${
-                        activeButton === "/create-resume"
-                          ? "bg-[#1170CD] text-white"
-                          : ""
-                      }`}
-                      onClick={() => {
-                        setActiveButton("/create-resume");
-                        setIsopen(false);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="p-2  rounded-lg">
-                          <img src={Analyse} alt="" className="w-6 h-6" />
-                        </span>
-                        Resume Analyse
-                      </div>
-                    </motion.button>
-                  </Link>
-
-                  <Link to="/dashboard">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full text-left text-[#1170CD] text-lg hover:bg-[#D7E8FF] hover:text-[#2563EB] p-2 transition-all duration-300 rounded-xl ${
-                        activeButton === "/dashboard"
-                          ? "bg-[#1170CD] text-white"
-                          : ""
-                      }`}
-                      onClick={() => {
-                        setActiveButton("/dashboard");
-                        setIsopen(false);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-lg">
-                          <img src={dashboard} alt="" className="w-6 h-6" />
-                        </span>
-                        Dashboard
-                      </div>
-                    </motion.button>
-                  </Link>
-
-                  <Link to="/login">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full text-left text-[#1170CD] text-lg hover:bg-[#D7E8FF] hover:text-[#2563EB] p-2 transition-all duration-300 rounded-xl ${
-                        activeButton === "/login"
-                          ? "bg-[#1170CD] text-white"
-                          : ""
-                      }`}
-                      onClick={() => {
-                        setActiveButton("/login");
-                        setIsopen(false);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="p-2  rounded-lg">
-                          <img src={Account} alt="" className="w-6 h-6" />
-                        </span>
-                        My Account
-                      </div>
-                    </motion.button>
-                  </Link>
-                </motion.ul>
-
-                {/* Footer */}
-                <div className="mt-auto pt-6 border-t border-gray-100 flex justify-center">
-                  <Button
-                    className="w-40  bg-[#1170CD] text-white rounded-xl !p-4 text-lg font-medium hover:bg-[#0E5BAA] transition-colors"
-                    onClick={() => {
-                      navigate("/login");
-                      setIsopen(false);
-                    }}
-                  >
-                    loginIn
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          <MobileNav
+            isopen={isopen}
+            setIsopen={setIsopen}
+            setActiveButton={setActiveButton}
+            activeButton={activeButton}
+          />
         </nav>
       </div>
     </>

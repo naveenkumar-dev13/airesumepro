@@ -11,6 +11,17 @@ import dashboardImage from "../assets/icons/dashboard v2.0 1.png";
 import AnalyseIconImage from "../assets/icons/Analyse.png";
 import FixAllIconImage from "../assets/icons/fix 1.png";
 import upload from "../assets/icons/upload.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faSquareTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
+import { faNoteSticky } from "@fortawesome/free-solid-svg-icons";
+import { faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { faBullseye } from "@fortawesome/free-solid-svg-icons";
 
 export const login = loginImage;
 export const signup = signupImage;
@@ -140,36 +151,48 @@ export const questions = [
 
 export const analysis = [
   {
-    icon: <ion-icon name="document-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faNoteSticky} />,
     title: "Real-time AI Mock Interviews",
     description:
       "Practice with our AI interviewer, get instant feedback and improve your skills",
   },
   {
-    icon: <ion-icon name="analytics-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faChartLine} />,
     title: "AI-Powered Performance Feedback",
     description: "Detailed analysis of your interview performance",
   },
   {
-    icon: <ion-icon name="invert-mode-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faBullseye} />,
     title: "Custom Question Bank",
     description: "Tailored questions based on your resume",
   },
 ];
 
+export const copyRightIcon = [
+  {
+    icon: <FontAwesomeIcon icon={faInstagram} />,
+  },
+  {
+    icon: <FontAwesomeIcon icon={faLinkedin} />,
+  },
+  {
+    icon: <FontAwesomeIcon icon={faFacebook} />,
+  },
+  { icon: <FontAwesomeIcon icon={faSquareTwitter} /> },
+];
 export const howItWorks = [
   {
-    icon: <ion-icon name="arrow-up-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faUpload} bounce />,
     title: "Upload Resume",
     description: "Drag & drop your resume file",
   },
   {
-    icon: <ion-icon name="accessibility-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faRobot} flip />,
     title: "AI Analysis",
     description: "Get detailed score & suggestions",
   },
   {
-    icon: <ion-icon name="chatbox-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faMessage} shake />,
     title: "Start Interview",
     description: "Practice with AI interviewer",
   },
@@ -190,24 +213,24 @@ export const aboutUs = [
   },
 ];
 
-export const copyRight = [
-  {
-    icon: <ion-icon name="logo-instagram"></ion-icon>,
-    title: "Instagram",
-  },
-  {
-    icon: <ion-icon name="logo-linkedin"></ion-icon>,
-    title: "LinkedIn",
-  },
-  {
-    icon: <ion-icon name="logo-facebook"></ion-icon>,
-    title: "Facebook",
-  },
-  {
-    icon: <ion-icon name="logo-twitter"></ion-icon>,
-    title: "Twitter",
-  },
-];
+// export const copyRight = [
+//   {
+//     icon: <FontAwesomeIcon icon={faInstagram} />,
+//     title: "Instagram",
+//   },
+//   {
+//     icon: <FontAwesomeIcon icon={faLinkedin} />,
+//     title: "LinkedIn",
+//   },
+//   {
+//     icon: <FontAwesomeIcon icon={faFacebook} />,
+//     title: "Facebook",
+//   },
+//   {
+//     icon: <FontAwesomeIcon icon={faSquareTwitter} />,
+//     title: "Twitter",
+//   },
+// ];
 export const resumes = [
   {
     title: "Software Engineer",

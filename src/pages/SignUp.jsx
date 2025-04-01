@@ -35,7 +35,7 @@ function SignUp() {
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center w-1/2 max-md:w-full  max-md:p-8  "
         >
-          <h1 className="text-4xl md:text-5xl font-bold ">Signup</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-5">Signup</h1>
           <div className="flex flex-col items-center justify-start gap-3 w-full p-4">
             <Inputs name={name} setName={setName}>
               Username

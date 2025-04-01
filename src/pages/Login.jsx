@@ -31,7 +31,7 @@ function Login() {
         stiffness: 600,
         ease: "easeInOut",
       }}
-      className="flex items-center justify-center h-screen p-4 "
+      className="flex items-center justify-center h-screen "
     >
       <div
         className="flex  items-center justify-evenly gap-2 rounded-2xl  mx-auto max-w-6xl w-full max-md:p-3 "
