@@ -3,6 +3,12 @@ import NavBar from "../components/NavBar";
 import { avatar, resumes } from "../data";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
 
 function DashBoard() {
   const [userAvatar, setUserAvatar] = useState(avatar);
@@ -46,37 +52,37 @@ function DashBoard() {
           <div className="border-b-2 border-blue-700 p-4 flex flex-col gap-2 ">
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="location-outline"
-                  className="text-[#1170CD] w-8 h-8 block"
-                ></ion-icon>
+                <FontAwesomeIcon
+                  icon={faLocationDot}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">Location</p>
             </p>
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="school-outline"
-                  className="text-[#1170CD] w-8 h-8 block"
-                ></ion-icon>
+                <FontAwesomeIcon
+                  icon={faGraduationCap}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">Education</p>
             </p>
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="logo-linkedin"
-                  className="text-[#1170CD] w-8 h-8 block"
-                ></ion-icon>
+                <FontAwesomeIcon
+                  icon={faLinkedin}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">LinkedIn </p>
             </p>
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="logo-github"
-                  className="text-[#1170CD] w-8 h-8 block"
-                ></ion-icon>
+                <FontAwesomeIcon
+                  icon={faGithub}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">Github</p>
             </p>
@@ -84,21 +90,19 @@ function DashBoard() {
           <div className=" p-4 flex flex-col gap-2 ">
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="mail-outline"
-                  className="text-[#1170CD] w-8 h-8 block"
-                >
-                  {" "}
-                </ion-icon>
+                <FontAwesomeIcon
+                  icon={faLocationDot}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">Location</p>
             </p>
             <p className="flex items-center gap-2">
               <span>
-                <ion-icon
-                  name="call-outline"
-                  className="text-[#1170CD] w-8 h-8 block"
-                ></ion-icon>
+                <FontAwesomeIcon
+                  icon={faPhone}
+                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+                />
               </span>
               <p className="text-gray-800  font-semibold">+1 234 567 8900</p>
             </p>

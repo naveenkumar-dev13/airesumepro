@@ -1,10 +1,20 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Account, dashboard, Analyse } from "../data";
-import Button from "./Button";
+// import Button from "./Button";
+import { useSelector } from "react-redux";
 
-function MobileNav({ isopen, setIsopen, setActiveButton, activeButton }) {
+function MobileNav({
+  isopen,
+  setIsopen,
+  setActiveButton,
+  activeButton,
+  setHover,
+  hover,
+}) {
+  const Username = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
   return (
     <div>
       {isopen && (
@@ -87,15 +97,45 @@ function MobileNav({ isopen, setIsopen, setActiveButton, activeButton }) {
 
             {/* Footer */}
             <div className="mt-auto pt-6 border-t border-gray-100 flex justify-center">
-              <Button
-                className="w-40  bg-[#1170CD] text-white rounded-xl !p-4 text-lg font-medium hover:bg-[#0E5BAA] transition-colors"
-                onClick={() => {
-                  Navigate("/login");
-                  setIsopen(false);
-                }}
-              >
-                login In
-              </Button>
+              {Username ? (
+                <div
+                  className="text-gray-400 px-4 py-2 rounded-full cursor-pointer relative"
+                  onClick={() => setHover(!hover)}
+                >
+                  <p className="text-gray-400 text-lg font-bold">{Username}</p>
+
+                  {hover && (
+                    <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white">
+                      <div className="absolute left-2/3 transform -translate-x-0 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-[#1170CD]"></div>
+                      <p
+                        className="py-2 border-b border-white cursor-pointer"
+                        onClick={() => navigate("/accountinfo")}
+                      >
+                        My Account
+                      </p>
+                      <p
+                        className="py-2 cursor-pointer"
+                        onClick={() => navigate("/dashboard")}
+                      >
+                        Dashboard
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login">
+                  <button
+                    className={`bg-[#1170CD] text-white  text-2xl p-4 rounded-md   hover:bg-[#0E5BAA] hover:text-white duration-300 ${
+                      activeButton === "/login"
+                        ? "bg-[#1170CD] text-white p-2 rounded-md "
+                        : "text-[#1170CD]"
+                    }`}
+                    onClick={() => setActiveButton("/login")}
+                  >
+                    Login
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </motion.div>

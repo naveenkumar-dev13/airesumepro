@@ -25,10 +25,8 @@ const NavBar = ({ onExit }) => {
   }, [location.pathname, isopen]);
 
   const Username = useSelector((state) => state.user.user);
-  console.log(Username);
   return (
     <>
-      {/* Blur overlay with animation */}
       {isopen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -65,7 +63,34 @@ const NavBar = ({ onExit }) => {
                 </button>
               </Link>
 
-              {
+              {Username ? (
+                <div
+                  className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
+                  onClick={() => setHover(!hover)}
+                >
+                  <p className="text-white text-lg font-bold">
+                    {Username.charAt(0).toUpperCase()}
+                  </p>
+
+                  {hover && (
+                    <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white">
+                      <div className="absolute left-2/3 transform -translate-x-0 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-[#1170CD]"></div>
+                      <p
+                        className="py-2 border-b border-white cursor-pointer"
+                        onClick={() => navigate("/accountinfo")}
+                      >
+                        My Account
+                      </p>
+                      <p
+                        className="py-2 cursor-pointer"
+                        onClick={() => navigate("/dashboard")}
+                      >
+                        Dashboard
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
                 <Link to="/login">
                   <button
                     className={`text-[#1170CD]  text-[18px]   p-2 rounded-md   hover:bg-[#0E5BAA] hover:text-white max-lg:text-base duration-300 ${
@@ -78,31 +103,7 @@ const NavBar = ({ onExit }) => {
                     Login
                   </button>
                 </Link>
-              }
-              <div
-                className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
-                onClick={() => setHover(!hover)}
-              >
-                <p className="text-white text-lg font-bold">N</p>
-
-                {hover && (
-                  <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white">
-                    <div className="absolute left-2/3 transform -translate-x-0 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-[#1170CD]"></div>
-                    <p
-                      className="py-2 border-b border-white cursor-pointer"
-                      onClick={() => navigate("/accountinfo")}
-                    >
-                      My Account
-                    </p>
-                    <p
-                      className="py-2 cursor-pointer"
-                      onClick={() => navigate("/dashboard")}
-                    >
-                      Dashboard
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
             </li>
             <li className="hidden max-sm:block">
               {!isopen ? (
@@ -127,6 +128,8 @@ const NavBar = ({ onExit }) => {
             setIsopen={setIsopen}
             setActiveButton={setActiveButton}
             activeButton={activeButton}
+            hover={hover}
+            setHover={setHover}
           />
         </nav>
       </div>

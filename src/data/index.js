@@ -204,7 +204,7 @@ export const aboutUs = [
     title: "+91 789-456-1230",
   },
   {
-    icon: <ion-icon name="mail-outline"></ion-icon>,
+    icon: <FontAwesomeIcon icon={faMessage} />,
     title: "nithin@gmail.com",
   },
   {

@@ -40,7 +40,7 @@ const BasicInfo = () => {
     <div className="h-screen">
       <NavBar />
       <div className="max-sm:p-4  h-[calc(100vh-75px)]">
-        <div className="max-w-6xl  mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1    ">
+        <div className="max-w-6xl  mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1    ">
           <div className="p-4 border-r-2 border-[#1170CD]  flex gap-4 flex-col relative max-md:border-none">
             <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-24 ">
               <input

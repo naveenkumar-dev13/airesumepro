@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: "navee",
+  user: "",
 };
 
 const userSlice = createSlice({
