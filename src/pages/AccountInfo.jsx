@@ -4,6 +4,10 @@ import { AccountInfo, avatar, nonProfile } from "../data";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import ShowPasswordPopup from "../components/ShowPasswordPopup";
 
 function AccountInfoPage() {
   const [info, setInfo] = useState(AccountInfo);
@@ -53,18 +57,13 @@ function AccountInfoPage() {
   }, [location.pathname]);
 
   return (
-    <div
-      className="h-screen "
-      style={{
-        boxShadow: "0px 0px 45px rgba(0, 0, 0, 0.5)", // Custom blur shadow
-      }}
-    >
+    <div className="h-screen ">
       <NavBar />
       <div className="p-6">
         <div
           className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2 "
           style={{
-            boxShadow: "0px 0px 45px rgba(0, 0, 0, 0.2)", // Custom blur shadow
+            boxShadow: "0px 0px 45px rgba(0, 0, 0, 0.2)",
           }}
         >
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
@@ -117,23 +116,26 @@ function AccountInfoPage() {
                   Basic Info
                 </Button>
               </Link>
-              <Button
-                className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                  activeButton === "account" ? "!bg-[#1170CD] !text-white" : ""
-                }`}
-                onClick={() => {
-                  setActiveButton("account");
-                  navigate("/accountinfo");
-                }}
-              >
-                <span className="block mt-1">
-                  <ion-icon
-                    name="settings-outline"
-                    className="w-5 h-5"
-                  ></ion-icon>
-                </span>
-                Account
-              </Button>
+              <Link to={"/accountinfo"}>
+                <Button
+                  className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                    activeButton === "/accountinfo"
+                      ? "!bg-[#1170CD] !text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setActiveButton("/accountinfo");
+                  }}
+                >
+                  <span className="block mt-1">
+                    <ion-icon
+                      name="settings-outline"
+                      className="w-5 h-5"
+                    ></ion-icon>
+                  </span>
+                  Account
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -141,18 +143,12 @@ function AccountInfoPage() {
             <div className="max-sm:flex max-sm:items-center max-sm:gap-4 ">
               <div className="max-sm:flex gap-4">
                 <div className="hidden max-sm:block">
-                  {!isopen ? (
-                    <ion-icon
-                      name="menu-outline"
-                      className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
+                  {!isopen && (
+                    <FontAwesomeIcon
+                      icon={faBars}
+                      className="w-10 h-10 block max-sm:w-6 max-sm:h-6 text-[#1170CD]"
                       onClick={() => setIsOpen(true)}
-                    ></ion-icon>
-                  ) : (
-                    <ion-icon
-                      name="close-outline"
-                      className="w-10 h-10 block max-sm:w-8 max-sm:h-8 text-[#1170CD]"
-                      onClick={() => setIsOpen(false)}
-                    ></ion-icon>
+                    />
                   )}
                 </div>
               </div>
@@ -280,19 +276,19 @@ function AccountInfoPage() {
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
-              className="absolute top-52 left-7  h-[400px]  bg-white shadow-2xl p-4 w-[330px] rounded-md  "
+              className="absolute top-52 left-[26px]  h-[400px]  bg-white shadow-2xl p-4 w-[320px] rounded-md  "
             >
               <div className="flex justify-between ">
-                <div className=" p-2 flex  flex-col gap-6  absolute top-12 left-5 ">
+                <div className=" p-2 flex  flex-col gap-6 w-[250px] absolute top-12 left-5 ">
                   <Link to={"/userinfo"}>
                     <Button
                       className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                        activeButton === "basicinfo"
+                        activeButton === "/userinfo"
                           ? "!bg-[#1170CD] !text-white"
                           : ""
                       }`}
                       onClick={() => {
-                        setActiveButton("basicinfo");
+                        setActiveButton("/userinfo");
                       }}
                     >
                       <span className="block mt-1">
@@ -304,32 +300,30 @@ function AccountInfoPage() {
                       Basic Info
                     </Button>
                   </Link>
-                  <Button
-                    className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
-                      activeButton === "account"
-                        ? "!bg-[#1170CD] !text-white"
-                        : ""
-                    }`}
-                    onClick={() => {
-                      setActiveButton("account");
-                      navigate("/accountinfo");
-                    }}
-                  >
-                    <span className="block mt-1">
-                      <ion-icon
-                        name="settings-outline"
-                        className="w-5 h-5"
-                      ></ion-icon>
-                    </span>
-                    Account
-                  </Button>
+                  <Link to={"/accountinfo"}>
+                    <Button
+                      className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                        activeButton === "/accountinfo"
+                          ? "!bg-[#1170CD] !text-white"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setActiveButton("/accountinfo");
+                      }}
+                    >
+                      <span className="block mt-1">
+                        <ion-icon
+                          name="settings-outline"
+                          className="w-5 h-5"
+                        ></ion-icon>
+                      </span>
+                      Account
+                    </Button>
+                  </Link>
                 </div>
                 <div>
                   <span onClick={() => setIsOpen(false)}>
-                    <ion-icon
-                      name="chevron-back-outline"
-                      className="w-5 h-5"
-                    ></ion-icon>
+                    <FontAwesomeIcon icon={faAngleRight} className="w-5 h-5" />
                   </span>
                 </div>
               </div>
@@ -337,64 +331,12 @@ function AccountInfoPage() {
           )}
         </div>
       </div>
-      {showPasswordPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Change Password</h2>
-            <form onSubmit={confirmPasswordSave}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                  required
-                  onChange={(e) => setTempValue(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                  required
-                  onChange={(e) => setTempValue(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                  required
-                  onChange={(e) => setTempValue(e.target.value)}
-                />
-              </div>
-              <div className="flex justify-end gap-3 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordPopup(false)}
-                  className="p-2 border
-                 rounded-md mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ShowPasswordPopup
+        setTempValue={setTempValue}
+        setShowPasswordPopup={setShowPasswordPopup}
+        showPasswordPopup={showPasswordPopup}
+        confirmPasswordSave={confirmPasswordSave}
+      />
     </div>
   );
 }

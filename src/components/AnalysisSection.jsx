@@ -7,7 +7,7 @@ function AnalysisSection() {
     <div className=" flex flex-col gap-10 py-16 max-sm:py-5 max-sm:my-5 bg-[#F5F7FA]">
       <h2
         className="text-center text-4xl max-sm:text-2xl font-bold my-10 max-sm:m-4 tracking-tight"
-        data-aos="fade-up"
+        data-aos="fade-down"
       >
         Get Ready for Your Next Job Interview with AI!
       </h2>

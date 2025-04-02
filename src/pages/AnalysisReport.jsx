@@ -26,18 +26,18 @@ const ReportAnalysis = () => {
     setOpenSection(openSection === section ? "" : section);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Failed to load data. Please try again later.");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       setError("Failed to load data. Please try again later.");
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   //   // Fetch data from the backend
   // useEffect(() => {

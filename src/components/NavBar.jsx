@@ -15,7 +15,7 @@ const NavBar = ({ onExit }) => {
   const [activeButton, setActiveButton] = useState(location.pathname);
   const navigate = useNavigate();
   useEffect(() => {
-    // Prevent body scroll when menu is open
+   
     if (isopen) {
       document.body.style.overflow = "hidden";
     } else {
