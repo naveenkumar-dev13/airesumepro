@@ -13,7 +13,7 @@ function MobileNav({
   setHover,
   hover,
 }) {
-  const Username = useSelector((state) => state.user.user);
+  const Useremail = useSelector((state) => state.user.email);
   const navigate = useNavigate();
   return (
     <div>
@@ -97,12 +97,12 @@ function MobileNav({
 
             {/* Footer */}
             <div className="mt-auto pt-6 border-t border-gray-100 flex justify-center">
-              {Username ? (
+              {Useremail ? (
                 <div
                   className="text-gray-400 px-4 py-2 rounded-full cursor-pointer relative"
                   onClick={() => setHover(!hover)}
                 >
-                  <p className="text-gray-400 text-lg font-bold">{Username}</p>
+                  <p className="text-gray-400 text-lg font-bold">{Useremail}</p>
 
                   {hover && (
                     <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white">

@@ -1,8 +1,10 @@
 import React from "react";
 import { analysis } from "../data";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 function AnalysisSection() {
+  const navigate = useNavigate();
   return (
     <div className=" flex flex-col gap-10 py-16 max-sm:py-5 max-sm:my-5 bg-[#F5F7FA]">
       <h2
@@ -27,7 +29,10 @@ function AnalysisSection() {
           </div>
         ))}
       </div>
-      <Button className="bg-[#1170CD] text-white  rounded-md  flex justify-center items-center mx-auto ">
+      <Button
+        className="bg-[#1170CD] text-white  rounded-md  flex justify-center items-center mx-auto "
+        onClick={() => navigate("/create-resume")}
+      >
         Analyze your resume
       </Button>
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function Inputs({
+function    Inputs({
   children,
   email,
   setEmail,
@@ -17,7 +17,7 @@ function Inputs({
           children === "Password"
             ? "password"
             : children === "Email"
-            ? "email"
+            ? "email"   
             : "text"
         }
         required
