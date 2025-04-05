@@ -4,18 +4,66 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Inputs from "../components/Inputs";
 import { signup } from "../data";
+import { useDispatch } from "react-redux";
+import { updateEmail } from "../feature/UserSlice";
+import Loadind from "../components/Loading";
 
 function SignUp() {
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/");
-    console.log(name, email, password);
+    setLoading(true);
+    setError("");
+    console.log(username, email, password);
+    try {
+      const response = await fetch(
+        "https://airesumeproapi.onrender.com/api/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (!response.ok) {
+        throw new Error(data.error || "Signup failed. Please try again.");
+      }
+
+      localStorage.setItem("token", data.token);
+      dispatch(updateEmail({ email }));
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loadind />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="bg-red-500 text-white p-4 rounded-md">
+          {error}
+        </div>
+      </div>
+    );
+  }
   return (
     <motion.div
       // initial={{ opacity: 0, scale: 0 }}
@@ -37,7 +85,7 @@ function SignUp() {
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-5">Signup</h1>
           <div className="flex flex-col items-center justify-start gap-3 w-full p-4">
-            <Inputs name={name} setName={setName}>
+            <Inputs name={username} setName={setName}>
               Username
             </Inputs>
             <Inputs email={email} setEmail={setEmail}>
