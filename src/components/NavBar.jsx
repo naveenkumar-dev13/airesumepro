@@ -7,9 +7,7 @@ import MobileNav from "./MobileNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { jwtDecode } from "jwt-decode";
-import Loading from "./Loading";
-import NotFound from "./NotFound";
+
 
 const NavBar = ({ onExit }) => {
  

@@ -77,7 +77,7 @@ function ResumeAnalyzer() {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-hidden">
       <NavBar />
       <div className="flex items-center justify-center p-4 h-[calc(100vh-75px)] max-sm:p-2">
         <div
