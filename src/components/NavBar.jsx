@@ -7,8 +7,12 @@ import MobileNav from "./MobileNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { jwtDecode } from "jwt-decode";
+import Loading from "./Loading";
+import NotFound from "./NotFound";
 
 const NavBar = ({ onExit }) => {
+ 
   const [isopen, setIsopen] = useState(false);
   const [hover, setHover] = useState(false);
   const location = useLocation();
@@ -22,9 +26,14 @@ const NavBar = ({ onExit }) => {
     }
     setActiveButton(location.pathname);
   }, [location.pathname, isopen]);
-
+  
   const email = useSelector((state) => state.user.email);
   console.log(email);
+  const token = localStorage.getItem("token");
+  const userEmail =
+    email || (token ? JSON.parse(atob(token.split(".")[1])).email : null);
+
+
   return (
     <>
       {isopen && (
@@ -63,13 +72,13 @@ const NavBar = ({ onExit }) => {
                 </button>
               </Link>
 
-              {email ? (
+              {userEmail ? (
                 <div
                   className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
                   onClick={() => setHover(!hover)}
                 >
                   <p className="text-white text-lg font-bold">
-                    {email.charAt(0).toUpperCase()}
+                    {userEmail.charAt(0).toUpperCase()}
                   </p>
 
                   {hover && (

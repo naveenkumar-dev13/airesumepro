@@ -52,7 +52,7 @@ function AccountInputs({ isopen }) {
                 </div>
                 {editingField === key ? (
                   key === "birthday" ? (
-                    <div className="bg-red-50">
+                    <div className="">
                       <input
                         type="text"
                         value={tempValue}
