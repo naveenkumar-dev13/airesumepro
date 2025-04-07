@@ -15,7 +15,6 @@ const NavBar = ({ onExit }) => {
   const [activeButton, setActiveButton] = useState(location.pathname);
   const navigate = useNavigate();
   useEffect(() => {
-   
     if (isopen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -24,7 +23,7 @@ const NavBar = ({ onExit }) => {
     setActiveButton(location.pathname);
   }, [location.pathname, isopen]);
 
-  const Username = useSelector((state) => state.user.user);
+  const email = useSelector((state) => state.user.email);
   return (
     <>
       {isopen && (
@@ -63,13 +62,13 @@ const NavBar = ({ onExit }) => {
                 </button>
               </Link>
 
-              {Username ? (
+              {email ? (
                 <div
                   className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
                   onClick={() => setHover(!hover)}
                 >
                   <p className="text-white text-lg font-bold">
-                    {Username.charAt(0).toUpperCase()}
+                    {email.charAt(0).toUpperCase()}
                   </p>
 
                   {hover && (

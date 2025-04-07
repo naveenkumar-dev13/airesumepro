@@ -2,27 +2,64 @@ import React, { useState } from "react";
 import logo from "../assets/Google__G__logo 1.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
 import Inputs from "../components/Inputs";
 import { login } from "../data";
 import { useDispatch } from "react-redux";
-import { updateEmail, updateName } from "../feature/UserSlice";
-//  import {login} from '../feature/UserSlice'
+import { updateEmail } from "../feature/UserSlice";
+import Loading from "../components/Loading";
+import Error from "../components/NotFound";
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("/");
-    dispatch(updateName(email));
+    setLoading(true);
+    setError("");
+    console.log("Sending login request with:", { email, password });
+
+    try {
+      const response = await fetch(
+        "https://airesumeproapi.onrender.com/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Login response:", data);
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        dispatch(updateEmail(email));
+
+        navigate("/");
+      } else {
+        console.error(data.error);
+        alert(data.error); // ✅ Notify user
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Try again!");
+    }
+    setLoading(false);
 
     setEmail("");
     setPassword("");
   };
+
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
   return (
     <motion.div
       // initial={{ opacity: 0, scale: 0 }}
@@ -39,7 +76,7 @@ function Login() {
         style={{ boxShadow: "0px 0px 10px 10px rgb(186, 213, 238,0.5)" }}
       >
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleLogin}
           className="flex flex-col items-center justify-center w-1/2 max-md:w-full  max-md:p-4"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-3">Login </h1>

@@ -22,8 +22,8 @@ function Header() {
           </Button>
         </div>
 
-        <div className="max-sm:w-[90%]  mx-auto ">
-          <img src={home} alt="hero" className="w-full h-full" />
+        <div className="max-sm:w-[100%]   mx-auto  w-[30%]   ">
+          <img src={home} alt="hero" className="w-full h-full animate-wiggle" />
         </div>
       </div>
 
