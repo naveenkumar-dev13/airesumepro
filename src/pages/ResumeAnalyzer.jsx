@@ -10,7 +10,7 @@ function ResumeAnalyzer() {
       <NavBar />
       <div className="flex items-center justify-center p-4 h-[calc(100vh-75px)] max-sm:p-2">
         <div
-          className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-6xl w-full max-md:p-3  "
+          className="flex items-center justify-between gap-2 rounded-3xl  mx-auto max-w-5xl w-full max-md:p-3  "
           style={{ boxShadow: "0px 0px 25px 10px rgb(186, 213, 238)" }}
           data-aos="fade-up"
         >
