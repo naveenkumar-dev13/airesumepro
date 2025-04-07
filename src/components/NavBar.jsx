@@ -24,6 +24,7 @@ const NavBar = ({ onExit }) => {
   }, [location.pathname, isopen]);
 
   const email = useSelector((state) => state.user.email);
+  console.log(email);
   return (
     <>
       {isopen && (

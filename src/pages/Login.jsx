@@ -13,9 +13,9 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -37,12 +37,12 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        dispatch(updateEmail(email));
+        dispatch(updateEmail({ email }));
 
         navigate("/");
       } else {
         console.error(data.error);
-        alert(data.error); // ✅ Notify user
+        alert(data.error);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -53,13 +53,13 @@ function Login() {
     setEmail("");
     setPassword("");
   };
-
   if (loading) {
     return <Loading />;
   }
   if (error) {
     return <Error />;
   }
+
   return (
     <motion.div
       // initial={{ opacity: 0, scale: 0 }}

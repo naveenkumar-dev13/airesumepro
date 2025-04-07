@@ -1,5 +1,4 @@
 import React from "react";
-
 function Inputs({
   children,
   email,
@@ -33,14 +32,14 @@ function Inputs({
   return (
     <div className="relative w-80 m-auto mb-6 max-sm:w-[90%]">
       <input
-        className="peer border-b border-gray-300 outline-none w-full text-gray-700 bg-transparent focus:ring-0 focus:border-blue-500"
-        type={inputType}
         id={label.toLowerCase()}
         name={label.toLowerCase()}
+        type={inputType}
         autoComplete={autoComplete}
         required
         value={inputValue}
         onChange={handleChange}
+        className="peer border-b border-gray-300 outline-none w-full text-gray-700 bg-transparent focus:ring-0 focus:border-blue-500"
       />
       <label
         htmlFor={label.toLowerCase()}
