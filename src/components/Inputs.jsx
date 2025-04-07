@@ -1,6 +1,6 @@
 import React from "react";
 
-function    Inputs({
+function Inputs({
   children,
   email,
   setEmail,
@@ -33,25 +33,14 @@ function    Inputs({
   return (
     <div className="relative w-80 m-auto mb-6 max-sm:w-[90%]">
       <input
-<<<<<<< HEAD
         className="peer border-b border-gray-300 outline-none w-full text-gray-700 bg-transparent focus:ring-0 focus:border-blue-500"
-        type={
-          children === "Password"
-            ? "password"
-            : children === "Email"
-            ? "email"   
-            : "text"
-        }
-=======
+        type={inputType}
         id={label.toLowerCase()}
         name={label.toLowerCase()}
-        type={inputType}
         autoComplete={autoComplete}
->>>>>>> 08ae067037f1a86a4dd07be3ad398b788779bb69
         required
         value={inputValue}
         onChange={handleChange}
-        className="peer border-b border-gray-300 outline-none w-full text-gray-700 bg-transparent focus:ring-0 focus:border-blue-500"
       />
       <label
         htmlFor={label.toLowerCase()}
