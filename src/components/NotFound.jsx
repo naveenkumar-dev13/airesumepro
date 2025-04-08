@@ -65,7 +65,6 @@ function NotFound() {
                 <img src={resumeIcon} alt="resume" className="w-6 h-6" />
               </span>
               Resume analyzer
-              jhjaskaj
             </Button>
           </Link>
         </div>

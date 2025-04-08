@@ -8,13 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 const ReportAnalysis = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const [openSection, setOpenSection] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [popUp, setPopUp] = useState(false);
-  const [jobSuggestions, setJobSuggestions] = useState([]);
-  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const apiData = location.state?.data;
+
   const [data, setData] = useState({
     overallScore: 0,
     breakdown: [
@@ -49,8 +44,16 @@ const ReportAnalysis = () => {
     },
   });
 
+  const [error, setError] = useState(null);
+  const [openSection, setOpenSection] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [popUp, setPopUp] = useState(false);
+  const [jobSuggestions, setJobSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
   useEffect(() => {
     if (apiData) {
+      // Set overall score and breakdown from API data
       setData({
         overallScore: apiData.overallScore || 0,
         breakdown: [
@@ -62,6 +65,7 @@ const ReportAnalysis = () => {
         ],
       });
 
+      // Parse issues and recommendations from API data
       setIssues({
         content: {
           needsImprovement: apiData.content?.issues
@@ -131,7 +135,7 @@ const ReportAnalysis = () => {
       }
 
       const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/resume/job-suggestions",
+        "https://airesumeproapi.onrender.com/api/job-suggestions",
         {
           method: "POST",
           headers: {
@@ -169,10 +173,12 @@ const ReportAnalysis = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="h-screen   ">
+    <div className="h-screen ">
       <NavBar />
       <div
-        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0 h-[calc(100vh-100px)]   `}
+        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0 h-[calc(100vh-75px)] ${
+          openSection ? "mt-20" : ""
+        }`}
       >
         <div className="bg-white shadow-[0px_5px_20px_-3px_rgba(0,0,0,0.2)] rounded-xl p-6 max-sm:shadow-none max-sm:p-4 mb-8">
           <div className="flex gap-16 items-center max-sm:flex-col">
@@ -281,11 +287,13 @@ const ReportAnalysis = () => {
             </div>
           </div>
         </div>
-        <div className={`my-4 p-3 overflow-y-hidden `}>
+        <div className="mt-4">
           <div>
             {isOpen &&
               Object.entries(issues).map(([issueKey, issueData], index) => (
                 <motion.div
+                  // data-aos="fade-up"
+                  data-aos-delay={index * 100}
                   key={issueKey}
                   className={`mb-4 rounded-xl shadow-md border border-gray-200 p-6 ${
                     openSection === issueKey ? "" : ""
