@@ -1,18 +1,73 @@
-import React, { useState, useSyncExternalStore } from "react";
-import NavBar from "../components/NavBar";
-import { avatar, resumes } from "../data";
-import { Link } from "react-router-dom";
-import Button from "../components/Button";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import {
+  faLocationDot,
+  faGraduationCap,
+  faPhone,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
+import Button from "../components/Button";
+import NavBar from "../components/NavBar";
+import { avatar } from "../data";
 
-function DashBoard() {
+const Dashboard = () => {
+  const [dashboardData, setDashboardData] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [userAvatar, setUserAvatar] = useState(avatar);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        // Fetch both endpoints in parallel
+        const [dashboardRes, basicInfoRes] = await Promise.all([
+          fetch("https://airesumeproapi.onrender.com/api/dashboard", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          fetch("https://airesumeproapi.onrender.com/api/basic-info", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ]);
+
+        if (!dashboardRes.ok) throw new Error("Failed to fetch dashboard data");
+        if (!basicInfoRes.ok) throw new Error("Failed to fetch user info");
+
+        const dashboardData = await dashboardRes.json();
+        const basicInfoData = await basicInfoRes.json();
+
+        console.log("User data from API:", basicInfoData.user); // Debug log
+
+        setDashboardData(dashboardData.data || []);
+        console.log("Full API response:", basicInfoData);
+        console.log("User object from API:", basicInfoData.user);
+
+        setUserInfo({
+          ...basicInfoData.user,
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -21,131 +76,163 @@ function DashBoard() {
       setUserAvatar(imageUrl);
     }
   };
-  const userName = useSelector((state) => state.user.user);
-  const userEmail = useSelector((state) => state.user.email);
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500">
+        {error}
+      </div>
+    );
+  if (!userInfo)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        User information not available
+      </div>
+    );
+
   return (
     <div>
       <NavBar />
-      <div className=" grid grid-cols-[400px_auto] mx-10   max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5 ">
-        <div
-          className=" h-auto w-auto bg-white rounded-xl  mt-10 flex flex-col  shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4"
-          data-aos="fade-down"
-          data-aos-duration="1000"
-        >
-          <div className="relative border-b-4 border-[#1170CD]  ">
-            <div className="w-24 h-24 object-cover rounded-xl  mx-auto my-4 overflow-hidden">
+      <div className="grid grid-cols-[400px_auto] mx-10 max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5">
+        {/* Profile Card */}
+        <div className="h-auto w-auto bg-white rounded-xl mt-10 flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4">
+          <div className="relative border-b-4 border-[#1170CD]">
+            <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden">
               <img
                 src={userAvatar}
                 alt="avatar"
-                className="w-full h-full object-cover rounded-xl    "
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
           </div>
-          <div className="border-b-2 border-blue-700 p-4 ">
-            <h1 className="text-2xl font-semibold text-center">{userName}</h1>
-            <p className="text-gray-500 text-center"> {userEmail}</p>
-            <p className="text-gray-800  font-semibold text-justify">
-              A Web Designer creates visually appealing and user-friendly
-              websites by focusing on layout, color schemes, typography, and
-              interactive elements. They use design tools like Figma or Adobe XD
-              and have basic knowledge of HTML, CSS, and JavaScript.
+          <div className="border-b-2 border-blue-700 p-4">
+            <h1 className="text-2xl font-semibold text-center">
+              {userInfo.username || "User Name"}
+            </h1>
+            <p className="text-gray-500 text-center flex items-center justify-center gap-2">
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                className="text-[#1170CD] w-4 h-4"
+              />
+              {userInfo.email}
+            </p>
+            <p className="text-gray-800 font-semibold text-justify">
+              {userInfo.summary || "No summary available."}
             </p>
           </div>
-          <div className="border-b-2 border-blue-700 p-4 flex flex-col gap-2 ">
-            <p className="flex items-center gap-2">
-              <span>
+          <div className="border-b-2 border-blue-700 p-4 flex flex-col gap-2">
+            {userInfo.location && (
+              <p className="flex items-center gap-2">
                 <FontAwesomeIcon
                   icon={faLocationDot}
                   className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
                 />
-              </span>
-              <p className="text-gray-800  font-semibold">Location</p>
-            </p>
+                <span className="text-gray-800 font-semibold">
+                  {userInfo.location}
+                </span>
+              </p>
+            )}
             <p className="flex items-center gap-2">
-              <span>
-                <FontAwesomeIcon
-                  icon={faGraduationCap}
-                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
-                />
+              <FontAwesomeIcon
+                icon={faGraduationCap}
+                className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+              />
+              <span className="text-gray-800 font-semibold">
+                {userInfo.education || "Education not specified"}
               </span>
-              <p className="text-gray-800  font-semibold">Education</p>
             </p>
-            <p className="flex items-center gap-2">
-              <span>
+            {userInfo.linkedinLink && (
+              <p className="flex items-center gap-2">
                 <FontAwesomeIcon
                   icon={faLinkedin}
                   className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
                 />
-              </span>
-              <p className="text-gray-800  font-semibold">LinkedIn </p>
-            </p>
-            <p className="flex items-center gap-2">
-              <span>
+                <span className="text-gray-800 font-semibold">
+                  {userInfo.linkedinLink}
+                </span>
+              </p>
+            )}
+            {userInfo.githubLink && (
+              <p className="flex items-center gap-2">
                 <FontAwesomeIcon
                   icon={faGithub}
                   className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
                 />
+                <span className="text-gray-800 font-semibold">
+                  {userInfo.githubLink}
+                </span>
+              </p>
+            )}
+          </div>
+          <div className="p-4 flex flex-col gap-2">
+            <p className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faPhone}
+                className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+              />
+              <span className="text-gray-800 font-semibold">
+                {userInfo.phone || "Phone not specified"}
               </span>
-              <p className="text-gray-800  font-semibold">Github</p>
             </p>
           </div>
-          <div className=" p-4 flex flex-col gap-2 ">
-            <p className="flex items-center gap-2">
-              <span>
-                <FontAwesomeIcon
-                  icon={faLocationDot}
-                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
-                />
-              </span>
-              <p className="text-gray-800  font-semibold">Location</p>
-            </p>
-            <p className="flex items-center gap-2">
-              <span>
-                <FontAwesomeIcon
-                  icon={faPhone}
-                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
-                />
-              </span>
-              <p className="text-gray-800  font-semibold">+1 234 567 8900</p>
-            </p>
+          <div className="flex justify-center p-4">
+            <Button
+              className="rounded-md"
+              onClick={() => navigate("/userinfo")}
+            >
+              Edit Profile
+            </Button>
           </div>
-          <Link to="/userinfo" className="flex justify-center p-4">
-            <Button className={"  rounded-md "}>Edit Profile</Button>
-          </Link>
         </div>
-        <div className=" max-sm:m-2">
-          <h1 className="text-4xl  my-10 max-sm:my-5">My Reumes</h1>
-          <div className=" grid grid-cols-2 gap-6 max-sm:grid-cols-1">
-            {resumes.map((resume, index) => (
-              <div
-                key={index}
-                data-aos="zoom-in"
-                data-aos-delay={index * 100}
-                data-aos-duration="1000"
-                className="p-4 w-auto  transition-all duration-300 bg-white rounded-xl shadow-md "
-              >
-                <h3 className="text-lg font-semibold">{resume.title}</h3>
-                <p className="text-gray-500 text-sm">
-                  Last update: {resume.lastUpdate}
-                </p>
-                <p className="mt-2 font-medium">ATS Score:</p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="bg-blue-500 h-2.5 rounded-full"
-                    style={{ width: `${resume.atsScore}%` }}
-                  ></div>
+
+        {/* Resumes Section */}
+        <div className="max-sm:m-2">
+          <h1 className="text-4xl my-10 max-sm:my-5">My Resumes</h1>
+          {dashboardData.length > 0 ? (
+            <div className="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+              {dashboardData.map((item, index) => (
+                <div
+                  key={index}
+                  className="p-4 w-auto transition-all duration-300 bg-white rounded-xl shadow-md"
+                >
+                  <h3 className="text-lg font-semibold">
+                    {item.jobRole || "Untitled Resume"}
+                  </h3>
+                  <p className="mt-2 font-medium">ATS Score:</p>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className="bg-blue-500 h-2.5 rounded-full"
+                      style={{ width: `${item.resumeAnalysisScore || 0}%` }}
+                    ></div>
+                  </div>
+                  <p className="mt-2">{item.resumeAnalysisScore || 0}%</p>
+                  <p className="mt-2 font-medium">
+                    Interview Score: {item.correctAnswers || 0}
+                  </p>
                 </div>
-                <p className="mt-2">{resume.atsScore}%</p>
-                <p className="mt-2 font-medium">
-                  Interview Score: {resume.interviewScore}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <p>No resume data available. Create your first resume!</p>
+              <Button
+                className="mt-4"
+                onClick={() => navigate("/create-resume")}
+              >
+                Create Resume
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default DashBoard;
+export default Dashboard;
