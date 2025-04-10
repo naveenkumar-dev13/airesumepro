@@ -62,13 +62,13 @@ function Login() {
 
   return (
     <motion.div
-      // initial={{ opacity: 0, scale: 0 }}
-      // animate={{ opacity: 1, scale: 1 }}
-      // transition={{
-      //   duration: 0.8,
-      //   stiffness: 600,
-      //   ease: "easeInOut",
-      // }}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.8,
+        stiffness: 600,
+        ease: "easeInOut",
+      }}
       className="flex items-center justify-center h-screen  p-4 "
     >
       <div

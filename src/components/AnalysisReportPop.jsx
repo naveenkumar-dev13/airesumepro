@@ -104,7 +104,7 @@ const AnalyseReportPopup = ({
             className="px-4 py-2 bg-[#1170CD] text-white rounded-md hover:bg-[#0E5BAA] transition-colors max-md:w-24"
             onClick={startMockInterview}
           >
-            Start Interview
+            Start
           </Button>
         </div>
       </div>

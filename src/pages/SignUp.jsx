@@ -58,20 +58,25 @@ function SignUp() {
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="bg-red-500 text-white p-4 rounded-md">{error}</div>
+        <div
+          className="bg-red-500 text-white p-4 rounded-md"
+          onClick={() => navigate(-1)}
+        >
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
     <motion.div
-      // initial={{ opacity: 0, scale: 0 }}
-      // animate={{ opacity: 1, scale: 1 }}
-      // transition={{
-      //   duration: 0.8,
-      //   stiffness: 600,
-      //   ease: "easeInOut",
-      // }}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.8,
+        stiffness: 600,
+        ease: "easeInOut",
+      }}
       className="flex items-center justify-between h-screen p-4 "
     >
       <div

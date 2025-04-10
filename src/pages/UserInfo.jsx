@@ -4,7 +4,6 @@ import Loading from "../components/Loading";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import AccountInputs from "../components/AccountInputs";
 import { motion } from "framer-motion";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,36 +21,23 @@ const BasicInfo = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
     username: "",
+    email: "",
+    phoneNumber: "",
     gender: "",
     location: "",
     birthday: "",
     summary: "",
     githubLink: "",
     linkedinLink: "",
+    profilePicture: "",
   });
-
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState("");
-
-  const handleEdit = (field) => {
-    setEditingField(field);
-    setTempValue(user[field]);
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    setUser({ ...user, [editingField]: tempValue });
-    setEditingField(null);
-  };
-
-  const handleCancel = () => {
-    setEditingField(null);
-    setTempValue("");
-  };
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchBasicInfo();
+    fetchProfilePicture();
     setActiveButton(location.pathname);
   }, [location.pathname]);
 
@@ -72,7 +58,15 @@ const BasicInfo = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       setUser(response.data.user);
+
+      if (response.data.user.profilePicture) {
+        setUserAvatar(response.data.user.profilePicture);
+      } else {
+        setUserAvatar(avatar);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching basic info:", error);
@@ -80,34 +74,86 @@ const BasicInfo = () => {
     }
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setUserAvatar(imageUrl);
+  const fetchProfilePicture = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "https://airesumeproapi.onrender.com/api/profile-picture",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.profilePicture) {
+        setUserAvatar(response.data.profilePicture);
+      }
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+
+        const token = localStorage.getItem("token");
+
+        const response = await axios.post(
+          "https://airesumeproapi.onrender.com/api/upload-profile-picture",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        setUserAvatar(response.data.profilePicture);
+        setMessage("Profile picture updated successfully!");
+        setTimeout(() => setMessage(""), 3000);
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        setMessage(
+          error.response?.data?.error || "Failed to update profile picture."
+        );
+      }
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleEdit = (field) => {
+    setEditingField(field);
+    setTempValue(user[field] || "");
+  };
+
+  const handleSave = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      const updatedField = { [editingField]: tempValue };
+
+      // Send the updated field to the backend
+      const response = await axios.put(
         "https://airesumeproapi.onrender.com/api/basic-info",
-        user,
+        updatedField,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessage("Basic info updated successfully!");
+
+      // Update the local state with the new value
+      setUser({ ...user, [editingField]: response.data.user[editingField] });
+      setEditingField(null);
+      setMessage("Changes saved successfully!");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
-      console.error("Error updating basic info:", error);
-      setMessage("Failed to update basic info.");
+      console.error("Error saving changes:", error);
+      setMessage(error.response?.data?.error || "Failed to save changes.");
     }
+  };
+
+  const handleCancel = () => {
+    setEditingField(null);
+    setTempValue("");
   };
 
   if (loading) return <Loading />;
@@ -129,35 +175,29 @@ const BasicInfo = () => {
               />
               <label htmlFor="avatar-upload" className="cursor-pointer block">
                 <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
-                  {userAvatar ? (
-                    <img
-                      src={userAvatar}
-                      alt="avatar"
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <img
-                        src={nonProfile}
-                        alt="avatar"
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    </div>
-                  )}
+                  <img
+                    src={userAvatar || nonProfile}
+                    alt="Profile"
+                    className="w-full h-full object-cover rounded-full"
+                    onError={(e) => {
+                      e.target.src = nonProfile;
+                    }}
+                  />
                 </div>
               </label>
             </div>
-            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 max-sm:hidden">
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex max-sm:hidden">
               <Link to={"/userinfo"}>
                 <Button
-                  className={`py-2 mb-4 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                  className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                     activeButton === "/userinfo"
                       ? "!bg-[#1170CD] !text-white"
                       : ""
                   }`}
-                  onClick={() => setActiveButton("userinfo")}
                 >
-                  <ion-icon name="person-outline" className="w-5 h-5 mt-1" />
+                  <span className="mt-1">
+                    <FontAwesomeIcon icon={faUser} className="!text-white" />
+                  </span>
                   Basic Info
                 </Button>
               </Link>
@@ -168,9 +208,10 @@ const BasicInfo = () => {
                       ? "!bg-[#1170CD] !text-white"
                       : ""
                   }`}
-                  onClick={() => setActiveButton("/accountinfo")}
                 >
-                  <ion-icon name="settings-outline" className="w-5 h-5 mt-1" />
+                  <span className="block mt-1 text-white">
+                    <FontAwesomeIcon icon={faGear} />
+                  </span>
                   Account
                 </Button>
               </Link>
@@ -204,98 +245,17 @@ const BasicInfo = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSave}>
               {Object.keys(user)
                 .filter((key) => !["profilePicture"].includes(key))
                 .map((key) => (
                   <div
                     key={key}
-                    className="flex items-start py-6 border-b max-sm:gap-2 max-sm:flex-col gap-4"
+                    className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4 max-sm:px-4"
                   >
-                    {/* Field label */}
-                    <div className="w-1/4 min-w-[120px] max-sm:w-full max-sm:flex max-sm:justify-between">
+                    <div className="flex justify-between max-sm:w-full">
                       <p className="capitalize font-medium text-xl">{key}:</p>
-                      <div className="mt-2 sm:mt-0 hidden max-sm:block">
-                        {key !== "username" && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              editingField === key
-                                ? handleSave()
-                                : handleEdit(key)
-                            }
-                            className="text-blue-500 hover:underline"
-                          >
-                            {editingField === key ? "" : "Edit"}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Field content - aligned to same starting point */}
-                    <div className="flex-1 w-full">
-                      {editingField === key ? (
-                        <>
-                          {key === "birthday" ? (
-                            <div className="w-full">
-                              <input
-                                type="date"
-                                value={tempValue}
-                                onChange={(e) => setTempValue(e.target.value)}
-                                className="w-full px-2 py-1 border rounded-md"
-                              />
-                            </div>
-                          ) : key === "summary" ? (
-                            <textarea
-                              value={tempValue}
-                              onChange={(e) => setTempValue(e.target.value)}
-                              className="w-full px-2 py-1 border rounded-md h-40"
-                              rows={4}
-                            />
-                          ) : key === "gender" ? (
-                            <select
-                              value={tempValue}
-                              onChange={(e) => setTempValue(e.target.value)}
-                              className="w-full px-2 py-1 border rounded-md"
-                            >
-                              <option value="">Select</option>
-                              <option value="male">Male</option>
-                              <option value="female">Female</option>
-                              <option value="other">Other</option>
-                            </select>
-                          ) : (
-                            <input
-                              type="text"
-                              value={tempValue}
-                              onChange={(e) => setTempValue(e.target.value)}
-                              className="w-full px-2 py-1 border rounded-md"
-                            />
-                          )}
-                          <div className="flex justify-start mt-4">
-                            <button
-                              type="button"
-                              onClick={handleCancel}
-                              className="p-2 border rounded-md mr-2"
-                            >
-                              Cancel
-                            </button>
-                            <Button type="submit" className="!p-2">
-                              Save
-                            </Button>
-                          </div>
-                        </>
-                      ) : (
-                        <p className="text-gray-950">
-                          {key === "birthday"
-                            ? new Date(user[key]).toLocaleDateString()
-                            : user[key] || "-"}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Edit button (desktop) */}
-                    <div className="w-20 text-right max-sm:hidden">
-                      {key !== "username" && (
+                      <div className="mt-2 hidden max-sm:block">
                         <button
                           type="button"
                           onClick={() =>
@@ -307,8 +267,86 @@ const BasicInfo = () => {
                         >
                           {editingField === key ? "" : "Edit"}
                         </button>
-                      )}
+                      </div>
                     </div>
+
+                    {editingField === key ? (
+                      <div>
+                        {key === "birthday" ? (
+                          <input
+                            type="date"
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            className="px-2 py-1 flex-1 border-b"
+                          />
+                        ) : key === "summary" ? (
+                          <textarea
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            className="w-full px-2 py-1 border rounded-md h-40"
+                            rows={4}
+                          />
+                        ) : key === "gender" ? (
+                          <select
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            className="px-2 py-1 flex-1 border-b"
+                          >
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            className="px-2 py-1 flex-1 border-b"
+                          />
+                        )}
+                        <div className="flex justify-start mt-4 gap-2">
+                          <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="p-2 bg-gray-300 rounded-md"
+                          >
+                            Cancel
+                          </button>
+                          <Button
+                            type="submit"
+                            className="!p-2"
+                            disabled={!tempValue || editingField === null}
+                          >
+                            Save
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-950 font-semibold flex-grow max-sm:w-full">
+                        {key === "birthday"
+                          ? new Date(user[key]).toLocaleDateString()
+                          : user[key] || "-"}
+                      </p>
+                    )}
+
+                    {key !== "username" &&
+                      key !== "email" &&
+                      key !== "phoneNumber" && (
+                        <div className="max-sm:hidden">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              editingField === key
+                                ? handleSave()
+                                : handleEdit(key)
+                            }
+                            className="text-blue-500 hover:underline"
+                          >
+                            {editingField === key ? "" : "Edit"}
+                          </button>
+                        </div>
+                      )}
                   </div>
                 ))}
             </form>

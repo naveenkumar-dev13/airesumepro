@@ -11,6 +11,7 @@ import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import Button from "../components/Button";
 import NavBar from "../components/NavBar";
 import { avatar } from "../data";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState([]);
@@ -77,12 +78,7 @@ const Dashboard = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
+  if (loading) return <Loading />;
   if (error)
     return (
       <div className="flex justify-center items-center h-screen text-red-500">

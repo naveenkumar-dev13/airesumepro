@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { questions } from "../data";
 import NavBar from "../components/NavBar";
-import Button from "../components/Button";
-import Loading from "../components/Loading";
 
 const InterviewResult = () => {
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState(questions);

@@ -3,7 +3,10 @@ import { cards } from "../data";
 function FeaturesSection() {
   return (
     <div className="my-10 flex flex-col gap-10 py-16 max-sm:py-5 max-sm:my-5">
-      <h2 className="text-center text-4xl max-sm:text-2xl font-bold my-10 max-sm:my-5">
+      <h2
+        className="text-center text-4xl max-sm:text-2xl font-bold my-10 max-sm:my-5"
+        data-aos="fade-down"
+      >
         Instant AI-Powered Resume Feedback
       </h2>
       <div className="flex justify-center items-center gap-10 max-sm:flex-col  mx-5 ">

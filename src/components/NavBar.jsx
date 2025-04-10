@@ -8,14 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-
 const NavBar = ({ onExit }) => {
- 
   const [isopen, setIsopen] = useState(false);
   const [hover, setHover] = useState(false);
   const location = useLocation();
   const [activeButton, setActiveButton] = useState(location.pathname);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (isopen) {
       document.body.style.overflow = "hidden";
@@ -24,13 +23,12 @@ const NavBar = ({ onExit }) => {
     }
     setActiveButton(location.pathname);
   }, [location.pathname, isopen]);
-  
+
   const email = useSelector((state) => state.user.email);
   console.log(email);
   const token = localStorage.getItem("token");
   const userEmail =
     email || (token ? JSON.parse(atob(token.split(".")[1])).email : null);
-
 
   return (
     <>
@@ -72,7 +70,7 @@ const NavBar = ({ onExit }) => {
 
               {userEmail ? (
                 <div
-                  className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative"
+                  className="bg-blue-500 px-4 py-2 rounded-full cursor-pointer relative max-sm:hidden"
                   onClick={() => setHover(!hover)}
                 >
                   <p className="text-white text-lg font-bold">
@@ -80,7 +78,7 @@ const NavBar = ({ onExit }) => {
                   </p>
 
                   {hover && (
-                    <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white">
+                    <div className="absolute top-12 mt-2 left-0 transform -translate-x-[60%] bg-[#1170CD] text-white rounded-lg shadow-lg w-32 text-center border-white ">
                       <div className="absolute left-2/3 transform -translate-x-0 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-[#1170CD]"></div>
                       <p
                         className="py-2 border-b border-white cursor-pointer"
