@@ -9,6 +9,7 @@ import ShowPasswordPopup from "../components/ShowPasswordPopup";
 import { avatar, nonProfile } from "../data";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../components/Loading";
 
 function AccountInfoPage() {
   const [info, setInfo] = useState({});
@@ -18,12 +19,17 @@ function AccountInfoPage() {
   const [activeButton, setActiveButton] = useState("basicinfo");
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
   // Fetch user data
   const fetchAccountInfo = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         "https://airesumeproapi.onrender.com/api/account-info",
@@ -38,17 +44,20 @@ function AccountInfoPage() {
       if (userData && userData._id) {
         delete userData._id;
       }
-      setInfo({ ...userData, password: "********" }); // Add dummy password
+      setInfo({ ...userData, password: "*****" });
 
       // Fetch profile picture separately
       fetchProfilePicture();
     } catch (err) {
       console.error("Error fetching account info:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Fetch profile picture
   const fetchProfilePicture = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         "https://airesumeproapi.onrender.com/api/get-profile-picture",
@@ -69,6 +78,8 @@ function AccountInfoPage() {
     } catch (err) {
       console.error("Error fetching profile picture:", err);
       setUserAvatar(nonProfile);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,6 +106,7 @@ function AccountInfoPage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const updatedInfo = { ...info, [editingField]: tempValue };
 
     try {
@@ -120,11 +132,14 @@ function AccountInfoPage() {
       }
     } catch (err) {
       console.error("Error updating info:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const confirmPasswordSave = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await fetch(
         "https://airesumeproapi.onrender.com/api/update-account-info",
@@ -134,7 +149,10 @@ function AccountInfoPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ newPassword: tempValue }),
+          body: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: tempValue,
+          }),
         }
       );
 
@@ -145,50 +163,59 @@ function AccountInfoPage() {
         setEditingField(null);
         setShowPasswordPopup(false);
         setTempValue("");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        alert("Password updated successfully!");
       } else {
         console.error("Password update failed:", data);
+        alert(data.error || "Failed to update password");
       }
     } catch (err) {
       console.error("Error updating password:", err);
+      alert("An error occurred while updating your password");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    ) {
-      try {
-        const res = await fetch(
-          "https://airesumeproapi.onrender.com/api/delete-account",
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (res.ok) {
-          localStorage.removeItem("token");
-          navigate("/");
-        } else {
-          const data = await res.json();
-          console.error("Account deletion failed:", data.error);
-          alert("Failed to delete account. Please try again.");
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "https://airesumeproapi.onrender.com/api/delete-account",
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      } catch (err) {
-        console.error("Error deleting account:", err);
-        alert("An error occurred while deleting your account.");
+      );
+
+      if (res.ok) {
+        localStorage.removeItem("token");
+        navigate("/");
+      } else {
+        const data = await res.json();
+        console.error("Account deletion failed:", data.error);
+        alert("Failed to delete account. Please try again.");
       }
+    } catch (err) {
+      console.error("Error deleting account:", err);
+      alert("An error occurred while deleting your account.");
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className="h-screen ">
       <NavBar />
@@ -305,7 +332,9 @@ function AccountInfoPage() {
                     </div>
                   ) : (
                     <p className="text-gray-950 font-semibold flex-grow max-sm:w-full">
-                      {key === "password" ? "********" : info[key]}
+                      {key === "password"
+                        ? "*".repeat(tempValue.length || 8)
+                        : info[key]}
                     </p>
                   )}
 
@@ -450,6 +479,14 @@ function AccountInfoPage() {
         setShowPasswordPopup={setShowPasswordPopup}
         showPasswordPopup={showPasswordPopup}
         confirmPasswordSave={confirmPasswordSave}
+        tempValue={tempValue}
+        setEditingField={setEditingField}
+        currentPassword={currentPassword}
+        setCurrentPassword={setCurrentPassword}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
       />
     </div>
   );

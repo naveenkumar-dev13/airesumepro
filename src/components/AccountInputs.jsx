@@ -9,7 +9,7 @@ function AccountInputs() {
     birthday: "",
     summary: "",
     githubLink: "",
-    linkedinLink: ""
+    linkedinLink: "",
   });
 
   const [editingField, setEditingField] = useState(null);
@@ -169,7 +169,7 @@ function AccountInputs() {
           ) : (
             <p className="text-gray-950 flex-grow max-sm:w-full">
               {key === "birthday"
-                ? user[key] 
+                ? user[key]
                   ? new Date(user[key]).toLocaleDateString()
                   : "-"
                 : user[key] || "-"}

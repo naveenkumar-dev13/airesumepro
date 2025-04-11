@@ -283,8 +283,9 @@ const BasicInfo = () => {
                           <textarea
                             value={tempValue}
                             onChange={(e) => setTempValue(e.target.value)}
-                            className="w-full px-2 py-1 border rounded-md h-40"
+                            className="px-2 py-1 border border-gray-300 focus:outline-none rounded-md h-40  w-[600px] text-gray-500 placeholder:text-gray-400  placeholder:text-sm max-sm:w-[350px] "
                             rows={4}
+                            placeholder="'The only way to do great work is to love what you do...'"
                           />
                         ) : key === "gender" ? (
                           <select
