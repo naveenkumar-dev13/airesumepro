@@ -2,24 +2,21 @@ import React, { useState } from "react";
 import logo from "../assets/Google__G__logo 1.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import Inputs from "../components/Inputs";
 import { login } from "../data";
 import { useDispatch } from "react-redux";
-import { updateEmail } from "../feature/UserSlice";
-import Loading from "../components/Loading";
-import Error from "../components/NotFound";
+import { updateEmail, updateName } from "../feature/UserSlice";
+//  import {login} from '../feature/UserSlice'
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+
     console.log("Sending login request with:", { email, password });
 
     try {
@@ -37,38 +34,31 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        dispatch(updateEmail({ email }));
-
+        dispatch(updateEmail(data.email)); // ✅ Only update Redux after login success
+        // If backend sends name: dispatch(updateName(data.name));
         navigate("/");
       } else {
         console.error(data.error);
-        alert(data.error);
+        alert(data.error); // ✅ Notify user
       }
     } catch (error) {
       console.error("Login error:", error);
       alert("Something went wrong. Try again!");
     }
-    setLoading(false);
 
     setEmail("");
     setPassword("");
   };
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <Error />;
-  }
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.8,
-        stiffness: 600,
-        ease: "easeInOut",
-      }}
+      // initial={{ opacity: 0, scale: 0 }}
+      // animate={{ opacity: 1, scale: 1 }}
+      // transition={{
+      //   duration: 0.8,
+      //   stiffness: 600,
+      //   ease: "easeInOut",
+      // }}
       className="flex items-center justify-center h-screen  p-4 "
     >
       <div

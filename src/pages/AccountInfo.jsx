@@ -153,6 +153,37 @@ function AccountInfoPage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      try {
+        const res = await fetch(
+          "https://airesumeproapi.onrender.com/api/delete-account",
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (res.ok) {
+          localStorage.removeItem("token");
+          navigate("/");
+        } else {
+          const data = await res.json();
+          console.error("Account deletion failed:", data.error);
+          alert("Failed to delete account. Please try again.");
+        }
+      } catch (err) {
+        console.error("Error deleting account:", err);
+        alert("An error occurred while deleting your account.");
+      }
+    }
+  };
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -161,15 +192,15 @@ function AccountInfoPage() {
   return (
     <div className="h-screen ">
       <NavBar />
-      <div className="max-sm:p-4 h-[calc(100vh-75px)] p-6">
+      <div className="h-[calc(100vh-75px)] p-6 max-sm:p-2">
         <div
-          className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2"
-          style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
+          className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1 max-sm:p-2"
+          style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
         >
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
             <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-28">
-              <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
+              <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 bg-slate-50 shadow-2xl">
                 <img
                   src={userAvatar || nonProfile}
                   alt="avatar"
@@ -341,7 +372,10 @@ function AccountInfoPage() {
             </form>
 
             <div className="flex justify-between items-center gap-4 max-sm:flex-col max-sm:gap-4">
-              <Button className="px-3 py-2 font-medium rounded-md bg-white !text-[#F01F1F] border-2 border-[#F01F1F] flex gap-2 justify-center items-center max-sm:w-full hover:!bg-[#F01F1F] hover:!text-white">
+              <Button
+                className="px-3 py-2 font-medium rounded-md bg-white !text-[#F01F1F] border-2 border-[#F01F1F] flex gap-2 justify-center items-center max-sm:w-full hover:!bg-[#F01F1F] hover:!text-white"
+                onClick={handleDeleteAccount}
+              >
                 <ion-icon name="trash-outline" className="w-5 h-5" />
                 Delete
               </Button>

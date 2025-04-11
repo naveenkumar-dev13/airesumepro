@@ -3,7 +3,6 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import Loading from "../components/Loading";
 
 const MockInterview = () => {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ const MockInterview = () => {
   const [skippedCount, setSkippedCount] = useState(0);
   const [evaluationResults, setEvaluationResults] = useState(null);
 
-  // Fetch questions from API when component mounts
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!resumeText || !jobRole || !difficulty) {
@@ -36,9 +34,6 @@ const MockInterview = () => {
           return;
         }
 
-        setLoading(true);
-        setError("");
-
         const response = await fetch(
           "https://airesumeproapi.onrender.com/api/mockinterview",
           {
@@ -47,33 +42,22 @@ const MockInterview = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              resumeText,
-              jobRole,
-              difficulty,
-            }),
+            body: JSON.stringify({ resumeText, jobRole, difficulty }),
           }
         );
 
+        const result = await response.json();
         if (!response.ok) {
-          const errorData = await response.json();
           throw new Error(
-            errorData.message || "Failed to fetch interview questions"
+            result.error || "Failed to fetch interview questions"
           );
         }
 
-        const result = await response.json();
-
-        if (!result.questions || !result.expectedAnswers) {
-          throw new Error("Invalid response format from server");
-        }
-
-        setQuestions(result.questions);
-        setExpectedAnswers(result.expectedAnswers);
+        setQuestions(result.questions || []);
+        setExpectedAnswers(result.expectedAnswers || []);
+        setLoading(false);
       } catch (err) {
-        console.error("API Error:", err);
-        setError(err.message || "An error occurred while fetching questions");
-      } finally {
+        setError(err.message);
         setLoading(false);
       }
     };
@@ -81,15 +65,14 @@ const MockInterview = () => {
     fetchQuestions();
   }, [resumeText, jobRole, difficulty, navigate]);
 
-  // Timer effect
   useEffect(() => {
-    if (timeLeft > 0 && questions.length > 0 && !evaluationResults) {
+    if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && questions.length > 0 && !evaluationResults) {
+    } else if (timeLeft === 0 && questions.length > 0) {
       evaluateAnswers();
     }
-  }, [timeLeft, questions, evaluationResults]);
+  }, [timeLeft]);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
@@ -109,10 +92,7 @@ const MockInterview = () => {
     }
   };
 
-  const progress =
-    questions.length > 0
-      ? ((currentQuestionIndex + 1) / questions.length) * 100
-      : 0;
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   const handleExit = () => {
     setShowExitPopup(true);
@@ -127,10 +107,8 @@ const MockInterview = () => {
   };
 
   const evaluateAnswers = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError("");
-
       const token = localStorage.getItem("token");
       if (!token) {
         navigate("/login");
@@ -159,32 +137,47 @@ const MockInterview = () => {
         }
       );
 
+      const result = await response.json();
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to evaluate answers");
+        throw new Error(result.error || "Failed to evaluate answers");
       }
 
-      const result = await response.json();
-      setEvaluationResults(result);
+      // Ensure evaluation results have the correct structure
+      const formattedResults = {
+        correctCount: result.correctCount || 0,
+        wrongCount: result.wrongCount || 0,
+        evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
+        feedback: result.feedback || "No feedback provided",
+      };
+
+      setEvaluationResults(formattedResults);
+      setLoading(false);
     } catch (err) {
-      console.error("Evaluation Error:", err);
-      setError(err.message || "An error occurred during evaluation");
-    } finally {
+      setError(err.message);
       setLoading(false);
     }
   };
 
   if (loading && questions.length === 0) {
-    return <Loading />;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner-border text-blue-500" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-3">Preparing your mock interview questions...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <div className="text-center max-w-md p-6 bg-white rounded-lg shadow-md">
-          <p className="text-red-500 text-lg mb-4">Error: {error}</p>
+        <div className="text-center text-red-500">
+          <p>Error: {error}</p>
           <Button
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
             onClick={() => navigate("/analysisReport")}
           >
             Go Back
@@ -196,27 +189,27 @@ const MockInterview = () => {
 
   if (evaluationResults) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="h-screen">
         <NavBar />
-        <div className="p-6 max-w-6xl mx-auto">
+        <div className="p-6 max-w-6xl m-auto">
           <h1 className="text-3xl font-bold text-center mb-8">
             Interview Results
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-green-50 p-4 rounded-lg text-center border border-green-200">
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="bg-green-100 p-4 rounded-lg text-center">
               <h3 className="text-xl font-semibold">Correct Answers</h3>
               <p className="text-4xl font-bold text-green-600">
-                {evaluationResults.correctCount || 0}
+                {evaluationResults.correctCount}
               </p>
             </div>
-            <div className="bg-red-50 p-4 rounded-lg text-center border border-red-200">
+            <div className="bg-red-100 p-4 rounded-lg text-center">
               <h3 className="text-xl font-semibold">Wrong Answers</h3>
               <p className="text-4xl font-bold text-red-600">
-                {evaluationResults.wrongCount || 0}
+                {evaluationResults.wrongCount}
               </p>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg text-center border border-yellow-200">
+            <div className="bg-yellow-100 p-4 rounded-lg text-center">
               <h3 className="text-xl font-semibold">Skipped Questions</h3>
               <p className="text-4xl font-bold text-yellow-600">
                 {skippedCount}
@@ -225,48 +218,74 @@ const MockInterview = () => {
           </div>
 
           <div className="space-y-6">
-            {questions.map((question, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg p-4 bg-white"
-              >
-                <h3 className="text-xl font-semibold mb-2">
-                  Q{index + 1}: {question}
-                </h3>
-                <p className="mb-2">
-                  <strong>Your Answer:</strong>{" "}
-                  {answers[index] || "Not answered"}
-                </p>
-                <p className="mb-2">
-                  <strong>Expected Answer:</strong> {expectedAnswers[index]}
-                </p>
+            {questions.map((question, index) => {
+              const userAnswer = answers[index] || "Not answered";
+              const isSkipped = userAnswer === "Skipped";
+              const isCorrect =
+                !isSkipped &&
+                evaluationResults.evaluation[index]?.includes("Correct");
+
+              return (
                 <div
-                  className={`p-3 rounded ${
-                    evaluationResults.evaluation?.[index]?.includes("Correct")
-                      ? "bg-green-50 text-green-700"
-                      : "bg-red-50 text-red-700"
-                  }`}
+                  key={index}
+                  className="border border-gray-200 rounded-lg p-4"
                 >
-                  <p className="font-semibold">
-                    {evaluationResults.evaluation?.[index]?.includes("Correct")
-                      ? "✓ Correct"
-                      : "✗ Wrong"}
+                  <h3 className="text-xl font-semibold mb-2">
+                    Q{index + 1}: {question}
+                  </h3>
+                  <p className="mb-2">
+                    <strong>Your Answer:</strong> {userAnswer}
                   </p>
-                  <p>{evaluationResults.evaluation?.[index]}</p>
+                  <p className="mb-2">
+                    <strong>Expected Answer:</strong> {expectedAnswers[index]}
+                  </p>
+                  <div
+                    className={`p-3 rounded ${
+                      isSkipped
+                        ? "bg-gray-100"
+                        : isCorrect
+                        ? "bg-green-100"
+                        : "bg-red-100"
+                    }`}
+                  >
+                    <p
+                      className={
+                        isSkipped
+                          ? "text-gray-700"
+                          : isCorrect
+                          ? "text-green-700"
+                          : "text-red-700"
+                      }
+                    >
+                      <strong>
+                        {isSkipped
+                          ? "↻ Skipped"
+                          : isCorrect
+                          ? "✓ Correct"
+                          : "✗ Wrong"}
+                      </strong>
+                    </p>
+                    {!isSkipped && (
+                      <p>
+                        {evaluationResults.evaluation[index] ||
+                          "No evaluation available"}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <div className="mt-8 flex justify-center gap-4">
             <Button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+              className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
               onClick={() => navigate("/dashboard")}
             >
               Go to Dashboard
             </Button>
             <Button
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
+              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
               onClick={() => navigate("/analysisReport")}
             >
               Try Another Interview
@@ -280,40 +299,46 @@ const MockInterview = () => {
   return (
     <>
       <NavBar onExit={handleExit} />
-      <div className="p-6 max-w-6xl mx-auto min-h-[90vh] flex flex-col justify-center">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">
+      <div className="p-6 max-w-6xl m-auto h-[90vh] flex flex-col justify-center my-auto">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold mb-4">
             Question {currentQuestionIndex + 1} of {questions.length}
           </h2>
-          <div className="bg-blue-500 text-white px-3 py-1 rounded-lg">
-            {timeLeft > 0
-              ? `${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
-                  .toString()
-                  .padStart(2, "0")}`
-              : "Time's Up"}
+          <div className="mb-2">
+            {timeLeft > 0 ? (
+              <span className="bg-[#1170CD] text-white px-2 py-1 rounded-[10px]">
+                {Math.floor(timeLeft / 60)}:
+                {(timeLeft % 60).toString().padStart(2, "0")}
+              </span>
+            ) : (
+              <span className="bg-[#1170CD] text-white px-2 py-1 rounded-[10px]">
+                Time's Up
+              </span>
+            )}
           </div>
         </div>
-
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
           <div
-            className="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
+            className="bg-[#1170CD] h-2.5 rounded-full"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
 
         {questions.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-xl font-medium text-gray-800">
+          <div>
+            <div
+              className="my-4 shadow-md p-4 rounded-xl h-24 flex items-center"
+              style={{ boxShadow: "0px 0px 10px 0px rgb(186, 213, 238)" }}
+            >
+              <p className="font-normal text-xl">
                 {questions[currentQuestionIndex]}
               </p>
             </div>
-
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <p className="text-lg font-medium">Your Answer</p>
+            <div className="my-4 shadow-xl p-4 rounded-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-xl">Your Answer</p>
                 <Button
-                  className="px-4 py-2 border border-blue-500 text-blue-500 hover:bg-blue-50 rounded-lg"
+                  className="px-6 py-2 hover:!bg-[#1170CD] hover:!text-white !bg-white !text-[#1170CD] border rounded w-fit transition"
                   onClick={() => {
                     setAnswers((prev) => ({
                       ...prev,
@@ -323,30 +348,31 @@ const MockInterview = () => {
                     nextQuestion();
                   }}
                 >
-                  Skip Question
+                  Skip
                 </Button>
               </div>
-
               <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-600 rounded-lg mb-4 focus:outline-none text-stone-600"
                 placeholder="Type your answer here..."
-                rows="5"
+                rows="4"
                 value={answers[currentQuestionIndex] || ""}
                 onChange={handleAnswerChange}
               />
-
-              <div className="flex justify-between pt-4">
+              <div className="flex justify-between">
                 <Button
-                  className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg disabled:opacity-50"
+                  className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50 max-md:text-sm"
                   onClick={previousQuestion}
                   disabled={currentQuestionIndex === 0 || timeLeft === 0}
                 >
                   Previous
                 </Button>
                 <Button
-                  className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50"
+                  className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50 max-md:text-sm"
                   onClick={nextQuestion}
-                  disabled={timeLeft === 0}
+                  disabled={
+                    currentQuestionIndex >= questions.length - 1 ||
+                    timeLeft === 0
+                  }
                 >
                   {currentQuestionIndex >= questions.length - 1
                     ? "Submit"
@@ -358,58 +384,46 @@ const MockInterview = () => {
         )}
       </div>
 
-      {/* Exit Confirmation Popup */}
       {showExitPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 shadow-xl">
-            <div className="flex items-center gap-3 mb-4">
-              <svg
-                className="w-6 h-6 text-red-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              <h2 className="text-xl font-bold text-gray-800">
+          <div className="bg-white rounded-2xl p-6 w-[400px] mx-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-icons-outlined text-red-500 text-2xl">
+                warning
+              </span>
+              <h2 className="text-2xl font-bold text-gray-800">
                 Exit Interview?
               </h2>
             </div>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to exit? All your progress will be lost.
+              Are you sure you want to exit? All your progress will be lost and
+              cannot be recovered.
             </p>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-4">
               <button
                 onClick={handleCancelExit}
-                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmExit}
-                className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
+                className="px-6 py-2 text-white bg-[#1170CD] rounded-lg hover:bg-[#0E5BAA] transition-colors"
               >
-                Exit
+                Exit Interview
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Time's Up Popup */}
       {timeLeft === 0 && !evaluationResults && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-blue-500 text-white p-6 rounded-xl shadow-lg max-w-sm mx-4 text-center">
-            <h3 className="text-2xl font-bold mb-2">Time's Up!</h3>
-            <p className="text-lg">Your answers are being evaluated...</p>
-            <div className="mt-4 flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
-            </div>
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-[#1170CD] p-6 rounded-2xl shadow-lg w-96 relative mx-2">
+            <p className="text-3xl font-bold text-white">Time is up!</p>
+            <p className="text-xl text-white">
+              Your answers are being evaluated...
+            </p>
           </div>
         </div>
       )}

@@ -111,7 +111,7 @@ const Dashboard = () => {
         {/* Profile Card */}
         <div className="h-auto w-auto bg-white rounded-xl mt-10 flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4">
           <div className="relative border-b-4 border-[#1170CD]">
-            <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden">
+            <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden max-sm:shadow-[]">
               <img
                 src={profileImage}
                 alt="avatar"

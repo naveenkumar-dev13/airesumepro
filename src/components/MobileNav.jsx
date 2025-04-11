@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Account, dashboard, Analyse, avatar, nonProfile } from "../data";
 import axios from "axios";
 
-
 function MobileNav({
   isopen,
   setIsopen,
@@ -17,6 +16,7 @@ function MobileNav({
   const [userEmail, setUserEmail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userAvatar, setUserAvatar] = useState(avatar);
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -24,6 +24,31 @@ function MobileNav({
       setUserAvatar(imageUrl);
     }
   };
+
+  const fetchProfilePicture = async () => {
+    try {
+      const res = await fetch(
+        "https://airesumeproapi.onrender.com/api/get-profile-picture",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        const blob = await res.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        setUserAvatar(imageUrl);
+      } else {
+        setUserAvatar(nonProfile);
+      }
+    } catch (err) {
+      console.error("Error fetching profile picture:", err);
+      setUserAvatar(nonProfile);
+    }
+  };
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem("token");
@@ -71,6 +96,7 @@ function MobileNav({
     };
 
     fetchUserInfo();
+    fetchProfilePicture(); // Fetch profile picture when the component mounts
   }, [isopen]); // Refresh when nav opens
 
   if (loading) {
@@ -168,35 +194,23 @@ function MobileNav({
                   <div className="text-gray-400 px-4  cursor-pointer  w-full">
                     <div className="flex items-center gap-4">
                       <div>
-                        <input
-                          type="file"
-                          id="avatar-upload"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                        <label
-                          htmlFor="avatar-upload"
-                          className="cursor-pointer block"
-                        >
-                          <div className="w-16 h-16 object-cover rounded-full mx-auto my-4 ">
-                            {userAvatar ? (
+                        <div className="w-16 h-16 object-cover rounded-full mx-auto my-4 ">
+                          {userAvatar ? (
+                            <img
+                              src={userAvatar}
+                              alt="avatar"
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
                               <img
-                                src={userAvatar}
+                                src={nonProfile}
                                 alt="avatar"
                                 className="w-full h-full object-cover rounded-full"
                               />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <img
-                                  src={nonProfile}
-                                  alt="avatar"
-                                  className="w-full h-full object-cover rounded-full"
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </label>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div>
                         <p className=" text-black text-2xl font-bold">

@@ -161,10 +161,10 @@ const BasicInfo = () => {
   return (
     <div className="h-screen">
       <NavBar />
-      <div className="max-sm:p-4 h-[calc(100vh-75px)]">
+      <div className="max-sm:p-4  h-screen ">
         <div
-          className="max-w-6xl mx-auto bg-white p-6 rounded-xl  grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1"
-          style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
+          className="max-w-6xl mx-auto  p-6 rounded-xl  grid grid-cols-[200px_auto] gap-10 my-14  max-sm:grid-cols-1"
+          style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
         >
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex gap-4 flex-col relative max-md:border-none">
@@ -177,7 +177,7 @@ const BasicInfo = () => {
                 className="hidden"
               />
               <label htmlFor="avatar-upload" className="cursor-pointer block">
-                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 shadow-md overflow-hidden relative">
+                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 bg-slate-50 shadow-2xl">
                   <img
                     src={userAvatar || nonProfile}
                     alt="Profile"
@@ -251,7 +251,7 @@ const BasicInfo = () => {
                 .map((key) => (
                   <div
                     key={key}
-                    className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4 max-sm:px-4"
+                    className="flex items-center gap-6 text-start py-5 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4 max-sm:px-4"
                   >
                     <div className="flex justify-between max-sm:w-full w-[20%]">
                       <p className="capitalize font-medium text-xl">{key}:</p>
