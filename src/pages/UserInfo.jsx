@@ -18,7 +18,6 @@ const BasicInfo = () => {
   const location = useLocation();
   const [isopen, setIsOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(location.pathname);
-  const navigate = useNavigate();
   const [user, setUser] = useState({
     username: "",
     email: "",

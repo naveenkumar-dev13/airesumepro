@@ -73,7 +73,7 @@ const MockInterview = () => {
     } else if (timeLeft === 0 && questions.length > 0) {
       evaluateAnswers();
     }
-  }, [timeLeft]);
+  }, [timeLeft, evaluateAnswers, questions.length]);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
@@ -107,7 +107,7 @@ const MockInterview = () => {
     setShowExitPopup(false);
   };
 // evaluate answers ...
-  const evaluateAnswers = async () => {
+  const evaluateAnswers = React.useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -157,7 +157,7 @@ const MockInterview = () => {
       setError(err.message);
       setLoading(false);
     }
-  };
+  }, [answers, expectedAnswers, jobRole, navigate, questions, skippedCount]);
 
   if (loading && questions.length === 0) {
     return (
