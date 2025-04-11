@@ -7,28 +7,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faBars } from "@fortawesome/free-solid-svg-icons";
 import ShowPasswordPopup from "../components/ShowPasswordPopup";
 import { avatar, nonProfile } from "../data";
-import Loading from "../components/Loading";
-import SideBar from "../components/SideBar";
-import axios from "axios";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 function AccountInfoPage() {
-  // State variables
-  const [info, setInfo] = useState({}); // Stores account information
-  const [editingField, setEditingField] = useState(null); // Tracks the field being edited
-  const [tempValue, setTempValue] = useState(""); // Temporary value for editing
-  const [userAvatar, setUserAvatar] = useState(avatar); // Stores the user's profile picture
-  const [activeButton, setActiveButton] = useState("basicinfo"); // Tracks the active sidebar button
-  const [showPasswordPopup, setShowPasswordPopup] = useState(false); // Controls the password popup visibility
-  const [isOpen, setIsOpen] = useState(false); // Controls the mobile menu visibility
-  const [loading, setLoading] = useState(true); // Tracks the loading state
-  const [message, setMessage] = useState(""); // Stores success or error messages
+  const [info, setInfo] = useState({});
+  const [editingField, setEditingField] = useState(null);
+  const [tempValue, setTempValue] = useState("");
+  const [userAvatar, setUserAvatar] = useState(avatar);
+  const [activeButton, setActiveButton] = useState("basicinfo");
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Fetch account information from the API
+  // Fetch user data
   const fetchAccountInfo = async () => {
-    setLoading(true);
     try {
       const res = await fetch(
         "https://airesumeproapi.onrender.com/api/account-info",
@@ -41,51 +36,65 @@ function AccountInfoPage() {
       const data = await res.json();
       const userData = data.user;
       if (userData && userData._id) {
-        delete userData._id; 
+        delete userData._id;
       }
-      setInfo({ ...userData, password: "********" }); 
+      setInfo({ ...userData, password: "********" }); // Add dummy password
+
+      // Fetch profile picture separately
+      fetchProfilePicture();
     } catch (err) {
       console.error("Error fetching account info:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Fetch account info on component mount
+  // Fetch profile picture
+  const fetchProfilePicture = async () => {
+    try {
+      const res = await fetch(
+        "https://airesumeproapi.onrender.com/api/get-profile-picture",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        const blob = await res.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        setUserAvatar(imageUrl);
+      } else {
+        setUserAvatar(nonProfile);
+      }
+    } catch (err) {
+      console.error("Error fetching profile picture:", err);
+      setUserAvatar(nonProfile);
+    }
+  };
+
   useEffect(() => {
     fetchAccountInfo();
   }, []);
 
-  // Update the active button based on the current route
   useEffect(() => {
     setActiveButton(location.pathname);
   }, [location.pathname]);
 
-  // Handle editing a specific field
   const handleEdit = (field) => {
     setEditingField(field);
-    setTempValue(info[field] || ""); 
+    setTempValue(info[field] || "");
     if (field === "password") {
-      setShowPasswordPopup(true); 
+      setShowPasswordPopup(true);
     }
   };
 
-  // Cancel editing
   const handleCancel = () => {
     setEditingField(null);
     setTempValue("");
   };
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    navigate("/login");
-  };
-
-  // Save the updated field to the API
   const handleSave = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const updatedInfo = { ...info, [editingField]: tempValue };
 
     try {
@@ -103,10 +112,9 @@ function AccountInfoPage() {
 
       const data = await res.json();
       if (res.ok) {
-        setInfo(updatedInfo); // Update the local state with the new value
+        setInfo(updatedInfo);
         setEditingField(null);
         setTempValue("");
-        setLoading(false);
       } else {
         console.error("Update failed:", data);
       }
@@ -115,7 +123,6 @@ function AccountInfoPage() {
     }
   };
 
-  // Save the updated password
   const confirmPasswordSave = async (e) => {
     e.preventDefault();
     try {
@@ -134,7 +141,7 @@ function AccountInfoPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setInfo((prev) => ({ ...prev, password: "********" })); 
+        setInfo((prev) => ({ ...prev, password: "********" }));
         setEditingField(null);
         setShowPasswordPopup(false);
         setTempValue("");
@@ -146,113 +153,92 @@ function AccountInfoPage() {
     }
   };
 
-  // Handle profile picture upload
-  const handleImageChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append("profilePicture", file);
-
-        const token = localStorage.getItem("token");
-
-        const response = await axios.post(
-          "https://airesumeproapi.onrender.com/api/upload-profile-picture",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        setUserAvatar(response.data.profilePicture); 
-        setMessage("Profile picture updated successfully!");
-        setTimeout(() => setMessage(""), 3000);
-      } catch (error) {
-        console.error("Error uploading profile picture:", error);
-        setMessage(
-          error.response?.data?.error || "Failed to update profile picture."
-        );
-      }
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
-  // Profile picture component
-  const Profile = () => (
-    <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-24">
-      <input
-        type="file"
-        id="avatar-upload"
-        accept="image/*"
-        className="hidden"
-        onChange={handleImageChange}
-      />
-      <label htmlFor="avatar-upload" className="cursor-pointer block">
-        <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
-          <img
-            src={userAvatar}
-            alt="Profile"
-            className="w-full h-full object-cover rounded-full"
-            onError={(e) => {
-              e.target.src = nonProfile; 
-            }}
-          />
-        </div>
-      </label>
-    </div>
-  );
-
-  if (loading) {
-    return <Loading />; 
-  }
-
   return (
-    <div className="h-screen">
+    <div className="h-screen ">
       <NavBar />
-    
-      <div className="p-6 max-sm:p-4 h-[calc(100vh-75px)] mt-10">
+      <div className="max-sm:p-4 h-[calc(100vh-75px)] p-6">
         <div
-          className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-10 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2"
-          style={{ boxShadow: "0px 0px 45px rgba(0, 0, 0, 0.2)" }}
+          className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1 max-sm:p-2 max-sm:gap-2"
+          style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
         >
+          {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
-            <Profile />
-            <SideBar
-              activeButton={activeButton}
-              setActiveButton={setActiveButton}
-            />
+            <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-28">
+              <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
+                <img
+                  src={userAvatar || nonProfile}
+                  alt="avatar"
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    e.target.src = nonProfile;
+                  }}
+                />
+              </div>
+            </div>
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 max-sm:hidden">
+              <Link to={"/userinfo"}>
+                <Button
+                  className={`py-2 mb-4 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                    activeButton === "basicinfo"
+                      ? "!bg-[#1170CD] !text-white"
+                      : ""
+                  }`}
+                  onClick={() => setActiveButton("basicinfo")}
+                >
+                  <ion-icon name="person-outline" className="w-5 h-5 mt-1" />
+                  Basic Info
+                </Button>
+              </Link>
+              <Link to={"/accountinfo"}>
+                <Button
+                  className={`w-40 py-2 font-medium hover:!text-white rounded-md bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                    activeButton === "/accountinfo"
+                      ? "!bg-[#1170CD] !text-white"
+                      : ""
+                  }`}
+                  onClick={() => setActiveButton("/accountinfo")}
+                >
+                  <ion-icon name="settings-outline" className="w-5 h-5 mt-1" />
+                  Account
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Main Content */}
           <div className="space-y-2 mt-6">
-            <div className="max-sm:flex max-sm:items-center max-sm:gap-4">
+            <div className="max-sm:flex gap-4 items-center  my-4">
               <div className="hidden max-sm:block">
-                {!isOpen && (
+                {
                   <FontAwesomeIcon
                     icon={faBars}
-                    className="w-6 h-6 text-[#1170CD]"
+                    className="w-10 h-10 block max-sm:w-6 max-sm:h-6 text-[#1170CD]"
                     onClick={() => setIsOpen(true)}
                   />
-                )}
+                }
               </div>
-              <h2 className="text-2xl font-bold mb-4 max-sm:text-center max-sm:my-5">
+              <h2 className="text-4xl font-bold max-sm:text-2xl">
                 Account Info
               </h2>
             </div>
 
-        
             <form onSubmit={handleSave}>
               {Object.keys(info).map((key) => (
                 <div
                   key={key}
-                  className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4 max-sm:px-4"
+                  className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4"
                 >
-                  {/* Field label */}
                   <div className="flex justify-between max-sm:w-full">
                     <p className="capitalize font-medium text-xl">{key}:</p>
-                    <div className="mt-2 hidden max-sm:block">
+                    <div
+                      className="mt-2 hidden max-sm:block
+                    "
+                    >
                       <button
                         type="button"
                         onClick={() =>
@@ -265,16 +251,15 @@ function AccountInfoPage() {
                     </div>
                   </div>
 
-                  {/* Field value or input */}
                   {editingField === key && key !== "password" ? (
-                    <div>
+                    <div className="flex flex-col gap-2 max-sm:w-[80%]">
                       <input
                         type="text"
                         value={tempValue}
                         onChange={(e) => setTempValue(e.target.value)}
                         className="px-2 py-1 flex-1 border-b"
                       />
-                      <div className="flex justify-start mt-4 gap-2">
+                      <div className="flex justify-start mt-1 gap-2">
                         <button
                           type="button"
                           onClick={handleCancel}
@@ -293,8 +278,7 @@ function AccountInfoPage() {
                     </p>
                   )}
 
-                  {/* Edit button for desktop */}
-                  {key !== "password" && (
+                  {key !== "password" && key !== "profilePicture" && (
                     <div className="max-sm:hidden">
                       <button
                         type="button"
@@ -307,15 +291,16 @@ function AccountInfoPage() {
                       </button>
                     </div>
                   )}
-
-                  {/* Password field */}
                   {key === "password" && (
                     <>
                       {editingField !== "password" ? (
                         <button
                           type="button"
-                          onClick={() => handleEdit("password")}
-                          className="!text-blue-500 !hover:underline !bg-white"
+                          onClick={() => {
+                            handleEdit("password");
+                            setShowPasswordPopup(true); // Show the password popup
+                          }}
+                          className="text-blue-500 hover:underline max-sm:hidden"
                         >
                           Edit
                         </button>
@@ -326,7 +311,7 @@ function AccountInfoPage() {
                             placeholder="Enter new password"
                             value={tempValue}
                             onChange={(e) => setTempValue(e.target.value)}
-                            className="px-2 py-1 border-none rounded-md outline-none"
+                            className="px-2 py-1 border border-gray-300 rounded-md"
                           />
                           <div className="flex gap-2">
                             <Button
@@ -336,16 +321,16 @@ function AccountInfoPage() {
                             >
                               Save
                             </Button>
-                            <Button
+                            <button
                               type="button"
                               onClick={() => {
                                 setEditingField(null);
                                 setTempValue("");
                               }}
-                              className="!p-2 bg-gray-300"
+                              className="!p-2 bg-gray-300 !text-black  rounded-md"
                             >
                               Cancel
-                            </Button>
+                            </button>
                           </div>
                         </div>
                       )}
@@ -355,14 +340,13 @@ function AccountInfoPage() {
               ))}
             </form>
 
-            {/* Delete and Logout buttons */}
             <div className="flex justify-between items-center gap-4 max-sm:flex-col max-sm:gap-4">
-              <Button className="px-3 py-2 font-medium rounded-md bg-white hover:!bg-[#F01F1F] hover:!text-white !text-[#F01F1F] border-2 border-[#F01F1F] flex gap-2 justify-center items-center max-sm:w-full">
+              <Button className="px-3 py-2 font-medium rounded-md bg-white !text-[#F01F1F] border-2 border-[#F01F1F] flex gap-2 justify-center items-center max-sm:w-full hover:!bg-[#F01F1F] hover:!text-white">
                 <ion-icon name="trash-outline" className="w-5 h-5" />
                 Delete
               </Button>
               <Button
-                className="px-6 py-2 font-medium rounded-md bg-[#1170CD] !text-white border-2 border-[#1170CD] flex gap-2 items-center justify-center max-sm:w-full"
+                className="px-3 py-2 font-medium rounded-md bg-[#1170CD] !text-white border-2 border-[#1170CD] flex gap-2 items-center justify-center max-sm:w-full"
                 onClick={handleLogout}
               >
                 <ion-icon name="log-out-outline" className="w-5 h-5" />
@@ -371,27 +355,31 @@ function AccountInfoPage() {
             </div>
           </div>
 
-          {/* Mobile Menu */}
           {isOpen && (
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
-              className="absolute top-56 left-4 h-[400px] bg-white shadow-2xl p-4 w-[320px] rounded-md"
+              className="absolute top-48 left-[20px] h-[400px] bg-white shadow-2xl p-4 w-[320px] rounded-md"
             >
               <div className="flex justify-between">
-                <div className="p-2 flex flex-col  w-[250px] absolute top-12 left-5 ">
+                <div className="p-2 flex flex-col gap-6 w-[250px] absolute top-12 left-5">
                   <Link to={"/userinfo"}>
                     <Button
-                      className={`py-2 mb-4 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                      className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                         activeButton === "/userinfo"
                           ? "!bg-[#1170CD] !text-white"
                           : ""
                       }`}
-                      onClick={() => setActiveButton("/userinfo")}
+                      onClick={() => {
+                        setActiveButton("/userinfo");
+                        setIsOpen(false);
+                      }}
                     >
-                      <ion-icon name="person-outline" className="w-5 h-5" />
-                      <p> Basic Info</p>
+                      <span className="block mt-1">
+                        <FontAwesomeIcon icon={faUser} />
+                      </span>
+                      Basic Info
                     </Button>
                   </Link>
                   <Link to={"/accountinfo"}>
@@ -401,10 +389,15 @@ function AccountInfoPage() {
                           ? "!bg-[#1170CD] !text-white"
                           : ""
                       }`}
-                      onClick={() => setActiveButton("/accountinfo")}
+                      onClick={() => {
+                        setActiveButton("/accountinfo");
+                        setIsOpen(false);
+                      }}
                     >
-                      <ion-icon name="settings-outline" className="w-5 h-5 " />
-                      <p> Account</p>
+                      <span className="block mt-1">
+                        <FontAwesomeIcon icon={faGear} />
+                      </span>
+                      Account
                     </Button>
                   </Link>
                 </div>

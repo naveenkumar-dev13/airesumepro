@@ -162,7 +162,10 @@ const BasicInfo = () => {
     <div className="h-screen">
       <NavBar />
       <div className="max-sm:p-4 h-[calc(100vh-75px)]">
-        <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1">
+        <div
+          className="max-w-6xl mx-auto bg-white p-6 rounded-xl  grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1"
+          style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
+        >
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex gap-4 flex-col relative max-md:border-none">
             <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-24">
@@ -174,11 +177,11 @@ const BasicInfo = () => {
                 className="hidden"
               />
               <label htmlFor="avatar-upload" className="cursor-pointer block">
-                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4">
+                <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 shadow-md overflow-hidden relative">
                   <img
                     src={userAvatar || nonProfile}
                     alt="Profile"
-                    className="w-full h-full object-cover rounded-full"
+                    className="w-full h-full object-cover rounded-full "
                     onError={(e) => {
                       e.target.src = nonProfile;
                     }}
@@ -186,18 +189,17 @@ const BasicInfo = () => {
                 </div>
               </label>
             </div>
-            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 flex max-sm:hidden">
+            <div className="mt-20 max-md:flex max-md:justify-center max-md:items-center flex-col gap-4 max-sm:hidden">
               <Link to={"/userinfo"}>
                 <Button
-                  className={`py-2 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
+                  className={`py-2 mb-4 w-40 font-medium rounded-md hover:!text-white bg-white !text-[#1170CD] border-2 border-[#1170CD] !flex gap-2 items-center ${
                     activeButton === "/userinfo"
                       ? "!bg-[#1170CD] !text-white"
                       : ""
                   }`}
+                  onClick={() => setActiveButton("/userinfo")}
                 >
-                  <span className="mt-1">
-                    <FontAwesomeIcon icon={faUser} className="!text-white" />
-                  </span>
+                  <ion-icon name="person-outline" className="w-5 h-5 mt-1" />
                   Basic Info
                 </Button>
               </Link>
@@ -208,19 +210,17 @@ const BasicInfo = () => {
                       ? "!bg-[#1170CD] !text-white"
                       : ""
                   }`}
+                  onClick={() => setActiveButton("/accountinfo")}
                 >
-                  <span className="block mt-1 text-white">
-                    <FontAwesomeIcon icon={faGear} />
-                  </span>
+                  <ion-icon name="settings-outline" className="w-5 h-5 mt-1" />
                   Account
                 </Button>
               </Link>
             </div>
           </div>
-
           {/* Main Content */}
           <div>
-            <div className="max-sm:flex gap-4">
+            <div className="max-sm:flex gap-4 items-center  my  -4">
               <div className="hidden max-sm:block">
                 {!isopen && (
                   <FontAwesomeIcon
@@ -230,7 +230,7 @@ const BasicInfo = () => {
                   />
                 )}
               </div>
-              <h2 className="text-2xl font-bold mb-4">Basic Info</h2>
+              <h2 className="text-4xl font-bold max-sm:text-2xl">Basic Info</h2>
             </div>
 
             {message && (
@@ -253,7 +253,7 @@ const BasicInfo = () => {
                     key={key}
                     className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4 max-sm:px-4"
                   >
-                    <div className="flex justify-between max-sm:w-full">
+                    <div className="flex justify-between max-sm:w-full w-[20%]">
                       <p className="capitalize font-medium text-xl">{key}:</p>
                       <div className="mt-2 hidden max-sm:block">
                         <button
@@ -305,7 +305,7 @@ const BasicInfo = () => {
                             className="px-2 py-1 flex-1 border-b"
                           />
                         )}
-                        <div className="flex justify-start mt-4 gap-2">
+                        <div className="flex justify-start mt-2 gap-2">
                           <button
                             type="button"
                             onClick={handleCancel}

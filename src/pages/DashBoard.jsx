@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [userAvatar, setUserAvatar] = useState(avatar);
+  const [profileImage, setProfileImage] = useState(avatar);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,54 +29,66 @@ const Dashboard = () => {
           throw new Error("No authentication token found");
         }
 
-        // Fetch both endpoints in parallel
-        const [dashboardRes, basicInfoRes] = await Promise.all([
-          fetch("https://airesumeproapi.onrender.com/api/dashboard", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-          fetch("https://airesumeproapi.onrender.com/api/basic-info", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-        ]);
+        // Fetch all data in parallel
+        const [dashboardRes, basicInfoRes, profileImageRes] = await Promise.all(
+          [
+            fetch("https://airesumeproapi.onrender.com/api/dashboard", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+            fetch("https://airesumeproapi.onrender.com/api/basic-info", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+            fetch(
+              "https://airesumeproapi.onrender.com/api/get-profile-picture",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ),
+          ]
+        );
 
+        // Handle dashboard data
         if (!dashboardRes.ok) throw new Error("Failed to fetch dashboard data");
-        if (!basicInfoRes.ok) throw new Error("Failed to fetch user info");
-
         const dashboardData = await dashboardRes.json();
-        const basicInfoData = await basicInfoRes.json();
-
-        console.log("User data from API:", basicInfoData.user); // Debug log
-
         setDashboardData(dashboardData.data || []);
-        console.log("Full API response:", basicInfoData);
-        console.log("User object from API:", basicInfoData.user);
 
-        setUserInfo({
-          ...basicInfoData.user,
-        });
+        // Handle basic info
+        if (!basicInfoRes.ok) throw new Error("Failed to fetch user info");
+        const basicInfoData = await basicInfoRes.json();
+        setUserInfo(basicInfoData.user || {});
+
+        // Handle profile image
+        if (profileImageRes.ok) {
+          const imageBlob = await profileImageRes.blob();
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setProfileImage(imageUrl);
+        } else {
+          console.log("Using default avatar");
+          setProfileImage(avatar);
+        }
       } catch (err) {
         setError(err.message);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setUserAvatar(imageUrl);
-    }
-  };
+    // Cleanup function
+    return () => {
+      if (profileImage && profileImage.startsWith("blob:")) {
+        URL.revokeObjectURL(profileImage);
+      }
+    };
+  }, []);
 
   if (loading) return <Loading />;
   if (error)
@@ -87,8 +99,8 @@ const Dashboard = () => {
     );
   if (!userInfo)
     return (
-      <div className="flex justify-center items-center h-screen">
-        User information not available
+      <div className="flex items-center gap-2 justify-center h-screen">
+        <p className="text-sm font-medium">User information not available</p>
       </div>
     );
 
@@ -101,13 +113,17 @@ const Dashboard = () => {
           <div className="relative border-b-4 border-[#1170CD]">
             <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden">
               <img
-                src={userAvatar}
+                src={profileImage}
                 alt="avatar"
                 className="w-full h-full object-cover rounded-xl"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = avatar;
+                }}
               />
             </div>
           </div>
-          <div className="border-b-2 border-blue-700 p-4">
+          <div className="border-b-2 border-blue-700 p-4 my-2">
             <h1 className="text-2xl font-semibold text-center">
               {userInfo.username || "User Name"}
             </h1>
@@ -122,7 +138,7 @@ const Dashboard = () => {
               {userInfo.summary || "No summary available."}
             </p>
           </div>
-          <div className="border-b-2 border-blue-700 p-4 flex flex-col gap-2">
+          <div className="border-b-2 border-blue-700 p-4 flex flex-col gap-2 my-2">
             {userInfo.location && (
               <p className="flex items-center gap-2">
                 <FontAwesomeIcon
@@ -149,9 +165,14 @@ const Dashboard = () => {
                   icon={faLinkedin}
                   className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
                 />
-                <span className="text-gray-800 font-semibold">
-                  {userInfo.linkedinLink}
-                </span>
+                <a
+                  href={userInfo.linkedinLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-800 font-semibold"
+                >
+                  LinkedIn Profile
+                </a>
               </p>
             )}
             {userInfo.githubLink && (
@@ -160,9 +181,14 @@ const Dashboard = () => {
                   icon={faGithub}
                   className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
                 />
-                <span className="text-gray-800 font-semibold">
-                  {userInfo.githubLink}
-                </span>
+                <a
+                  href={userInfo.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-800 font-semibold"
+                >
+                  GitHub Profile
+                </a>
               </p>
             )}
           </div>
@@ -173,7 +199,7 @@ const Dashboard = () => {
                 className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
               />
               <span className="text-gray-800 font-semibold">
-                {userInfo.phone || "Phone not specified"}
+                {userInfo.phoneNumber || "Phone not specified"}
               </span>
             </p>
           </div>
@@ -195,30 +221,34 @@ const Dashboard = () => {
               {dashboardData.map((item, index) => (
                 <div
                   key={index}
-                  className="p-4 w-auto transition-all duration-300 bg-white rounded-xl shadow-md"
+                  className="p-4 w-auto transition-all duration-300 bg-white rounded-xl shadow-md hover:shadow-lg"
                 >
                   <h3 className="text-lg font-semibold">
                     {item.jobRole || "Untitled Resume"}
                   </h3>
                   <p className="mt-2 font-medium">ATS Score:</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
                     <div
                       className="bg-blue-500 h-2.5 rounded-full"
                       style={{ width: `${item.resumeAnalysisScore || 0}%` }}
                     ></div>
                   </div>
-                  <p className="mt-2">{item.resumeAnalysisScore || 0}%</p>
-                  <p className="mt-2 font-medium">
-                    Interview Score: {item.correctAnswers || 0}
+                  <p className="mt-1 text-sm text-gray-600">
+                    {item.resumeAnalysisScore || 0}%
+                  </p>
+                  <p className="mt-3 font-medium">
+                    Interview Score: {item.correctAnswers || 0}/15
                   </p>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-10">
-              <p>No resume data available. Create your first resume!</p>
+              <p className="text-gray-600 mb-4">
+                No resume data available. Create your first resume!
+              </p>
               <Button
-                className="mt-4"
+                className="mt-4 px-6 py-2"
                 onClick={() => navigate("/create-resume")}
               >
                 Create Resume
