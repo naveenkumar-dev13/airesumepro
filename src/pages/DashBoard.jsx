@@ -88,7 +88,7 @@ const Dashboard = () => {
         URL.revokeObjectURL(profileImage);
       }
     };
-  }, []);
+  }, [profileImage]);
 
   if (loading) return <Loading />;
   if (error)

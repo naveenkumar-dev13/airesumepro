@@ -14,7 +14,6 @@ import InterviewResult from "./pages/InterViewResult";
 import UserInfo from "./pages/UserInfo";
 import AccountInfo from "./pages/AccountInfo";
 import NotFound from "./components/NotFound";
-import Loading from "./components/Loading";
 function App() {
   useEffect(() => {
     AOS.init({ duration: 1000, once: false, mirror: true });

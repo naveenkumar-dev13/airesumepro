@@ -103,7 +103,7 @@ function AccountInfoPage() {
     setEditingField(null);
     setTempValue("");
   };
-
+// save the btn
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -136,7 +136,7 @@ function AccountInfoPage() {
       setLoading(false);
     }
   };
-
+// save the password
   const confirmPasswordSave = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -178,7 +178,7 @@ function AccountInfoPage() {
       setLoading(false);
     }
   };
-
+// delete the account
   const handleDeleteAccount = async () => {
     setLoading(true);
     try {
@@ -207,6 +207,7 @@ function AccountInfoPage() {
       setLoading(false);
     }
   };
+  // logout the account
 
   const handleLogout = () => {
     localStorage.removeItem("token");

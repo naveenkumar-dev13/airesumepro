@@ -11,6 +11,7 @@ function ResumeAnalyzer() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // handle  submit
   const handleSubmit = async (event) => {
     event.preventDefault();
 

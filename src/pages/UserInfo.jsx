@@ -48,7 +48,7 @@ const BasicInfo = () => {
       document.body.style.overflow = "unset";
     }
   }, [isopen]);
-
+// user info...
   const fetchBasicInfo = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -73,7 +73,7 @@ const BasicInfo = () => {
       setLoading(false);
     }
   };
-
+// profile picture...
   const fetchProfilePicture = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -89,7 +89,7 @@ const BasicInfo = () => {
       console.error("Error fetching profile picture:", error);
     }
   };
-
+// uploading profile picture...
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -132,15 +132,11 @@ const BasicInfo = () => {
     try {
       const token = localStorage.getItem("token");
       const updatedField = { [editingField]: tempValue };
-
-      // Send the updated field to the backend
       const response = await axios.put(
         "https://airesumeproapi.onrender.com/api/basic-info",
         updatedField,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Update the local state with the new value
       setUser({ ...user, [editingField]: response.data.user[editingField] });
       setEditingField(null);
       setMessage("Changes saved successfully!");

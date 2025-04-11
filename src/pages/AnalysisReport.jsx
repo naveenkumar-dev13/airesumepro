@@ -124,7 +124,7 @@ const ReportAnalysis = () => {
       navigate("/resume-analyzer");
     }
   }, [apiData, navigate]);
-
+//  suggestions of jobs
   const fetchJobSuggestions = async () => {
     setLoadingSuggestions(true);
     try {

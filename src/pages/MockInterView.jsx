@@ -21,6 +21,7 @@ const MockInterview = () => {
   const [evaluationResults, setEvaluationResults] = useState(null);
 
   useEffect(() => {
+    // fetching questions ...
     const fetchQuestions = async () => {
       if (!resumeText || !jobRole || !difficulty) {
         navigate("/");
@@ -105,7 +106,7 @@ const MockInterview = () => {
   const handleCancelExit = () => {
     setShowExitPopup(false);
   };
-
+// evaluate answers ...
   const evaluateAnswers = async () => {
     setLoading(true);
     try {

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Account, dashboard, Analyse, avatar, nonProfile } from "../data";
 import axios from "axios";
+import Loading from "./Loading";
 
 function MobileNav({
   isopen,
@@ -16,15 +17,7 @@ function MobileNav({
   const [userEmail, setUserEmail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userAvatar, setUserAvatar] = useState(avatar);
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setUserAvatar(imageUrl);
-    }
-  };
-
+  //  fetch profile picture
   const fetchProfilePicture = async () => {
     try {
       const res = await fetch(
@@ -96,11 +89,11 @@ function MobileNav({
     };
 
     fetchUserInfo();
-    fetchProfilePicture(); // Fetch profile picture when the component mounts
-  }, [isopen]); // Refresh when nav opens
+    fetchProfilePicture();
+  }, [isopen]);
 
   if (loading) {
-    return null; // Or return a loading spinner
+    <Loading />;
   }
 
   return (

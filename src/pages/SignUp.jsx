@@ -17,6 +17,7 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // signup function
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

@@ -6,7 +6,6 @@ function ShowPasswordPopup({
   setShowPasswordPopup,
   showPasswordPopup,
   confirmPasswordSave,
-  tempValue,
   setEditingField,
 }) {
   const [newPassword, setNewPassword] = useState("");
