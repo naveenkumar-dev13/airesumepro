@@ -8,20 +8,18 @@ const MockInterview = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { resumeText, jobRole, difficulty } = location.state || {};
-
   const [showExitPopup, setShowExitPopup] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes timer
+  const [timeLeft, setTimeLeft] = useState(900); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [skippedCount, setSkippedCount] = useState(0);
   const [evaluationResults, setEvaluationResults] = useState(null);
 
   useEffect(() => {
-    // fetching questions ...
     const fetchQuestions = async () => {
       if (!resumeText || !jobRole || !difficulty) {
         navigate("/");
@@ -66,6 +64,57 @@ const MockInterview = () => {
     fetchQuestions();
   }, [resumeText, jobRole, difficulty, navigate]);
 
+  const evaluateAnswers = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const userEmail = decoded.email;
+
+      const response = await fetch(
+        "https://airesumeproapi.onrender.com/api/evaluate-answers",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            questions,
+            answers: Object.values(answers),
+            expectedAnswers,
+            jobRole,
+            skippedCount,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to evaluate answers");
+      }
+
+      const formattedResults = {
+        correctCount: result.correctCount || 0,
+        wrongCount: result.wrongCount || 0,
+        evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
+        feedback: result.feedback || "No feedback provided",
+      };
+
+      setEvaluationResults(formattedResults);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  }, [answers, expectedAnswers, jobRole, navigate, questions, skippedCount]);
+
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -106,58 +155,7 @@ const MockInterview = () => {
   const handleCancelExit = () => {
     setShowExitPopup(false);
   };
-// evaluate answers ...
-  const evaluateAnswers = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
 
-      const decoded = jwtDecode(token);
-      const userEmail = decoded.email;
-
-      const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/evaluate-answers",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            questions,
-            answers: Object.values(answers),
-            expectedAnswers,
-            jobRole,
-            skippedCount,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to evaluate answers");
-      }
-
-      // Ensure evaluation results have the correct structure
-      const formattedResults = {
-        correctCount: result.correctCount || 0,
-        wrongCount: result.wrongCount || 0,
-        evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
-        feedback: result.feedback || "No feedback provided",
-      };
-
-      setEvaluationResults(formattedResults);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  }, [answers, expectedAnswers, jobRole, navigate, questions, skippedCount]);
 
   if (loading && questions.length === 0) {
     return (
