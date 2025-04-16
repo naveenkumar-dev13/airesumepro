@@ -3,7 +3,7 @@ import { avatar, nonProfile } from "../data";
 import Loading from "../components/Loading";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,7 +47,7 @@ const BasicInfo = () => {
       document.body.style.overflow = "unset";
     }
   }, [isopen]);
-// user info...
+  // user info...
   const fetchBasicInfo = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -72,7 +72,7 @@ const BasicInfo = () => {
       setLoading(false);
     }
   };
-// profile picture...
+  // profile picture...
   const fetchProfilePicture = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -88,7 +88,7 @@ const BasicInfo = () => {
       console.error("Error fetching profile picture:", error);
     }
   };
-// uploading profile picture...
+  // uploading profile picture...
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {

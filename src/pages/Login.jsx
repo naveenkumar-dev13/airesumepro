@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Inputs from "../components/Inputs";
 import { login } from "../data";
 import { useDispatch } from "react-redux";
-import { updateEmail, updateName } from "../feature/UserSlice";
+import { updateEmail} from "../feature/UserSlice";
 //  import {login} from '../feature/UserSlice'
 
 function Login() {

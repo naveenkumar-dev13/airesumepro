@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Loading from "../components/Loading";
 
 const MockInterview = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const MockInterview = () => {
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(900); 
+  const [timeLeft, setTimeLeft] = useState(900);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [skippedCount, setSkippedCount] = useState(0);
@@ -156,16 +157,10 @@ const MockInterview = () => {
     setShowExitPopup(false);
   };
 
-
   if (loading && questions.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="spinner-border text-blue-500" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-          <p className="mt-3">Preparing your mock interview questions...</p>
-        </div>
+        <Loading />
       </div>
     );
   }
