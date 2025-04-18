@@ -3,24 +3,25 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import Loading from "../components/Loading";
 
 const MockInterview = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { resumeText, jobRole, difficulty } = location.state || {};
+  const { resumeText, jobRole, difficulty, score } = location.state || {};
+
   const [showExitPopup, setShowExitPopup] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(900);
+  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes timer
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [skippedCount, setSkippedCount] = useState(0);
   const [evaluationResults, setEvaluationResults] = useState(null);
 
   useEffect(() => {
+    // fetching questions ...
     const fetchQuestions = async () => {
       if (!resumeText || !jobRole || !difficulty) {
         navigate("/");
@@ -65,57 +66,6 @@ const MockInterview = () => {
     fetchQuestions();
   }, [resumeText, jobRole, difficulty, navigate]);
 
-  const evaluateAnswers = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
-      const decoded = jwtDecode(token);
-      const userEmail = decoded.email;
-
-      const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/evaluate-answers",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            questions,
-            answers: Object.values(answers),
-            expectedAnswers,
-            jobRole,
-            skippedCount,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to evaluate answers");
-      }
-
-      const formattedResults = {
-        correctCount: result.correctCount || 0,
-        wrongCount: result.wrongCount || 0,
-        evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
-        feedback: result.feedback || "No feedback provided",
-      };
-
-      setEvaluationResults(formattedResults);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  }, [answers, expectedAnswers, jobRole, navigate, questions, skippedCount]);
-
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -123,7 +73,7 @@ const MockInterview = () => {
     } else if (timeLeft === 0 && questions.length > 0) {
       evaluateAnswers();
     }
-  }, [timeLeft, evaluateAnswers, questions.length]);
+  }, [timeLeft]);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
@@ -156,11 +106,69 @@ const MockInterview = () => {
   const handleCancelExit = () => {
     setShowExitPopup(false);
   };
+  // evaluate answers ...
+  const evaluateAnswers = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const userEmail = decoded.email;
+
+      const response = await fetch(
+        "https://airesumeproapi.onrender.com/api/evaluate-answers",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            questions,
+            answers: Object.values(answers),
+            expectedAnswers,
+            jobRole,
+            skippedCount,
+            score,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to evaluate answers");
+      }
+
+      // Ensure evaluation results have the correct structure
+      const formattedResults = {
+        correctCount: result.correctCount || 0,
+        wrongCount: result.wrongCount || 0,
+        evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
+        feedback: result.feedback || "No feedback provided",
+      };
+
+      setEvaluationResults(formattedResults);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   if (loading && questions.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <Loading />
+        <div className="text-center">
+          <div className="spinner-border text-blue-500" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-3">Preparing your mock interview questions...</p>
+        </div>
       </div>
     );
   }
@@ -186,9 +194,9 @@ const MockInterview = () => {
       <div className="h-screen">
         <NavBar />
         <div className="p-6 max-w-6xl m-auto">
-          <h1 className="text-3xl font-bold text-center mb-8">
-            Interview Results
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold text-center mb-8">Interview</h1>
+          </div>
 
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="bg-green-100 p-4 rounded-lg text-center">
@@ -270,7 +278,7 @@ const MockInterview = () => {
               );
             })}
           </div>
-
+          {/* 
           <div className="mt-8 flex justify-center gap-4">
             <Button
               className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
@@ -280,11 +288,11 @@ const MockInterview = () => {
             </Button>
             <Button
               className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
-              onClick={() => navigate("/analysisReport")}
+              onClick={() => navigate("/create-resume")}
             >
               Try Another Interview
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     );

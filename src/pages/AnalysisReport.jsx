@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const ReportAnalysis = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const apiData = location.state?.data;
+  const { data: apiData, score } = location.state || {};
 
   const [data, setData] = useState({
     overallScore: 0,
@@ -124,7 +124,7 @@ const ReportAnalysis = () => {
       navigate("/resume-analyzer");
     }
   }, [apiData, navigate]);
-//  suggestions of jobs
+  //  suggestions of jobs
   const fetchJobSuggestions = async () => {
     setLoadingSuggestions(true);
     try {
@@ -221,6 +221,7 @@ const ReportAnalysis = () => {
                       jobSuggestions={jobSuggestions}
                       loading={loadingSuggestions}
                       resumeData={apiData}
+                      score={score}
                     />
                   )}
                 </div>
