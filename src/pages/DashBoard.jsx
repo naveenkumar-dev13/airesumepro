@@ -109,7 +109,7 @@ const Dashboard = () => {
       <NavBar />
       <div className="grid grid-cols-[400px_auto] mx-10 max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5">
         {/* Profile Card */}
-        <div className="h-auto w-auto bg-white rounded-xl mt-10 flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4">
+        <div className="h-300px w-auto  rounded-xl mt-10 flex flex-col shadow-[10px_10px_10px_0px_#bad5ee] max-sm:m-4">
           <div className="relative border-b-4 border-[#1170CD]">
             <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden max-sm:shadow-[]">
               <img

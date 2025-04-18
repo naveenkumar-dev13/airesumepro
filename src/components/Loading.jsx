@@ -4,7 +4,10 @@ import { ThreeDot } from "react-loading-indicators";
 const Loading = () => {
   return (
     <div className="flex items-center justify-center h-screen w-screen ">
-      <div className="flex flex-col items-center justify-center">
+      <div
+        className="flex flex-col items-center justify-center"
+        data-aos="fade-up"
+      >
         <ThreeDot
           variant="bounce"
           color="#3275b7"

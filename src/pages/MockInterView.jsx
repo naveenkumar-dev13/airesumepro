@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Loading from "../components/Loading";
 
 const MockInterview = () => {
   const navigate = useNavigate();
@@ -163,12 +164,7 @@ const MockInterview = () => {
   if (loading && questions.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="spinner-border text-blue-500" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-          <p className="mt-3">Preparing your mock interview questions...</p>
-        </div>
+        <Loading />
       </div>
     );
   }
@@ -193,29 +189,44 @@ const MockInterview = () => {
     return (
       <div className="h-screen">
         <NavBar />
-        <div className="p-6 max-w-6xl m-auto">
-          <div>
-            <h1 className="text-3xl font-bold text-center mb-8">Interview</h1>
-          </div>
+        <div className="p-6 max-w-6xl mx-auto">
+          <div className="flex flex-col gap-4 shadow-md p-4 rounded-xl  my-8">
+            <div className="flex justify-between items-center ">
+              <h1 className="text-3xl font-bold text-center max-md:text-xl">
+                Interview Results
+              </h1>
+              <p className="text-xl font-semibold bg-[#1170CD] text-white p-2 rounded-lg  max-md:text-center">
+                Total questions: {questions.length}
+              </p>
+            </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="bg-green-100 p-4 rounded-lg text-center">
-              <h3 className="text-xl font-semibold">Correct Answers</h3>
-              <p className="text-4xl font-bold text-green-600">
-                {evaluationResults.correctCount}
-              </p>
-            </div>
-            <div className="bg-red-100 p-4 rounded-lg text-center">
-              <h3 className="text-xl font-semibold">Wrong Answers</h3>
-              <p className="text-4xl font-bold text-red-600">
-                {evaluationResults.wrongCount}
-              </p>
-            </div>
-            <div className="bg-yellow-100 p-4 rounded-lg text-center">
-              <h3 className="text-xl font-semibold">Skipped Questions</h3>
-              <p className="text-4xl font-bold text-yellow-600">
-                {skippedCount}
-              </p>
+            <div className="grid grid-cols-4 gap-4 mb-8 max-md:grid-cols-2 max-md:mb-0">
+              <div className="bg-gray-100 p-4 rounded-lg text-center">
+                <h3 className="text-xl font-semibold ">Skipped Questions</h3>
+                <p className="text-4xl font-bold ">{skippedCount}</p>
+              </div>
+              <div className="bg-green-100 p-4 rounded-lg text-center">
+                <h3 className="text-xl font-semibold ">Correct Answers</h3>
+                <p className="text-4xl font-bold text-green-600">
+                  {evaluationResults.correctCount}
+                </p>
+              </div>
+              <div className="bg-red-100 p-4 rounded-lg text-center">
+                <h3 className="text-xl font-semibold ">Wrong Answers</h3>
+                <p className="text-4xl font-bold   text-red-600">
+                  {evaluationResults.wrongCount}
+                </p>
+              </div>
+
+              <div className="bg-blue-100 p-4 rounded-lg text-center ">
+                <h3 className="text-xl font-semibold ">Score</h3>
+                <p className="text-4xl font-bold   text-blue-600">
+                  {Math.round(
+                    (evaluationResults.correctCount / questions.length) * 100
+                  )}
+                  %
+                </p>
+              </div>
             </div>
           </div>
 
@@ -278,8 +289,8 @@ const MockInterview = () => {
               );
             })}
           </div>
-          {/* 
-          <div className="mt-8 flex justify-center gap-4">
+
+          {/* <div className="mt-8 flex justify-center gap-4">
             <Button
               className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
               onClick={() => navigate("/dashboard")}
@@ -288,7 +299,7 @@ const MockInterview = () => {
             </Button>
             <Button
               className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
-              onClick={() => navigate("/create-resume")}
+              onClick={() => navigate("/analysisReport")}
             >
               Try Another Interview
             </Button>

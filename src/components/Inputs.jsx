@@ -37,6 +37,7 @@ function Inputs({
         type={inputType}
         autoComplete={autoComplete}
         required
+        maxLength={8}
         value={inputValue}
         onChange={handleChange}
         className="peer border-b border-gray-300 outline-none w-full text-gray-700 bg-transparent focus:ring-0 focus:border-blue-500"
