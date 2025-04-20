@@ -235,7 +235,7 @@ const ReportAnalysis = () => {
                         ? "bg-[#A9FFD6]"
                         : item.value >= 10
                         ? "bg-[#FFEC9F]"
-                        : "bg-red-100"
+                        : "bg-[#FFD6D6]"
                     } text-gray-500`}
                   >
                     <p
@@ -244,7 +244,7 @@ const ReportAnalysis = () => {
                           ? "text-[#22925c]"
                           : item.value >= 10
                           ? "text-[#af9734]"
-                          : "text-red-500"
+                          : "text-[#FF0000]"
                       }`}
                     >
                       {item.label}

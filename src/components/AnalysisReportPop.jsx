@@ -7,6 +7,7 @@ const AnalyseReportPopup = ({
   jobSuggestions,
   loading,
   resumeData,
+  score,
 }) => {
   const [jobRole, setJobRole] = useState("");
   const [difficulty, setDifficulty] = useState("");
@@ -27,6 +28,7 @@ const AnalyseReportPopup = ({
         resumeText: resumeData,
         jobRole: jobRole,
         difficulty: difficulty,
+        score,
       },
     });
   };
@@ -34,7 +36,7 @@ const AnalyseReportPopup = ({
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-2xl shadow-lg w-96 relative mx-2">
-        <span className="absolute top-0 right-0">
+        <span className="absolute top-0 right-0 p-2">
           <ion-icon
             name="close-outline"
             className="w-8 h-8 block max-sm:w-8 max-sm:h-8 cursor-pointer"

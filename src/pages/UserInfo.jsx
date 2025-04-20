@@ -3,7 +3,7 @@ import { avatar, nonProfile } from "../data";
 import Loading from "../components/Loading";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +14,7 @@ import axios from "axios";
 
 const BasicInfo = () => {
   const [loading, setLoading] = useState(true);
-  const [userAvatar, setUserAvatar] = useState(avatar);
+  const [userAvatar, setUserAvatar] = useState(nonProfile);
   const location = useLocation();
   const [isopen, setIsOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(location.pathname);
@@ -156,7 +156,7 @@ const BasicInfo = () => {
   return (
     <div className="h-screen">
       <NavBar />
-      <div className="max-sm:p-4  h-screen ">
+      <div className="max-sm:p-4 h-[calc(90vh-75px)]">
         <div
           className="max-w-6xl mx-auto  p-6 rounded-xl  grid grid-cols-[200px_auto] gap-10 my-14  max-sm:grid-cols-1"
           style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
@@ -175,8 +175,8 @@ const BasicInfo = () => {
                 <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 bg-slate-50 shadow-2xl">
                   <img
                     src={userAvatar || nonProfile}
-                    alt="Profile"
-                    className="w-full h-full object-cover rounded-full "
+                    alt="avatar"
+                    className="w-full h-full object-cover rounded-full"
                     onError={(e) => {
                       e.target.src = nonProfile;
                     }}
@@ -242,7 +242,10 @@ const BasicInfo = () => {
 
             <form onSubmit={handleSave}>
               {Object.keys(user)
-                .filter((key) => !["profilePicture"].includes(key))
+                .filter(
+                  (key) =>
+                    !["profilePicture", "email", "phoneNumber"].includes(key)
+                )
                 .map((key) => (
                   <div
                     key={key}

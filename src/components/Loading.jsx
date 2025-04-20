@@ -7,6 +7,7 @@ const Loading = () => {
       <div
         className="flex flex-col items-center justify-center"
         data-aos="fade-up"
+        data-aos-duration="1000"
       >
         <ThreeDot
           variant="bounce"

@@ -107,10 +107,7 @@ function AccountInfoPage() {
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Get the field name from the form input
-    const field = e.target.querySelector("input").name;
-    const value = tempValue;
+    const updatedInfo = { ...info, [editingField]: tempValue };
 
     try {
       const res = await fetch(
@@ -121,13 +118,13 @@ function AccountInfoPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ [field]: value }),
+          body: JSON.stringify({ [editingField]: tempValue }),
         }
       );
 
       const data = await res.json();
       if (res.ok) {
-        setInfo((prev) => ({ ...prev, [field]: value }));
+        setInfo(updatedInfo);
         setEditingField(null);
         setTempValue("");
       } else {
@@ -169,7 +166,7 @@ function AccountInfoPage() {
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
-       
+        alert("Password updated successfully!");
       } else {
         console.error("Password update failed:", data);
         alert(data.error || "Failed to update password");
@@ -223,7 +220,7 @@ function AccountInfoPage() {
   return (
     <div className="h-screen ">
       <NavBar />
-      <div className="h-[calc(100vh-75px)] p-6 max-sm:p-2">
+      <div className="h-[calc(90vh-75px)] p-6 max-sm:p-2">
         <div
           className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1 max-sm:p-2"
           style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
@@ -276,127 +273,133 @@ function AccountInfoPage() {
           <div className="space-y-2 mt-6">
             <div className="max-sm:flex gap-4 items-center  my-4">
               <div className="hidden max-sm:block">
-                <FontAwesomeIcon
-                  icon={faBars}
-                  className="w-10 h-10 block max-sm:w-6 max-sm:h-6 text-[#1170CD]"
-                  onClick={() => setIsOpen(true)}
-                />
+                {
+                  <FontAwesomeIcon
+                    icon={faBars}
+                    className="w-10 h-10 block max-sm:w-6 max-sm:h-6 text-[#1170CD]"
+                    onClick={() => setIsOpen(true)}
+                  />
+                }
               </div>
               <h2 className="text-4xl font-bold max-sm:text-2xl">
                 Account Info
               </h2>
             </div>
 
-            {Object.keys(info).map((key) => (
-              <div
-                key={key}
-                className="flex items-center gap-6 text-start py-5 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4"
-              >
-                <div className="flex justify-between w-[20%]">
-                  <p className="capitalize font-medium text-xl">{key}:</p>
-                  <div className="mt-2 hidden max-sm:block">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        editingField === key ? null : handleEdit(key)
-                      }
-                      className="text-blue-500 hover:underline"
+            <form onSubmit={handleSave}>
+              {Object.keys(info).map((key) => (
+                <div
+                  key={key}
+                  className="flex items-center gap-6 text-start py-6 max-sm:py-4 border-b max-sm:flex-col max-sm:gap-4"
+                >
+                  <div className="flex justify-between max-sm:w-full">
+                    <p className="capitalize font-medium text-xl">{key}:</p>
+                    <div
+                      className="mt-2 hidden max-sm:block
+                    "
                     >
-                      {editingField === key ? "" : "Edit"}
-                    </button>
-                  </div>
-                </div>
-
-                {editingField === key && key !== "password" ? (
-                  <form
-                    onSubmit={handleSave}
-                    className="flex flex-col gap-2 max-sm:w-[80%]"
-                  >
-                    <input
-                      type="text"
-                      name={key} // Add name attribute
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                      className="px-2 py-1 flex-1 border-b"
-                    />
-                    <div className="flex justify-start mt-1 gap-2">
                       <button
                         type="button"
-                        onClick={handleCancel}
-                        className="p-2 bg-gray-300 rounded-md"
+                        onClick={() =>
+                          editingField === key ? handleSave() : handleEdit(key)
+                        }
+                        className="text-blue-500 hover:underline"
                       >
-                        Cancel
+                        {editingField === key ? "" : "Edit"}
                       </button>
-                      <Button type="submit" className="!p-2">
-                        Save
-                      </Button>
                     </div>
-                  </form>
-                ) : (
-                  <p className="text-gray-950 font-semibold flex-grow max-sm:w-full">
-                    {key === "password" ? "*".repeat(8) : info[key]}
-                  </p>
-                )}
-
-                {key !== "password" && key !== "profilePicture" && (
-                  <div className="max-sm:hidden">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        editingField === key ? null : handleEdit(key)
-                      }
-                      className="text-blue-500 hover:underline"
-                    >
-                      {editingField === key ? "" : "Edit"}
-                    </button>
                   </div>
-                )}
-                {key === "password" && (
-                  <>
-                    {editingField !== "password" ? (
+
+                  {editingField === key && key !== "password" ? (
+                    <div className="flex flex-col gap-2 max-sm:w-[80%]">
+                      <input
+                        type="text"
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                        className="px-2 py-1 flex-1 border-b"
+                      />
+                      <div className="flex justify-start mt-1 gap-2">
+                        <button
+                          type="button"
+                          onClick={handleCancel}
+                          className="p-2 bg-gray-300 rounded-md"
+                        >
+                          Cancel
+                        </button>
+                        <Button type="submit" className="!p-2">
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-950 font-semibold flex-grow max-sm:w-full">
+                      {key === "password"
+                        ? "*".repeat(tempValue.length || 8)
+                        : info[key]}
+                    </p>
+                  )}
+
+                  {key !== "password" && key !== "profilePicture" && (
+                    <div className="max-sm:hidden">
                       <button
                         type="button"
-                        onClick={() => {
-                          handleEdit("password");
-                          setShowPasswordPopup(true);
-                        }}
-                        className="text-blue-500 hover:underline max-sm:hidden"
+                        onClick={() =>
+                          editingField === key ? handleSave() : handleEdit(key)
+                        }
+                        className="text-blue-500 hover:underline"
                       >
-                        Edit
+                        {editingField === key ? "" : "Edit"}
                       </button>
-                    ) : (
-                      <form
-                        onSubmit={confirmPasswordSave}
-                        className="flex flex-col items-start gap-2"
-                      >
-                        <input
-                          type="password"
-                          placeholder="Enter new password"
-                          value={tempValue}
-                          onChange={(e) => setTempValue(e.target.value)}
-                          className="px-2 py-1 border border-gray-300 rounded-md"
-                        />
-                        <div className="flex gap-2">
-                          <Button type="submit" className="!p-2">
-                            Save
-                          </Button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEditingField(null);
-                              setTempValue("");
-                            }}
-                            className="!p-2 bg-gray-300 !text-black rounded-md"
-                          >
-                            Cancel
-                          </button>
+                    </div>
+                  )}
+                  {key === "password" && (
+                    <>
+                      {editingField !== "password" ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleEdit("password");
+                            setShowPasswordPopup(true); // Show the password popup
+                          }}
+                          className="text-blue-500 hover:underline max-sm:hidden"
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <div className="flex flex-col items-start gap-2">
+                          <input
+                            type="password"
+                            placeholder="Enter new password"
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            className="px-2 py-1 border border-gray-300 rounded-md"
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              type="button"
+                              onClick={confirmPasswordSave}
+                              className="!p-2"
+                            >
+                              Save
+                            </Button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingField(null);
+                                setTempValue("");
+                              }}
+                              className="!p-2 bg-gray-300 !text-black  rounded-md"
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </div>
-                      </form>
-                    )}
-                  </>
-                )}
-              </div>
-            ))}
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </form>
 
             <div className="flex justify-between items-center gap-4 max-sm:flex-col max-sm:gap-4">
               <Button
