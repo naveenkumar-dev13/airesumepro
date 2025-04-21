@@ -3,7 +3,7 @@ import { avatar, nonProfile } from "../data";
 import Loading from "../components/Loading";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   faBars,

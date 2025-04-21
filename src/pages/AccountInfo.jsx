@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ function AccountInfoPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchAccountInfo = async () => {
+  const fetchAccountInfo = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(
@@ -50,9 +50,9 @@ function AccountInfoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchProfilePicture]);
 
-  const fetchProfilePicture = async () => {
+  const fetchProfilePicture = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(
@@ -77,11 +77,12 @@ function AccountInfoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchAccountInfo();
-  }, []);
+    fetchProfilePicture();
+  }, [fetchAccountInfo, fetchProfilePicture]);
 
   useEffect(() => {
     setActiveButton(location.pathname);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -73,7 +73,7 @@ const MockInterview = () => {
     } else if (timeLeft === 0 && questions.length > 0) {
       evaluateAnswers();
     }
-  }, [timeLeft]);
+  }, [timeLeft, evaluateAnswers, questions.length]);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
@@ -123,7 +123,7 @@ const MockInterview = () => {
     setShowExitPopup(false);
   };
 
-  const evaluateAnswers = async () => {
+  const evaluateAnswers = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -149,7 +149,6 @@ const MockInterview = () => {
             answers: Object.values(answers),
             expectedAnswers,
             jobRole,
-
             score,
           }),
         }
@@ -173,7 +172,7 @@ const MockInterview = () => {
       setError(err.message);
       setLoading(false);
     }
-  };
+  }, [questions, answers, expectedAnswers, jobRole, score, navigate]);
 
   if (loading && questions.length === 0) {
     return (
