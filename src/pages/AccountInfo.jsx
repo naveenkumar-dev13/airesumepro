@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -23,11 +23,12 @@ function AccountInfoPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchAccountInfo = useCallback(async () => {
+  const fetchAccountInfo = async () => {
     setLoading(true);
     try {
       const res = await fetch(
@@ -50,9 +51,9 @@ function AccountInfoPage() {
     } finally {
       setLoading(false);
     }
-  }, [fetchProfilePicture]);
+  };
 
-  const fetchProfilePicture = useCallback(async () => {
+  const fetchProfilePicture = async () => {
     setLoading(true);
     try {
       const res = await fetch(
@@ -77,12 +78,11 @@ function AccountInfoPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchAccountInfo();
-    fetchProfilePicture();
-  }, [fetchAccountInfo, fetchProfilePicture]);
+  }, []);
 
   useEffect(() => {
     setActiveButton(location.pathname);
@@ -223,6 +223,21 @@ function AccountInfoPage() {
     return <Loading />;
   }
 
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-center text-red-500">
+          <p>Error: {error}</p>
+          <Button
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={() => navigate("/analysisReport")}
+          >
+            Log In Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="h-screen">
       <NavBar />
@@ -234,7 +249,7 @@ function AccountInfoPage() {
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">
             <div className="absolute -top-20 left-15 max-sm:-top-20 max-sm:left-28">
-              <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 bg-slate-50 shadow-2xl">
+              <div className="w-32 h-32 object-cover rounded-full mx-auto my-4 bg-slate-50 shadow-2xl hover:scale-95 border-[#1170CD] transition-all duration-300 ">
                 <img
                   src={userAvatar || nonProfile}
                   alt="avatar"

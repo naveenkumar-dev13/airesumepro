@@ -170,15 +170,28 @@ const ReportAnalysis = () => {
     return "text-red-400 border-red-400";
   };
 
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-center text-red-500">
+          <p>Error: {error}</p>
+          <Button
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={() => navigate("/analysisReport")}
+          >
+            
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen ">
       <NavBar />
       <div
-        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0 h-[calc(100vh-75px)] ${
-          openSection ? "mt-20" : ""
-        }`}
+        className={`p-6 max-w-6xl m-auto max-sm:p-4 mt-0 h-[calc(100vh-75px)] 
+        `}
       >
         <div className="bg-white shadow-[0px_5px_20px_-3px_rgba(0,0,0,0.2)] rounded-xl p-6 max-sm:shadow-none max-sm:p-4 mb-8">
           <div className="flex gap-16 items-center max-sm:flex-col">
@@ -235,7 +248,7 @@ const ReportAnalysis = () => {
                         ? "bg-[#A9FFD6]"
                         : item.value >= 10
                         ? "bg-[#FFEC9F]"
-                        : "bg-[#FFD6D6]"
+                        : "bg-red-100"
                     } text-gray-500`}
                   >
                     <p
@@ -244,7 +257,7 @@ const ReportAnalysis = () => {
                           ? "text-[#22925c]"
                           : item.value >= 10
                           ? "text-[#af9734]"
-                          : "text-[#FF0000]"
+                          : "text-red-500"
                       }`}
                     >
                       {item.label}
