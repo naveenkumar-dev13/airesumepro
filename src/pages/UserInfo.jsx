@@ -5,7 +5,11 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faCircleExclamation,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -230,13 +234,24 @@ const BasicInfo = () => {
 
             {message && (
               <div
-                className={`mb-4 p-2 rounded-md ${
+                className={`my-4 p-4 rounded-md flex items-center gap-3 shadow-sm ${
                   message.includes("success")
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
                 }`}
               >
-                {message}
+                {message.includes("success") ? (
+                  <FontAwesomeIcon
+                    icon={faCircleExclamation}
+                    className="text-green-600 text-xl animate-bounce"
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCircleCheck}
+                    className="text-red-600 text-xl animate-bounce"
+                  />
+                )}
+                <span className="text-sm font-medium">{message}</span>
               </div>
             )}
 
@@ -281,9 +296,10 @@ const BasicInfo = () => {
                           <textarea
                             value={tempValue}
                             onChange={(e) => setTempValue(e.target.value)}
-                            className="px-2 py-1 border border-gray-300 focus:outline-none rounded-md h-40  w-[600px] text-gray-500 placeholder:text-gray-400  placeholder:text-sm max-sm:w-[350px] "
+                            className="px-2 py-1 border border-gray-300 focus:outline-none rounded-md h-40 w-[600px] text-gray-500 placeholder:text-gray-400 placeholder:text-sm max-sm:w-[350px]"
                             rows={4}
-                            placeholder="'The only way to do great work is to love what you do...'"
+                            placeholder="Write a brief summary of your professional background and career objectives (max 50 words)"
+                            maxLength={50}
                           />
                         ) : key === "gender" ? (
                           <select
