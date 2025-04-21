@@ -18,9 +18,9 @@ const MockInterview = () => {
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes timer
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [skippedCount, setSkippedCount] = useState(0);
+
   const [evaluationResults, setEvaluationResults] = useState(null);
-  const [skippedQuestions, setSkippedQuestions] = useState([]);
+  const [answerError, setAnswerError] = useState("");
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -78,9 +78,25 @@ const MockInterview = () => {
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });
+    if (e.target.value.trim() && answerError) {
+      setAnswerError("");
+    }
+  };
+
+  const validateAnswer = () => {
+    const currentAnswer = answers[currentQuestionIndex] || "";
+    if (!currentAnswer.trim()) {
+      setAnswerError("Please enter your answer before proceeding");
+      return false;
+    }
+    return true;
   };
 
   const nextQuestion = () => {
+    if (!validateAnswer()) {
+      return;
+    }
+
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -100,6 +116,14 @@ const MockInterview = () => {
     setShowExitPopup(true);
   };
 
+  const handleConfirmExit = () => {
+    navigate("/dashboard");
+  };
+
+  const handleCancelExit = () => {
+    setShowExitPopup(false);
+  };
+
   const evaluateAnswers = async () => {
     setLoading(true);
     try {
@@ -111,12 +135,6 @@ const MockInterview = () => {
 
       const decoded = jwtDecode(token);
       const userEmail = decoded.email;
-
-      // Track skipped questions
-      const skippedIndices = Object.entries(answers)
-        .filter(([_, answer]) => answer === "Skipped")
-        .map(([index]) => parseInt(index));
-      setSkippedQuestions(skippedIndices);
 
       const response = await fetch(
         "https://airesumeproapi.onrender.com/api/evaluate-answers",
@@ -132,8 +150,7 @@ const MockInterview = () => {
             answers: Object.values(answers),
             expectedAnswers,
             jobRole,
-            skippedCount,
-            skippedQuestions: skippedIndices,
+
             score,
           }),
         }
@@ -149,7 +166,6 @@ const MockInterview = () => {
         wrongCount: result.wrongCount || 0,
         evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
         feedback: result.feedback || "No feedback provided",
-        skippedCount: skippedIndices.length,
       };
 
       setEvaluationResults(formattedResults);
@@ -188,8 +204,8 @@ const MockInterview = () => {
     return (
       <div className="h-screen">
         <NavBar />
-        <div className="p-6 max-w-6xl m-auto flex flex-col gap-4">
-          <div className="shadow-md p-4 rounded-xl">
+        <div className="p-6 max-w-6xl m-auto flex flex-col justify-center my-auto gap-4">
+          <div className="shadow-md p-4 rounded-xl ">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-3xl font-bold text-center max-md:text-2xl">
                 Interview Results
@@ -199,7 +215,7 @@ const MockInterview = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-8 max-md:grid-cols-2 max-md:mb-0 ">
+            <div className="grid grid-cols-3 gap-4 mb-8 max-md:grid-cols-2 max-md:mb-0 ">
               <div className="bg-green-100 p-4 rounded-lg text-center">
                 <h3 className="text-xl font-semibold">Correct Answers</h3>
                 <p className="text-4xl font-bold text-green-600">
@@ -212,12 +228,7 @@ const MockInterview = () => {
                   {evaluationResults.wrongCount}
                 </p>
               </div>
-              <div className="bg-yellow-100 p-4 rounded-lg text-center">
-                <h3 className="text-xl font-semibold">Skipped Questions</h3>
-                <p className="text-4xl font-bold text-yellow-600">
-                  {evaluationResults.skippedCount}
-                </p>
-              </div>
+
               <div className="bg-blue-100 p-4 rounded-lg text-center">
                 <h3 className="text-xl font-semibold">Score Percentage</h3>
                 <p className="text-4xl font-bold text-blue-600">
@@ -234,17 +245,13 @@ const MockInterview = () => {
           <div className="space-y-6">
             {questions.map((question, index) => {
               const userAnswer = answers[index] || "Not answered";
-              const isSkipped = userAnswer === "Skipped";
-              const evaluationText = isSkipped
-                ? "Question was skipped"
-                : evaluationResults.evaluation[index] || "";
+              const isSkipped =
+                userAnswer === "Skipped" || userAnswer === "Not answered";
+              const evaluationText = evaluationResults.evaluation[index] || "";
 
               const isCorrect =
                 !isSkipped &&
-                (/correct/i.test(evaluationText) ||
-                  /similar/i.test(evaluationText) ||
-                  /close enough/i.test(evaluationText) ||
-                  /mostly right/i.test(evaluationText) ||
+                (/true/i.test(evaluationText) ||
                   userAnswer
                     .toLowerCase()
                     .includes(
@@ -266,27 +273,25 @@ const MockInterview = () => {
                   <p className="mb-2">
                     <strong>Your Answer:</strong> {userAnswer}
                   </p>
-                  {!isSkipped && (
-                    <p className="mb-2">
-                      <strong>Expected Answer:</strong> {expectedAnswers[index]}
-                    </p>
-                  )}
+                  <p className="mb-2">
+                    <strong>Expected Answer:</strong> {expectedAnswers[index]}
+                  </p>
                   <div
                     className={`p-3 rounded ${
                       isSkipped
-                        ? "bg-[#F5F5F5]"
+                        ? "bg-gray-100"
                         : isCorrect
-                        ? "bg-[#A9FFD6]"
-                        : "bg-[#FFD6D6]"
+                        ? "bg-green-100"
+                        : "bg-red-100"
                     }`}
                   >
                     <p
                       className={
                         isSkipped
-                          ? "text-[#333333]"
+                          ? "text-gray-700"
                           : isCorrect
-                          ? "text-[#008000]"
-                          : "text-[#FF0000]"
+                          ? "text-green-700"
+                          : "text-red-700"
                       }
                     >
                       <strong>
@@ -314,7 +319,7 @@ const MockInterview = () => {
             })}
           </div>
 
-          <div className="mt-8 flex justify-center gap-4">
+          {/* <div className="mt-8 flex justify-center gap-4">
             <Button
               className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
               onClick={() => navigate("/dashboard")}
@@ -327,7 +332,7 @@ const MockInterview = () => {
             >
               Try Another Interview
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     );
@@ -374,27 +379,17 @@ const MockInterview = () => {
             <div className="my-4 shadow-xl p-4 rounded-2xl">
               <div className="flex justify-between items-center mb-4">
                 <p className="text-xl">Your Answer</p>
-                <Button
-                  className="px-6 py-2 hover:!bg-[#1170CD] hover:!text-white !bg-white !text-[#1170CD] border rounded w-fit transition"
-                  onClick={() => {
-                    setAnswers((prev) => ({
-                      ...prev,
-                      [currentQuestionIndex]: "Skipped",
-                    }));
-                    setSkippedCount((prev) => prev + 1);
-                    nextQuestion();
-                  }}
-                >
-                  Skip
-                </Button>
               </div>
               <textarea
-                className="w-full p-2 border border-gray-600 rounded-lg mb-4 focus:outline-none text-stone-600"
+                className="w-full p-2 border border-gray-600 rounded-lg mb-1 focus:outline-none text-stone-600"
                 placeholder="Type your answer here..."
                 rows="4"
                 value={answers[currentQuestionIndex] || ""}
                 onChange={handleAnswerChange}
               />
+              {answerError && (
+                <p className="text-red-500 text-sm mb-3">{answerError}</p>
+              )}
               <div className="flex justify-between">
                 <Button
                   className="px-4 py-2 bg-[#1170CD] text-white rounded-full max-md:px-6 disabled:opacity-50 max-md:text-sm"
@@ -408,9 +403,7 @@ const MockInterview = () => {
                   onClick={nextQuestion}
                   disabled={
                     currentQuestionIndex >= questions.length - 1 ||
-                    timeLeft === 0 ||
-                    !answers[currentQuestionIndex] ||
-                    answers[currentQuestionIndex].trim() === ""
+                    timeLeft === 0
                   }
                 >
                   {currentQuestionIndex >= questions.length - 1
@@ -422,6 +415,39 @@ const MockInterview = () => {
           </div>
         )}
       </div>
+
+      {showExitPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-[400px] mx-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-icons-outlined text-red-500 text-2xl">
+                warning
+              </span>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Exit Interview?
+              </h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to exit? All your progress will be lost and
+              cannot be recovered.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleCancelExit}
+                className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmExit}
+                className="px-6 py-2 text-white bg-[#1170CD] rounded-lg hover:bg-[#0E5BAA] transition-colors"
+              >
+                Exit Interview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {timeLeft === 0 && !evaluationResults && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">

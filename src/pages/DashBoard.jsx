@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
-  faGraduationCap,
+  faUser,
   faPhone,
   faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
@@ -109,7 +109,7 @@ const Dashboard = () => {
       <NavBar />
       <div className="grid grid-cols-[400px_auto] mx-10 max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5">
         {/* Profile Card */}
-        <div className="h-300px w-auto  rounded-xl mt-10 flex flex-col shadow-[10px_10px_10px_0px_#bad5ee] max-sm:m-4">
+        <div className="h-auto w-auto bg-white rounded-xl mt-10 flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4">
           <div className="relative border-b-4 border-[#1170CD]">
             <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden max-sm:shadow-[]">
               <img
@@ -152,30 +152,56 @@ const Dashboard = () => {
             )}
             <p className="flex items-center gap-2">
               <FontAwesomeIcon
-                icon={faGraduationCap}
+                icon={faUser}
                 className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
               />
               <span className="text-gray-800 font-semibold">
-                {userInfo.education || "Education not specified"}
+                {userInfo.gender || "Gender not specified"}
               </span>
             </p>
-            {userInfo.linkedinLink && (
-              <p className="flex items-center gap-2">
-                <FontAwesomeIcon
-                  icon={faLinkedin}
-                  className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
-                />
+
+            <p className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faLinkedin}
+                className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+              />
+              {userInfo.linkedinLink ? (
                 <a
                   href={userInfo.linkedinLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-800 font-semibold"
                 >
-                  LinkedIn Profile
+                  {userInfo.linkedinLink.slice(0, 30)}
                 </a>
-              </p>
-            )}
-            {userInfo.githubLink && (
+              ) : (
+                <span className="text-gray-800 font-semibold">
+                  Add LinkedIn Link
+                </span>
+              )}
+            </p>
+            <p className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faGithub}
+                className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+              />
+              {userInfo.githubLink ? (
+                <a
+                  href={userInfo.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-800 font-semibold"
+                >
+                  {userInfo.githubLink.slice(0, 30)}
+                </a>
+              ) : (
+                <span className="text-gray-800 font-semibold">
+                  Add LinkedIn Link
+                </span>
+              )}
+            </p>
+
+            {/* {userInfo.githubLink && (
               <p className="flex items-center gap-2">
                 <FontAwesomeIcon
                   icon={faGithub}
@@ -187,10 +213,12 @@ const Dashboard = () => {
                   rel="noopener noreferrer"
                   className="text-gray-800 font-semibold"
                 >
-                  GitHub Profile
+                  {userInfo.githubLink
+                    ? userInfo.githubLink.slice(0, 30)
+                    : "GitHub Profile"}
                 </a>
               </p>
-            )}
+            )} */}
           </div>
           <div className="p-4 flex flex-col gap-2">
             <p className="flex items-center gap-2">
@@ -200,6 +228,15 @@ const Dashboard = () => {
               />
               <span className="text-gray-800 font-semibold">
                 {userInfo.phoneNumber || "Phone not specified"}
+              </span>
+            </p>
+            <p className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                className="text-[#1170CD] w-8 h-8 max-sm:w-5 max-sm:h-5"
+              />
+              <span className="text-gray-800 font-semibold">
+                {userInfo.email || "Phone not specified"}
               </span>
             </p>
           </div>
