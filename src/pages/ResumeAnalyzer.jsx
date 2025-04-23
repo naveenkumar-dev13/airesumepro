@@ -94,7 +94,7 @@ function ResumeAnalyzer() {
         <div
           className="flex items-center justify-between gap-2 rounded-3xl mx-auto max-w-5xl w-full max-md:p-3"
           style={{ boxShadow: "0px 0px 25px 10px rgb(186, 213, 238)" }}
-          data-aos="fade-up"
+          data-aos="fade-down"
         >
           <div className="flex flex-col justify-between px-16 gap-3 w-full max-md:px-4">
             <h2 className="text-[#1170CD] text-4xl font-semibold max-md:text-2xl max-md:text-center">

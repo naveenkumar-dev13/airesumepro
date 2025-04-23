@@ -164,6 +164,7 @@ const BasicInfo = () => {
         <div
           className="max-w-6xl mx-auto  p-6 rounded-xl  grid grid-cols-[200px_auto] gap-10 my-14  max-sm:grid-cols-1"
           style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
+          data-aos="fade-down"
         >
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex gap-4 flex-col relative max-md:border-none">

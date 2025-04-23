@@ -245,6 +245,7 @@ function AccountInfoPage() {
         <div
           className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md grid grid-cols-[200px_auto] gap-10 mt-14 max-sm:grid-cols-1 max-sm:p-2"
           style={{ boxShadow: "rgba(100, 100, 111, 0.4) 0px 7px 29px 0px" }}
+          data-aos="fade-down"
         >
           {/* Sidebar */}
           <div className="p-4 border-r-2 border-[#1170CD] flex-1 flex gap-4 flex-col relative max-md:border-none">

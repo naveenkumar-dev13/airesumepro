@@ -109,7 +109,7 @@ const Dashboard = () => {
           </p>
           <p className="text-red-500 text-sm mb-6">{error}</p>
           <Button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/login")}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300"
           >
             login again
@@ -125,10 +125,13 @@ const Dashboard = () => {
           className="text-4xl text-red-500 animate-pulse"
         />{" "}
         {/* Font Awesome icon */}
-        <p className="text-lg font-medium text-gray-700">
+        <Button
+          onClick={() => navigate("/login")}
+          className="text-lg font-medium text-gray-700"
+        >
           We are unable to retrieve your user information at this time. Please
           try again later.
-        </p>
+        </Button>
       </div>
     );
 
@@ -137,7 +140,10 @@ const Dashboard = () => {
       <NavBar />
       <div className="grid grid-cols-[400px_auto] mx-10 my-6 max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5  h-[calc(100vh-110px)]">
         {/* Profile Card */}
-        <div className="h-auto w-auto bg-white rounded-xl  flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4">
+        <div
+          className="h-auto w-auto bg-white rounded-xl  flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4"
+          data-aos="fade-right"
+        >
           <div className="relative border-b-4 border-[#1170CD]">
             <div className="w-24 h-24 object-cover rounded-xl mx-auto my-4 overflow-hidden ">
               <img
@@ -286,7 +292,9 @@ const Dashboard = () => {
               {dashboardData.map((item, index) => (
                 <div
                   key={index}
-                  className="p-4 w-auto transition-all duration-300 bg-white rounded-xl shadow-md hover:shadow-lg"
+                  className="p-4 w-auto transition-all duration-300 bg-white rounded-xl shadow-md   "
+                  data-aos="zoom-in"
+                  data-aos-delay={index * 200}
                 >
                   <h3 className="text-lg font-semibold">
                     {item.jobRole || "Untitled Resume"}

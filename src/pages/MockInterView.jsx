@@ -73,7 +73,7 @@ const MockInterview = () => {
     } else if (timeLeft === 0 && questions.length > 0) {
       evaluateAnswers();
     }
-  }, [timeLeft, evaluateAnswers, questions.length]);
+  }, [timeLeft]);
 
   const handleAnswerChange = (e) => {
     setAnswers({ ...answers, [currentQuestionIndex]: e.target.value });

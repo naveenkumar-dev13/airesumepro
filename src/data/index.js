@@ -118,7 +118,7 @@ export const aboutUs = [
   },
   {
     icon: <FontAwesomeIcon icon={faMessage} />,
-    title: "nithin@gmail.com",
+    title: "John@gmail.com",
   },
   {
     icon: <ion-icon name="location-outline"></ion-icon>,
