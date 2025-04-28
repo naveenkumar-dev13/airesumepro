@@ -10,7 +10,6 @@ import ResumeAnalyzer from "./pages/ResumeAnalyzer";
 import DashBoard from "./pages/DashBoard";
 import AnalysisReport from "./pages/AnalysisReport";
 import MockInterview from "./pages/MockInterView";
-import InterviewResult from "./pages/InterViewResult";
 import UserInfo from "./pages/UserInfo";
 import AccountInfo from "./pages/AccountInfo";
 import NotFound from "./components/NotFound";
@@ -31,7 +30,6 @@ function App() {
         <Route path="/accountinfo" element={<AccountInfo />} />
         <Route path="/analysisReport" element={<AnalysisReport />} />
         <Route path="/mockinterview" element={<MockInterview />} />
-        <Route path="/interviewresult" element={<InterviewResult />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -141,7 +141,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-[400px_auto] mx-10 my-6 max-sm:mx-2 max-sm:grid-cols-1 gap-10 max-sm:gap-5  h-[calc(100vh-110px)]">
         {/* Profile Card */}
         <div
-          className="h-auto w-auto bg-white rounded-xl  flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4"
+          className="h-[610px] w-auto bg-white rounded-xl  flex flex-col shadow-[0px_0px_10px_0px_#bad5ee] max-sm:m-4 max-sm:h-[590px]"
           data-aos="fade-right"
         >
           <div className="relative border-b-4 border-[#1170CD]">

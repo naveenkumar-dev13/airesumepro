@@ -204,7 +204,7 @@ const MockInterview = () => {
         <NavBar />
         <div className="p-6 max-w-6xl m-auto flex flex-col justify-center my-auto gap-4">
           <div className="shadow-md p-4 rounded-xl ">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between ">
               <h1 className="text-3xl font-bold text-center max-md:text-2xl">
                 Interview Results
               </h1>
