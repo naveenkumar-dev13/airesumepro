@@ -204,7 +204,7 @@ const MockInterview = () => {
         <NavBar />
         <div className="p-6 max-w-6xl m-auto flex flex-col justify-center my-auto gap-4">
           <div className="shadow-md p-4 rounded-xl ">
-            <div className="flex items-center justify-between ">
+            <div className="flex items-center justify-between mb-4 ">
               <h1 className="text-3xl font-bold text-center max-md:text-2xl">
                 Interview Results
               </h1>
@@ -213,7 +213,7 @@ const MockInterview = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-8 max-md:grid-cols-2 max-md:mb-0 ">
+            <div className="grid grid-cols-3 gap-4  max-md:grid-cols-2 max-md:mb-0 ">
               <div className="bg-green-100 p-4 rounded-lg text-center">
                 <h3 className="text-xl font-semibold">Correct Answers</h3>
                 <p className="text-4xl font-bold text-green-600">
@@ -316,21 +316,6 @@ const MockInterview = () => {
               );
             })}
           </div>
-
-          {/* <div className="mt-8 flex justify-center gap-4">
-            <Button
-              className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
-              onClick={() => navigate("/dashboard")}
-            >
-              Go to Dashboard
-            </Button>
-            <Button
-              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
-              onClick={() => navigate("/analysisReport")}
-            >
-              Try Another Interview
-            </Button>
-          </div> */}
         </div>
       </div>
     );
