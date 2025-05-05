@@ -164,6 +164,8 @@ const MockInterview = () => {
         wrongCount: result.wrongCount || 0,
         evaluation: Array.isArray(result.evaluation) ? result.evaluation : [],
         feedback: result.feedback || "No feedback provided",
+        // Add detailed correctness information from backend
+        isCorrect: result.isCorrect || [], // Array of booleans indicating correctness
       };
 
       setEvaluationResults(formattedResults);
@@ -203,8 +205,8 @@ const MockInterview = () => {
       <div className="h-screen">
         <NavBar />
         <div className="p-6 max-w-6xl m-auto flex flex-col justify-center my-auto gap-4">
-          <div className="shadow-md p-4 rounded-xl ">
-            <div className="flex items-center justify-between mb-4 ">
+          <div className="shadow-md p-4 rounded-xl mb-4 ">
+            <div className="flex items-center justify-between ">
               <h1 className="text-3xl font-bold text-center max-md:text-2xl">
                 Interview Results
               </h1>
@@ -213,7 +215,7 @@ const MockInterview = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4  max-md:grid-cols-2 max-md:mb-0 ">
+            <div className="grid grid-cols-3 gap-4 mb-2 max-md:grid-cols-2 max-md:mb-0 ">
               <div className="bg-green-100 p-4 rounded-lg text-center">
                 <h3 className="text-xl font-semibold">Correct Answers</h3>
                 <p className="text-4xl font-bold text-green-600">
@@ -247,18 +249,11 @@ const MockInterview = () => {
                 userAnswer === "Skipped" || userAnswer === "Not answered";
               const evaluationText = evaluationResults.evaluation[index] || "";
 
-              const isCorrect =
-                !isSkipped &&
-                (/true/i.test(evaluationText) ||
-                  userAnswer
-                    .toLowerCase()
-                    .includes(
-                      expectedAnswers[index].toLowerCase().split(" ")[0]
-                    ) ||
-                  expectedAnswers[index]
-                    .toLowerCase()
-                    .split(" ")
-                    .some((word) => userAnswer.toLowerCase().includes(word)));
+              // Use the isCorrect array from backend if available, otherwise fall back to text evaluation
+              const isCorrect = Array.isArray(evaluationResults.isCorrect)
+                ? evaluationResults.isCorrect[index]
+                : evaluationText.toLowerCase().includes("true") ||
+                  evaluationText.toLowerCase().includes("correct");
 
               return (
                 <div
@@ -299,11 +294,6 @@ const MockInterview = () => {
                           ? "✓ Correct"
                           : "✗ Wrong"}
                       </strong>
-                      {isCorrect && !/correct/i.test(evaluationText) && (
-                        <span className="ml-2 text-sm">
-                          (Accepted as correct)
-                        </span>
-                      )}
                     </p>
                     {!isSkipped && (
                       <p>
