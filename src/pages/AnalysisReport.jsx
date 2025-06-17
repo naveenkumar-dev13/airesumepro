@@ -135,7 +135,7 @@ const ReportAnalysis = () => {
       }
 
       const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/job-suggestions",
+        "https://resumepro-5wxq.onrender.com/api/job-suggestions",
         {
           method: "POST",
           headers: {
@@ -178,9 +178,7 @@ const ReportAnalysis = () => {
           <Button
             className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
             onClick={() => navigate("/analysisReport")}
-          >
-            
-          </Button>
+          ></Button>
         </div>
       </div>
     );

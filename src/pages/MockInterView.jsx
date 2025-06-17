@@ -36,7 +36,7 @@ const MockInterview = () => {
         }
 
         const response = await fetch(
-          "https://airesumeproapi.onrender.com/api/mockinterview",
+          "https://resumepro-5wxq.onrender.com/api/mockinterview",
           {
             method: "POST",
             headers: {
@@ -136,7 +136,7 @@ const MockInterview = () => {
       const userEmail = decoded.email;
 
       const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/evaluate-answers",
+        "https://resumepro-5wxq.onrender.com/api/evaluate-answers",
         {
           method: "POST",
           headers: {

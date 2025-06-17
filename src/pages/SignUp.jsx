@@ -24,11 +24,14 @@ function SignUp() {
     setError("");
     console.log(username, email, password);
     try {
-      const response = await fetch("https://airesumeproapi.onrender.com/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-      });
+      const response = await fetch(
+        "https://resumepro-5wxq.onrender.com/api/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password }),
+        }
+      );
 
       const data = await response.json();
       console.log(data);
@@ -108,7 +111,7 @@ function SignUp() {
               type="button"
               onClick={() =>
                 (window.location.href =
-                  "https://airesumeproapi.onrender.com/api/auth/google/callback")
+                  "https://resumepro-5wxq.onrender.com/api/auth/google/callback")
               } // ✅ Redirect to backend
               className="bg-[#1170CD] text-white p-2 w-full max-w-xs rounded-md shadow-md hover:bg-[#0E5BAA] transition-all duration-300"
             >

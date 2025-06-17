@@ -21,7 +21,7 @@ function MobileNav({
   const fetchProfilePicture = async () => {
     try {
       const res = await fetch(
-        "https://airesumeproapi.onrender.com/api/get-profile-picture",
+        "https://resumepro-5wxq.onrender.com/api/get-profile-picture",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -59,7 +59,7 @@ function MobileNav({
           setDisplayName(tempName);
         }
         const response = await axios.get(
-          "https://airesumeproapi.onrender.com/api/basic-info",
+          "https://resumepro-5wxq.onrender.com/api/basic-info",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Inputs from "../components/Inputs";
 import { login } from "../data";
 import { useDispatch } from "react-redux";
-import { updateEmail} from "../feature/UserSlice";
+import { updateEmail } from "../feature/UserSlice";
 //  import {login} from '../feature/UserSlice'
 
 function Login() {
@@ -23,7 +23,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/login",
+        "https://resumepro-5wxq.onrender.com/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -36,12 +36,12 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        dispatch(updateEmail(data.email)); 
+        dispatch(updateEmail(data.email));
         // If backend sends name: dispatch(updateName(data.name));
         navigate("/");
       } else {
         console.error(data.error);
-        alert(data.error); 
+        alert(data.error);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -87,12 +87,12 @@ function Login() {
               <p className="text-gray-800 text-2xl font-bold">or</p>
             </div>
 
-             <button
+            <button
               type="button"
               onClick={() =>
                 (window.location.href =
-                  "https://airesumeproapi.onrender.com/api/auth/google/callback")
-              } 
+                  "https://resumepro-5wxq.onrender.com/api/auth/google/callback")
+              }
               className="bg-[#1170CD] text-white p-2 w-full max-w-xs rounded-md shadow-md hover:bg-[#0E5BAA] transition-all duration-300"
             >
               <div className="flex items-center justify-center gap-2">
