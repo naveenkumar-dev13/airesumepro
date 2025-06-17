@@ -107,7 +107,14 @@ function SignUp() {
               <p className="text-gray-800 text-2xl font-bold">or</p>
             </div>
 
-            <button className="bg-[#1170CD] text-white p-2 w-full max-w-xs rounded-md shadow-md hover:bg-[#0E5BAA] transition-all duration-300">
+            <button
+              type="button"
+              onClick={() =>
+                (window.location.href =
+                  "https://airesumeproapi.onrender.com/api/auth/google/callback")
+              } // ✅ Redirect to backend
+              className="bg-[#1170CD] text-white p-2 w-full max-w-xs rounded-md shadow-md hover:bg-[#0E5BAA] transition-all duration-300"
+            >
               <div className="flex items-center justify-center gap-2">
                 <img src={logo} alt="Google_logo" className="w-6" />
                 <span>Sign in with Google</span>
