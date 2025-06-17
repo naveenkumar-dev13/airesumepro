@@ -233,7 +233,7 @@ function MobileNav({
                 ) : (
                   <Link to="/login">
                     <button
-                      className={`bg-[#1170CD] text-white text-2xl p-4 rounded-md hover:bg-[#0E5BAA] hover:text-white duration-300 ${
+                      className={`bg-[#1170CD] text-white text-2xl p-4 my-2 rounded-md hover:bg-[#0E5BAA] hover:text-white duration-300 ${
                         activeButton === "/login"
                           ? "bg-[#1170CD] text-white p-2 rounded-md"
                           : "text-[#1170CD]"

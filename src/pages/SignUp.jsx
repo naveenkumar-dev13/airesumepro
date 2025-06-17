@@ -24,14 +24,11 @@ function SignUp() {
     setError("");
     console.log(username, email, password);
     try {
-      const response = await fetch(
-        "https://airesumeproapi.onrender.com/api/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email, password }),
-        }
-      );
+      const response = await fetch("https://airesumeproapi.onrender.com/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
 
       const data = await response.json();
       console.log(data);
